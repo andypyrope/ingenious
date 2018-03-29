@@ -15,5 +15,6 @@
       <module>evolution</module>
       <module>platform</module>
       <module>fitness</module>
+      <module>app</module>
    </modules>
 </project>

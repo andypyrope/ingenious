@@ -1,4 +1,4 @@
-package io.github.andypyrope.evolution.interactors;
+package io.github.andypyrope.app.tui;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -66,28 +66,6 @@ public class ConsoleInteractor {
             _world.getMaxFitness(),
             _world.size()));
    }
-
-   // private boolean prompt(final String question) {
-   // final String output = question + " (y/n)";
-   // System.out.println(output);
-   //
-   // final Pattern yes = Pattern.compile("[yY]");
-   // final Pattern no = Pattern.compile("[yY]");
-   // while (true) {
-   // final String input = acceptInput();
-   // if (yes.matcher(input).matches()) {
-   // return true;
-   // }
-   // if (no.matcher(input).matches()) {
-   // return false;
-   // }
-   // }
-   // }
-
-   // private String ask(final String question) {
-   // System.out.println(question);
-   // return acceptInput();
-   // }
 
    private String acceptInput() {
       return _scanner.nextLine();

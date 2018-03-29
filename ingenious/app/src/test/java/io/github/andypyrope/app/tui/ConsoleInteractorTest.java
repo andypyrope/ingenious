@@ -1,4 +1,4 @@
-package io.github.andypyrope.evolution.interactors;
+package io.github.andypyrope.app.tui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
