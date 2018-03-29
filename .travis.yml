@@ -1,0 +1,10 @@
+language: java
+
+jdk:
+  - oraclejdk9
+
+before_script:
+  cd evolution
+
+script:
+  mvn test
