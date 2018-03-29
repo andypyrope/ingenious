@@ -3,8 +3,5 @@ language: java
 jdk:
   - oraclejdk9
 
-before_script:
-  cd ingenious
-
 script:
   mvn test
