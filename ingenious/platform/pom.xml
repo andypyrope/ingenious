@@ -5,7 +5,24 @@
     <artifactId>ingenious</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>platform</artifactId>
   <name>Platform</name>
   <description>Some essential classes</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>9</maven.compiler.source>
+    <maven.compiler.target>9</maven.compiler.target>
+    <junit.jupiter.version>5.1.0</junit.jupiter.version>
+  </properties>
+  
+  <dependencies>
+   <dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>5.0.1</version>
+    <scope>test</scope>
+   </dependency>
+  </dependencies>
 </project>

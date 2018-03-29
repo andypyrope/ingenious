@@ -4,7 +4,7 @@ jdk:
   - oraclejdk9
 
 before_script:
-  cd evolution
+  cd ingenious
 
 script:
   mvn test
