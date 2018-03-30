@@ -17,36 +17,33 @@ public class ByteDna implements Dna {
       _data = new byte[size];
    }
 
-   private ByteDna(byte[] data) {
-      _data = data;
-   }
-
    /**
     * Combines two DNA instances to produce a third one.
     * 
-    * @param other The DNA to produce a combination with
-    * @return The combination of the two DNA strings
+    * @param parent1 The first parent
+    * @param parent2 The second parent
+    * @throws DnaLengthMismatchException
     */
-   public ByteDna copulate(ByteDna other) throws DnaLengthMismatchException {
-      if (_data.length != other._data.length) {
+   public ByteDna(ByteDna parent1, ByteDna parent2)
+            throws DnaLengthMismatchException {
+      if (parent1._data.length != parent2._data.length) {
          throw new DnaLengthMismatchException(
             String.format(
                "Cannot copulate byte DNA with length %d and byte DNA with length %d",
-               _data.length,
-               other._data.length));
+               parent1._data.length,
+               parent2._data.length));
       }
-      final byte[] data = new byte[_data.length];
-      final int cutPosition = ThreadLocalRandom.current().nextInt(0,
-         _data.length);
+      final int length = parent1._data.length;
 
-      System.arraycopy(_data, 0, data, 0, cutPosition);
-      System.arraycopy(other._data,
-         cutPosition,
-         data,
-         cutPosition,
-         _data.length - cutPosition);
+      _data = new byte[length];
+      final int cutPosition = ThreadLocalRandom.current().nextInt(0, length);
 
-      return new ByteDna(data);
+      System.arraycopy(parent1._data, 0, _data, 0, cutPosition);
+      System.arraycopy(parent2._data,
+         cutPosition,
+         _data,
+         cutPosition,
+         length - cutPosition);
    }
 
    public void mutate(double mutationProbability) {
@@ -67,7 +64,7 @@ public class ByteDna implements Dna {
    public int read() {
       return readSigned() & SIGNED_TO_UNSIGNED_BYTE_MASK;
    }
-   
+
    public int readSigned() {
       if (_currentPosition == _data.length) {
          resetReader();

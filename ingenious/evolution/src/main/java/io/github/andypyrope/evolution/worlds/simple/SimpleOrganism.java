@@ -12,27 +12,23 @@ class SimpleOrganism {
 
    private final ByteDna _dna;
    private final Calculator _calculator;
+   private final CalculatorProvider _provider;
 
    SimpleOrganism(CalculatorProvider provider) {
       _dna = new ByteDna(DEFAULT_DNA_SIZE);
       _dna.mutate(INITIAL_DNA_MUTATION);
-      _calculator = provider.provide(_dna);
+      _provider = provider;
+      _calculator = _provider.provide(_dna);
    }
 
-   private SimpleOrganism(ByteDna dna, CalculatorProvider provider) {
-      _dna = dna;
+   SimpleOrganism(SimpleOrganism _parent1, SimpleOrganism _parent2) {
+      _dna = new ByteDna(_parent1._dna, _parent2._dna);
       _dna.mutate(DEFAULT_DNA_MUTATION);
-      _calculator = provider.provide(_dna);
-   }
-
-   public SimpleOrganism copulate(SimpleOrganism other,
-      CalculatorProvider provider) {
-
-      return new SimpleOrganism(_dna.copulate(other._dna), provider);
+      _provider = _parent1._provider;
+      _calculator = _provider.provide(_dna);
    }
 
    public long getFitness() {
       return _calculator.getFitness();
    }
-
 }

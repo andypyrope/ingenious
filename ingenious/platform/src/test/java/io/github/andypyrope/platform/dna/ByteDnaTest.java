@@ -62,7 +62,7 @@ class ByteDnaTest {
 
    private ByteDna tryToCopulate(final ByteDna first, final ByteDna second) {
       try {
-         return first.copulate(second);
+         return new ByteDna(first, second);
       } catch (DnaLengthMismatchException e) {
          return null;
       }

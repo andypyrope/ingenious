@@ -42,7 +42,7 @@ public class SimpleWorld implements World {
       for (int i = 0; i < organismsToReproduce; i++) {
          for (int j = i + 1; j < organismsToReproduce; j++) {
             _organisms.add(
-               _organisms.get(i).copulate(_organisms.get(j), _provider));
+               new SimpleOrganism(_organisms.get(i), _organisms.get(j)));
          }
       }
       _organisms.sort((organism1,
