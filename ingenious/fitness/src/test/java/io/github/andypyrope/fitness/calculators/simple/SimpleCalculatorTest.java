@@ -48,6 +48,11 @@ public class SimpleCalculatorTest {
       assertEquals(false, tryToCreate().canStudy());
    }
 
+   @Test
+   public void testStudy() {
+      tryToCreate().study(5);
+   }
+
    private Calculator tryToCreate() {
       return tryToCreate(EasyMock.createNiceMock(Dna.class));
    }

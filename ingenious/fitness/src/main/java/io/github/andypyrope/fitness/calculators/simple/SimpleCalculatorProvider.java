@@ -8,4 +8,8 @@ public class SimpleCalculatorProvider implements CalculatorProvider {
    public Calculator provide(Dna dna) {
       return new SimpleCalculator(dna);
    }
+
+   public int getDesiredDnaLength() {
+      return 50;
+   }
 }

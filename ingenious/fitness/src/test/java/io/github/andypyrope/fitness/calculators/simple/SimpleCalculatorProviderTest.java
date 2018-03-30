@@ -1,5 +1,6 @@
 package io.github.andypyrope.fitness.calculators.simple;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.easymock.EasyMock;
@@ -13,5 +14,10 @@ public class SimpleCalculatorProviderTest {
    public void testProvide() {
       assertNotNull(new SimpleCalculatorProvider()
                .provide(EasyMock.createNiceMock(Dna.class)));
+   }
+
+   @Test
+   public void testGetDesiredDnaLength() {
+      assertEquals(50, new SimpleCalculatorProvider().getDesiredDnaLength());
    }
 }

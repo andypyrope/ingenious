@@ -8,4 +8,9 @@ public interface CalculatorProvider {
     * @return A new instance of {@link Calculator}
     */
    Calculator provide(Dna dna);
+
+   /**
+    * @return The number of elements the calculators excpect the DNA to have
+    */
+   int getDesiredDnaLength();
 }
