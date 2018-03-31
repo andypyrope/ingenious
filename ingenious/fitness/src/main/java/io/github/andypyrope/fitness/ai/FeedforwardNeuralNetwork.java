@@ -7,6 +7,8 @@ public class FeedforwardNeuralNetwork {
    private final double _volatility;
    private final ActivationFunction _function;
    private final FeedforwardNeuron[][] _neurons;
+   private final FeedforwardNeuron[] _inputNeurons;
+   private final FeedforwardNeuron[] _outputNeurons;
 
    public FeedforwardNeuralNetwork(int inputNodeCount, int[] hidden,
       int outputNodeCount, ActivationFunction function, double volatility) {
@@ -17,6 +19,7 @@ public class FeedforwardNeuralNetwork {
 
       // Output layer
       _neurons[_neurons.length - 1] = createNeuronArray(outputNodeCount, null);
+      _outputNeurons = _neurons[_neurons.length - 1];
 
       // Hidden layer(s)
       FeedforwardNeuron[] nextLayer = _neurons[_neurons.length - 1];
@@ -27,10 +30,12 @@ public class FeedforwardNeuralNetwork {
 
       // Input layer
       _neurons[0] = createNeuronArray(inputNodeCount, nextLayer);
+      _inputNeurons = _neurons[0];
    }
 
    private FeedforwardNeuron[] createNeuronArray(int size,
       FeedforwardNeuron[] nextLayer) {
+
       final FeedforwardNeuron[] result = new FeedforwardNeuron[size];
       for (int i = 0; i < size; i++) {
          result[i] = new FeedforwardNeuron(nextLayer, _function);
@@ -46,9 +51,9 @@ public class FeedforwardNeuralNetwork {
       }
 
       // Input
-      for (int i = 0; i < _neurons[0].length; i++) {
-         _neurons[0][i].setOutput(inputValues[i]);
-         _neurons[0][i].feedIntoNextLayer();
+      for (int i = 0; i < _inputNeurons.length; i++) {
+         _inputNeurons[i].setOutput(inputValues[i]);
+         _inputNeurons[i].feedIntoNextLayer();
       }
 
       // Hidden / Output
@@ -60,13 +65,17 @@ public class FeedforwardNeuralNetwork {
       }
    }
 
-   public void backpropagate(double[] targetOutput) {
+   /**
+    * Runs the backpropagation algorithm to improve the weights/biases.
+    * 
+    * @param targetOutput The expected output
+    */
+   public void adjust(double[] targetOutput) {
       // Assuming it's already been calculated
 
       // Output
-      for (int i = 0; i < _neurons[_neurons.length - 1].length; i++) {
-         _neurons[_neurons.length - 1][i]
-                  .calculateDifferentials(targetOutput[i]);
+      for (int i = 0; i < _outputNeurons.length; i++) {
+         _outputNeurons[i].calculateDifferentials(targetOutput[i]);
       }
 
       // Hidden / Input
@@ -78,12 +87,26 @@ public class FeedforwardNeuralNetwork {
       }
    }
 
-   public double getError(double[] targetOutput) {
+   public double[] getOutput() {
+      final int outputCount = _neurons[_neurons.length - 1].length;
+      final double[] result = new double[outputCount];
+      for (int i = 0; i < outputCount; i++) {
+         result[i] = _neurons[_neurons.length - 1][i].getOutput();
+      }
+      return result;
+   }
+
+   /**
+    * @param targetOutput The expected output
+    * @return The euclidean distance between the actual output and an expected
+    *         one
+    */
+   public double getEucliedanDistance(double[] targetOutput) {
       double totalError = 0.0;
       for (int i = 0; i < _neurons[_neurons.length - 1].length; i++) {
-         totalError += _neurons[_neurons.length - 1][i]
-                  .getError(targetOutput[i]);
+         final double output = _neurons[_neurons.length - 1][i].getOutput();
+         totalError += (output - targetOutput[i]) * (output - targetOutput[i]);
       }
-      return totalError / 2.0;
+      return Math.sqrt(totalError);
    }
 }

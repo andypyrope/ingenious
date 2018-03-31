@@ -21,6 +21,7 @@ class FeedforwardNeuron {
 
    FeedforwardNeuron(FeedforwardNeuron[] nextLayer,
       ActivationFunction function) {
+
       final ThreadLocalRandom generator = ThreadLocalRandom.current();
       _bias = generator.nextDouble();
       _function = function;
@@ -40,7 +41,7 @@ class FeedforwardNeuron {
    }
 
    void resetNetInput() {
-      _netInput = _bias;
+      _netInput = 0.0;
    }
 
    void setOutput(double output) {
@@ -48,7 +49,7 @@ class FeedforwardNeuron {
    }
 
    void updateOutput() {
-      _output = _function.getOutput(_netInput);
+      _output = _function.getOutput(_netInput + _bias);
    }
 
    public void feedIntoNextLayer() {
@@ -63,12 +64,9 @@ class FeedforwardNeuron {
 
    public void calculateDifferentials() {
       _outputDifferential = 0.0;
-      for (int i = 0; i < _edgeDifferentials.length; i++) {
-         // dE/dw = dE/di * di/dw
-         _edgeDifferentials[i] = (_edges[i] * _output) *
-                  _nextLayer[i]._inputDifferential;
-
-         _outputDifferential += _edgeDifferentials[i] * _edges[i];
+      for (int i = 0; i < _edges.length; i++) {
+         _edgeDifferentials[i] = _output * _nextLayer[i]._inputDifferential;
+         _outputDifferential += _edges[i] * _nextLayer[i]._inputDifferential;
       }
       _inputDifferential = _function.getSlope(_netInput, _output) *
                _outputDifferential;
@@ -94,7 +92,7 @@ class FeedforwardNeuron {
       _bias -= biasDifferential * volatility;
    }
 
-   public double getError(double targetOutput) {
-      return (_output - targetOutput) * (_output - targetOutput);
+   public double getOutput() {
+      return _output;
    }
 }

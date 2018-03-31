@@ -1,6 +1,6 @@
 package io.github.andypyrope.fitness.ai.activation;
 
-public class SigmoidFunction implements ActivationFunction {
+public class LogisticFunction implements ActivationFunction {
 
    @Override
    public double getOutput(double input) {
