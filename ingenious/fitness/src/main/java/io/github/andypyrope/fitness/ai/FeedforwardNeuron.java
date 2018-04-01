@@ -1,10 +1,11 @@
 package io.github.andypyrope.fitness.ai;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import io.github.andypyrope.fitness.ai.activation.ActivationFunction;
 
 class FeedforwardNeuron {
+
+   private static final double DEFAULT_BIAS = 0.0;
+   private static final double DEFAULT_EDGE_WEIGHT = 1.0;
 
    private double _bias;
    private final double[] _edges;
@@ -22,8 +23,7 @@ class FeedforwardNeuron {
    FeedforwardNeuron(FeedforwardNeuron[] nextLayer,
       ActivationFunction function) {
 
-      final ThreadLocalRandom generator = ThreadLocalRandom.current();
-      _bias = generator.nextDouble();
+      _bias = DEFAULT_BIAS;
       _function = function;
 
       _nextLayer = nextLayer;
@@ -35,7 +35,7 @@ class FeedforwardNeuron {
          _edgeDifferentials = new double[nextLayer.length];
 
          for (int i = 0; i < _edges.length; i++) {
-            _edges[i] = generator.nextDouble();
+            _edges[i] = DEFAULT_EDGE_WEIGHT;
          }
       }
    }
