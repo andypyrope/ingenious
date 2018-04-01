@@ -3,17 +3,17 @@ package io.github.andypyrope.platform.dna;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * DNA with minimal precision and speed/RAM usage.
+ * DNA with reasonable precision and speed/RAM usage.
  */
-public class ByteDna implements Dna {
+public class IntDna implements Dna {
 
-   private static final int SIGNED_TO_UNSIGNED_BYTE_MASK = 0x000000FF;
+   private static final int MASK_AFTER_SHIFT = 0x7FFFFFFF;
 
    private int _currentPosition = 0;
-   private final byte[] _data;
+   private final int[] _data;
 
-   public ByteDna(int size) {
-      _data = new byte[size];
+   public IntDna(int size) {
+      _data = new int[size];
    }
 
    /**
@@ -23,18 +23,18 @@ public class ByteDna implements Dna {
     * @param parent2 The second parent
     * @throws DnaLengthMismatchException
     */
-   public ByteDna(ByteDna parent1, ByteDna parent2)
+   public IntDna(IntDna parent1, IntDna parent2)
             throws DnaLengthMismatchException {
       if (parent1._data.length != parent2._data.length) {
          throw new DnaLengthMismatchException(
             String.format(
-               "Cannot copulate byte DNA with length %d and byte DNA with length %d",
+               "Cannot copulate int DNA with length %d and int DNA with length %d",
                parent1._data.length,
                parent2._data.length));
       }
       final int length = parent1._data.length;
 
-      _data = new byte[length];
+      _data = new int[length];
       final int cutPosition = ThreadLocalRandom.current().nextInt(0, length);
 
       System.arraycopy(parent1._data, 0, _data, 0, cutPosition);
@@ -49,7 +49,7 @@ public class ByteDna implements Dna {
    public void mutate(double mutationProbability) {
       ThreadLocalRandom generator = ThreadLocalRandom.current();
       for (int i = 0; i < _data.length; i++) {
-         for (int j = 0; j < Byte.SIZE; j++) {
+         for (int j = 0; j < Integer.SIZE; j++) {
             if (generator.nextDouble() < mutationProbability) {
                // Flip the j-th bit of the i-th element
                _data[i] ^= 1 << j;
@@ -60,7 +60,10 @@ public class ByteDna implements Dna {
 
    @Override
    public void randomize() {
-      ThreadLocalRandom.current().nextBytes(_data);
+      ThreadLocalRandom generator = ThreadLocalRandom.current();
+      for (int i = 0; i < _data.length; i++) {
+         _data[i] = generator.nextInt();
+      }
    }
 
    @Override
@@ -68,9 +71,13 @@ public class ByteDna implements Dna {
       _currentPosition = 0;
    }
 
+   /**
+    * Reads the next element as it would an unsigned int, but made 2 times
+    * smaller.
+    */
    @Override
    public int read() {
-      return readSigned() & SIGNED_TO_UNSIGNED_BYTE_MASK;
+      return (readSigned() >> 1) & MASK_AFTER_SHIFT;
    }
 
    @Override
@@ -83,12 +90,12 @@ public class ByteDna implements Dna {
       if (_currentPosition == _data.length) {
          resetReader();
       }
-      return ((int) _data[_currentPosition++]);
+      return _data[_currentPosition++];
    }
 
    @Override
    public double readDouble() {
-      return ((double) read()) / (1 << Byte.SIZE);
+      return (((double) read()) / (1L << 31));
    }
 
    @Override

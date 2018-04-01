@@ -13,6 +13,11 @@ public interface Dna {
    void mutate(double mutationProbability);
 
    /**
+    * Makes the DNA completely (pseudo-)random
+    */
+   void randomize();
+
+   /**
     * Returns the reading pointer to the first position
     */
    void resetReader();
@@ -25,6 +30,11 @@ public interface Dna {
     * @return An unsigned integer value
     */
    int read();
+
+   /**
+    * @return An integer in the [from, to) range.
+    */
+   int read(int from, int to);
 
    /**
     * Reads a single integer. Its minimum and maximum values aren't necessarily
