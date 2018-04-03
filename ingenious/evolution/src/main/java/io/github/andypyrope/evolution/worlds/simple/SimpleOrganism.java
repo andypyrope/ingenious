@@ -6,7 +6,7 @@ import io.github.andypyrope.platform.dna.IntDna;
 
 class SimpleOrganism {
 
-   private static final double DEFAULT_DNA_MUTATION = 0.1;
+   private static final double DEFAULT_DNA_MUTATION = 0.05;
 
    private final IntDna _dna;
    private final Calculator _calculator;
@@ -22,8 +22,7 @@ class SimpleOrganism {
    SimpleOrganism(SimpleOrganism _parent1, SimpleOrganism _parent2) {
       _provider = _parent1._provider;
       _dna = new IntDna(_parent1._dna, _parent2._dna);
-      _dna.mutate(Math.min(1.0,
-         -1 * _parent1.getFitness() + -1 * _parent2.getFitness()));
+      _dna.mutate(DEFAULT_DNA_MUTATION);
       _calculator = _provider.provide(_dna);
    }
 
