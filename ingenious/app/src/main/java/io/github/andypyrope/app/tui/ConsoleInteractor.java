@@ -9,15 +9,16 @@ import io.github.andypyrope.evolution.worlds.World;
 public class ConsoleInteractor {
 
    private final World _world;
-   private final Scanner _scanner = new Scanner(System.in);
+   private final Scanner _scanner;
 
    private static final Pattern COMMAND_HELP = Pattern.compile("help");
    private static final Pattern COMMAND_ITERATE = Pattern
             .compile("iterate ?(\\d+)?");
    private static final Pattern COMMAND_EXIT = Pattern.compile("exit");
 
-   public ConsoleInteractor(World world) {
+   public ConsoleInteractor(World world, Scanner scanner) {
       _world = world;
+      _scanner = scanner;
    }
 
    public void launch() {
@@ -58,7 +59,7 @@ public class ConsoleInteractor {
 
    private void printWorldInfo() {
       System.out.println(
-         String.format("Gen %02d. Fitness: %3.1f %3.1f %3.1f %3.1f. Population: %d",
+         String.format("Gen %02d. Fitness: %3.3f %3.3f %3.3f %3.3f. Population: %d",
             _world.getGeneration(),
             _world.getMinFitness(),
             _world.getMeanFitness(),

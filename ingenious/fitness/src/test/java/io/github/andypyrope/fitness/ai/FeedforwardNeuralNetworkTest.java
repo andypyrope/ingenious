@@ -19,6 +19,8 @@ class FeedforwardNeuralNetworkTest {
          new LogisticFunction(),
          10.0);
 
+      assertEquals(25 + 5 + 2, network.getEdgeCount());
+
       final double[] input = new double[] { 0.12, 0.23, 0.64, 0.23, 0.1 };
       final double[] output = new double[] { 0.96, 0.11 };
 
@@ -50,6 +52,8 @@ class FeedforwardNeuralNetworkTest {
          1,
          new LogisticFunction(),
          1.8);
+
+      assertEquals(1 + 1, network.getEdgeCount());
 
       final double[] input = new double[] { 1.0 };
       final double[] output = new double[] { 0.0 };

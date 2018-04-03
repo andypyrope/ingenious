@@ -18,7 +18,7 @@ class SimpleCalculator implements Calculator {
    }
 
    @Override
-   public long getFitness() {
+   public double getFitness() {
       if (_persistedFitness != null) {
          return _persistedFitness;
       }
@@ -48,7 +48,7 @@ class SimpleCalculator implements Calculator {
    }
 
    @Override
-   public void study(int iterationCount) {
+   public void study() {
       // No implementation
    }
 
@@ -56,5 +56,4 @@ class SimpleCalculator implements Calculator {
    public boolean canStudy() {
       return false;
    }
-
 }

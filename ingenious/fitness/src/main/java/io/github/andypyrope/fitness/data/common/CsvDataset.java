@@ -54,7 +54,7 @@ public abstract class CsvDataset {
 
       _columns = new ArrayList<>();
       _columnIndices = new HashMap<>();
-      for (String columnName : lines.get(1).split(separator)) {
+      for (String columnName : lines.get(0).split(separator)) {
          final String lowercaseColumn = columnName.toLowerCase();
          if (_columnIndices.containsKey(lowercaseColumn)) {
             throw new DatasetCreationException(
@@ -68,7 +68,7 @@ public abstract class CsvDataset {
       }
 
       _rawRows = new ArrayList<>();
-      for (int i = 2; i < lines.size(); i++) {
+      for (int i = 1; i < lines.size(); i++) {
          final String[] currentRow = lines.get(i).split(separator, -1);
          if (currentRow.length != _columns.size()) {
             throw new DatasetCreationException(
@@ -85,7 +85,14 @@ public abstract class CsvDataset {
    }
 
    protected String getCell(int row, String column) {
+      return getCell(row, column, false);
+   }
+
+   protected String getCell(int row, String column, boolean safe) {
       if (!hasColumns(new String[] { column })) {
+         if (safe) {
+            return null;
+         }
          throw new DatasetCreationException(
             String.format("Column '%s' does not exist", column));
       }
@@ -99,6 +106,6 @@ public abstract class CsvDataset {
 
    protected boolean hasColumns(final String[] columns) {
       return Arrays.stream(columns)
-               .allMatch(column -> _columns.contains(column));
+            .allMatch(column -> _columns.contains(column));
    }
 }

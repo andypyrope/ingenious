@@ -37,8 +37,12 @@ public class ByteDna implements Dna {
       _data = new byte[length];
       final int cutPosition = ThreadLocalRandom.current().nextInt(0, length);
 
-      System.arraycopy(parent1._data, 0, _data, 0, cutPosition);
-      System.arraycopy(parent2._data,
+      final boolean dataShouldBeSwapped = ThreadLocalRandom.current()
+            .nextBoolean();
+      final ByteDna leftParent = dataShouldBeSwapped ? parent2 : parent1;
+      final ByteDna rightParent = dataShouldBeSwapped ? parent1 : parent2;
+      System.arraycopy(leftParent._data, 0, _data, 0, cutPosition);
+      System.arraycopy(rightParent._data,
          cutPosition,
          _data,
          cutPosition,

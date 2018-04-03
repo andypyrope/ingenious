@@ -24,7 +24,7 @@ public class IntDna implements Dna {
     * @throws DnaLengthMismatchException
     */
    public IntDna(IntDna parent1, IntDna parent2)
-            throws DnaLengthMismatchException {
+      throws DnaLengthMismatchException {
       if (parent1._data.length != parent2._data.length) {
          throw new DnaLengthMismatchException(
             String.format(
@@ -37,8 +37,12 @@ public class IntDna implements Dna {
       _data = new int[length];
       final int cutPosition = ThreadLocalRandom.current().nextInt(0, length);
 
-      System.arraycopy(parent1._data, 0, _data, 0, cutPosition);
-      System.arraycopy(parent2._data,
+      final boolean dataShouldBeSwapped = ThreadLocalRandom.current()
+            .nextBoolean();
+      final IntDna leftParent = dataShouldBeSwapped ? parent2 : parent1;
+      final IntDna rightParent = dataShouldBeSwapped ? parent1 : parent2;
+      System.arraycopy(leftParent._data, 0, _data, 0, cutPosition);
+      System.arraycopy(rightParent._data,
          cutPosition,
          _data,
          cutPosition,

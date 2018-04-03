@@ -7,7 +7,7 @@ public interface Calculator {
     * 
     * @return The calculated fitness
     */
-   long getFitness();
+   double getFitness();
 
    /**
     * @return The worst-case complexity of the algorithm that improves the
@@ -19,7 +19,7 @@ public interface Calculator {
     * Attempt to improve the fitness returned by this calculator. If there is no
     * implementation of this, it does nothing.
     */
-   void study(int iterationCount);
+   void study();
 
    /**
     * @return Whether there is an implementation of the {@link #study(int)}

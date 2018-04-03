@@ -2,6 +2,7 @@ package io.github.andypyrope.fitness.calculators.simple;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ public class SimpleCalculatorTest {
    public void testGetFitness() {
       final Dna dnaMock = EasyMock.createNiceMock(Dna.class);
       final int dnaSize = 8;
-      final long fitness = dnaSize * 2;
+      final double fitness = dnaSize * 2;
 
       EasyMock.expect(dnaMock.size()).andReturn(dnaSize).times(1);
       EasyMock.expect(dnaMock.read()).andReturn(5).times(dnaSize); // 2 ones
@@ -32,8 +33,8 @@ public class SimpleCalculatorTest {
       EasyMock.replay(dnaMock);
 
       final Calculator calculator = tryToCreate(dnaMock);
-      assertEquals(fitness, calculator.getFitness());
-      assertEquals(fitness, calculator.getFitness());
+      compareDoubles(fitness, calculator.getFitness());
+      compareDoubles(fitness, calculator.getFitness());
 
       EasyMock.verify(dnaMock);
    }
@@ -50,11 +51,15 @@ public class SimpleCalculatorTest {
 
    @Test
    public void testStudy() {
-      tryToCreate().study(5);
+      tryToCreate().study();
    }
 
    private Calculator tryToCreate() {
       return tryToCreate(EasyMock.createNiceMock(Dna.class));
+   }
+
+   private void compareDoubles(double a, double b) {
+      assertTrue(Math.abs(a - b) < 0.0000001);
    }
 
    private Calculator tryToCreate(Dna dna) {

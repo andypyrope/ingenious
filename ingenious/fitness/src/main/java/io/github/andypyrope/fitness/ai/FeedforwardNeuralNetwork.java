@@ -8,6 +8,7 @@ public class FeedforwardNeuralNetwork {
    private final FeedforwardNeuron[][] _neurons;
    private final FeedforwardNeuron[] _inputNeurons;
    private final FeedforwardNeuron[] _outputNeurons;
+   private final int _edgeCount;
 
    public FeedforwardNeuralNetwork(int inputNodeCount, int[] hidden,
       int outputNodeCount, ActivationFunction activationFunction,
@@ -34,6 +35,8 @@ public class FeedforwardNeuralNetwork {
          null,
          outputLayerFunction);
       _outputNeurons = _neurons[_neurons.length - 1];
+      
+      int edgeCount = 0;
 
       // Hidden layer(s)
       FeedforwardNeuron[] nextLayer = _neurons[_neurons.length - 1];
@@ -41,12 +44,19 @@ public class FeedforwardNeuralNetwork {
          _neurons[i + 1] = createNeuronArray(hidden[i],
             nextLayer,
             hiddenLayerFunction);
+         edgeCount += hidden[i] * nextLayer.length;
          nextLayer = _neurons[i + 1];
       }
 
       // Input layer
       _neurons[0] = createNeuronArray(inputNodeCount, nextLayer, null);
       _inputNeurons = _neurons[0];
+      edgeCount += inputNodeCount * nextLayer.length;
+      _edgeCount = edgeCount;
+   }
+   
+   public int getEdgeCount() {
+      return _edgeCount;
    }
 
    private FeedforwardNeuron[] createNeuronArray(int size,

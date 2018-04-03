@@ -21,8 +21,11 @@ public class SimpleWorld implements World {
       _provider = provider;
 
       for (int i = 0; i < _settings.getSize(); i++) {
-         _organisms.add(new SimpleOrganism(_provider));
+         final SimpleOrganism organism = new SimpleOrganism(_provider);
+         organism.studyIfPossible(_settings.getAllowedComplexityPerOrganism());
+         _organisms.add(organism);
       }
+      sortOrganisms();
    }
 
    public int size() {
@@ -35,23 +38,39 @@ public class SimpleWorld implements World {
 
    public void iterate() {
       final int organismsToReproduce = (int) (_organisms.size() *
-               _settings.getCopulationRatio());
-      _organisms.sort((organism1,
-         organism2) -> (int) (organism2.getFitness() - organism1.getFitness()));
+            _settings.getCopulationRatio());
 
       for (int i = 0; i < organismsToReproduce; i++) {
          for (int j = i + 1; j < organismsToReproduce; j++) {
-            _organisms.add(
-               new SimpleOrganism(_organisms.get(i), _organisms.get(j)));
+            final SimpleOrganism organism = new SimpleOrganism(
+               _organisms.get(i),
+               _organisms.get(j));
+            organism
+                  .studyIfPossible(_settings.getAllowedComplexityPerOrganism());
+            _organisms.add(organism);
          }
       }
-      _organisms.sort((organism1,
-         organism2) -> (int) (organism2.getFitness() - organism1.getFitness()));
+      sortOrganisms();
       while (_organisms.size() > _settings.getSize()) {
          _organisms.remove(_organisms.size() - 1);
       }
 
       _currentGeneration++;
+   }
+
+   /**
+    * Sort them in reverse order (the ones with the highest fitness first)
+    */
+   private void sortOrganisms() {
+      _organisms.sort((organism1, organism2) -> {
+         if (organism1.getFitness() > organism2.getFitness()) {
+            return -1;
+         }
+         if (organism1.getFitness() < organism2.getFitness()) {
+            return 1;
+         }
+         return 0;
+      });
    }
 
    @Override
@@ -63,32 +82,39 @@ public class SimpleWorld implements World {
 
    @Override
    public double getMeanFitness() {
-      long totalFitness = 0;
+      double totalFitness = 0;
       for (SimpleOrganism organism : _organisms) {
          totalFitness += organism.getFitness();
       }
-      return (double) (totalFitness) / _organisms.size();
+      return totalFitness / _organisms.size();
    }
 
    @Override
    public double getMedianFitness() {
       List<SimpleOrganism> organisms = new ArrayList<>(_organisms.size());
       organisms.addAll(_organisms);
-      organisms.sort((organism1,
-         organism2) -> (int) (organism1.getFitness() - organism2.getFitness()));
+      organisms.sort((organism1, organism2) -> {
+         if (organism1.getFitness() > organism2.getFitness()) {
+            return 1;
+         }
+         if (organism1.getFitness() < organism2.getFitness()) {
+            return -1;
+         }
+         return 0;
+      });
       final int middleIndex = organisms.size() / 2;
-      final long medianFitness = organisms.get(middleIndex).getFitness();
+      final double medianFitness = organisms.get(middleIndex).getFitness();
 
       if (organisms.size() % 2 == 0) {
-         return (double) (medianFitness +
-                  organisms.get(middleIndex + 1).getFitness()) / 2.0;
+         return (medianFitness + organisms.get(middleIndex + 1).getFitness()) /
+               2.0;
       }
       return medianFitness;
    }
 
    @Override
    public double getMinFitness() {
-      long minFitness = _organisms.get(0).getFitness();
+      double minFitness = _organisms.get(0).getFitness();
       for (SimpleOrganism organism : _organisms) {
          minFitness = Math.min(minFitness, organism.getFitness());
       }
@@ -97,7 +123,7 @@ public class SimpleWorld implements World {
 
    @Override
    public double getMaxFitness() {
-      long maxFitness = 0;
+      double maxFitness = _organisms.get(0).getFitness();
       for (SimpleOrganism organism : _organisms) {
          maxFitness = Math.max(maxFitness, organism.getFitness());
       }

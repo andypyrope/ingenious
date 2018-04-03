@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import org.easymock.EasyMock;
@@ -23,7 +24,7 @@ class ConsoleInteractorTest {
    private static final double DEFAULT_MEDIAN_FITNESS = 12.5688888;
    private static final double DEFAULT_MAX_FITNESS = 91;
    private static final int DEFAULT_GENERATION = 1325;
-   private static final String DEFAULT_LINE = "Gen 1325. Fitness: 10.0 12.4 12.6 91.0. Population: 50";
+   private static final String DEFAULT_LINE = "Gen 1325. Fitness: 10.000 12.400 12.569 91.000. Population: 50";
    private static final String INPUT_LINE = " >> ";
    private static final String EXIT_LINE = "Bye!";
 
@@ -90,7 +91,7 @@ class ConsoleInteractorTest {
    private void mockInput(String... lines) {
       System.setIn(new ByteArrayInputStream(
          Arrays.stream(lines).collect(Collectors.joining(String.format("%n")))
-                  .getBytes()));
+               .getBytes()));
    }
 
    private void verifyOutput(String... lines) {
@@ -103,22 +104,22 @@ class ConsoleInteractorTest {
       final World world = EasyMock.createNiceMock(World.class);
       EasyMock.expect(world.size()).andReturn(DEFAULT_SIZE).anyTimes();
       EasyMock.expect(world.getMinFitness()).andReturn(DEFAULT_MIN_FITNESS)
-               .anyTimes();
+            .anyTimes();
       EasyMock.expect(world.getMeanFitness()).andReturn(DEFAULT_MEAN_FITNESS)
-               .anyTimes();
+            .anyTimes();
       EasyMock.expect(world.getMedianFitness())
-               .andReturn(DEFAULT_MEDIAN_FITNESS).anyTimes();
+            .andReturn(DEFAULT_MEDIAN_FITNESS).anyTimes();
       EasyMock.expect(world.getMaxFitness()).andReturn(DEFAULT_MAX_FITNESS)
-               .anyTimes();
+            .anyTimes();
       EasyMock.expect(world.getGeneration()).andReturn(DEFAULT_GENERATION)
-               .anyTimes();
+            .anyTimes();
 
       world.iterate(_iterateArgument);
       EasyMock.expectLastCall();
 
       EasyMock.replay(world);
 
-      return new ConsoleInteractor(world);
+      return new ConsoleInteractor(world, new Scanner(System.in));
    }
 
 }

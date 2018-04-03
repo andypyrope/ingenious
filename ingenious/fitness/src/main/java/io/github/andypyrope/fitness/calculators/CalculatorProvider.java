@@ -13,4 +13,9 @@ public interface CalculatorProvider {
     * @return The number of elements the calculators excpect the DNA to have
     */
    int getDesiredDnaLength();
+
+   /**
+    * @return The worst possible worst-case complexity of the algorithm
+    */
+   long getMaxStudyingComplexity();
 }

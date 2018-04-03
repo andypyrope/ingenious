@@ -13,9 +13,12 @@
    <description>Classes which determine the fitness of organisms based on their DNA</description>
 
    <properties>
+      <java.version>9</java.version>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <maven.compiler.source>9</maven.compiler.source>
-      <maven.compiler.target>9</maven.compiler.target>
+      <maven.compiler.source>${java.version}</maven.compiler.source>
+      <maven.compiler.target>${java.version}</maven.compiler.target>
+      <junit.jupiter.version>5.0.0</junit.jupiter.version>
+      <junit.platform.version>1.1.0</junit.platform.version>
    </properties>
 
    <dependencies>
@@ -32,7 +35,13 @@
       <dependency>
          <groupId>org.junit.jupiter</groupId>
          <artifactId>junit-jupiter-api</artifactId>
-         <version>5.0.1</version>
+         <version>${junit.jupiter.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.junit.jupiter</groupId>
+         <artifactId>junit-jupiter-engine</artifactId>
+         <version>${junit.jupiter.version}</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
@@ -52,6 +61,17 @@
                   </goals>
                </execution>
             </executions>
+         </plugin>
+         <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.19.1</version>
+            <dependencies>
+               <dependency>
+                  <groupId>org.junit.platform</groupId>
+                  <artifactId>junit-platform-surefire-provider</artifactId>
+                  <version>${junit.platform.version}</version>
+               </dependency>
+            </dependencies>
          </plugin>
       </plugins>
    </build>
