@@ -16,7 +16,9 @@ class ByteDnaTest {
 
    @Test
    public void testCopulation() {
-      assertNotNull(tryToCopulate(new ByteDna(LENGTH), new ByteDna(LENGTH)));
+      for (int i = 0; i < 10; i++) {
+         assertNotNull(tryToCopulate(new ByteDna(LENGTH), new ByteDna(LENGTH)));
+      }
    }
 
    @Test

@@ -16,7 +16,9 @@ class IntDnaTest {
 
    @Test
    public void testCopulation() {
-      assertNotNull(tryToCopulate(new IntDna(LENGTH), new IntDna(LENGTH)));
+      for (int i = 0; i < 10; i++) {
+         assertNotNull(tryToCopulate(new IntDna(LENGTH), new IntDna(LENGTH)));
+      }
    }
 
    @Test
