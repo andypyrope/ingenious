@@ -1,98 +1,53 @@
 package io.github.andypyrope.fitness.ai;
 
-import io.github.andypyrope.fitness.ai.activation.ActivationFunction;
-
-class FeedforwardNeuron {
-
-   private static final double DEFAULT_BIAS = 0.0;
-   private static final double DEFAULT_EDGE_WEIGHT = 1.0;
-
-   private double _bias;
-   private final double[] _edges;
-   private final FeedforwardNeuron[] _nextLayer;
-
-   private double _netInput;
-   private double _output;
-
-   private double _outputDifferential;
-   private double _inputDifferential;
-   private final double[] _edgeDifferentials;
-
-   private final ActivationFunction _function;
-
-   FeedforwardNeuron(FeedforwardNeuron[] nextLayer,
-      ActivationFunction function) {
-
-      _bias = DEFAULT_BIAS;
-      _function = function;
-
-      _nextLayer = nextLayer;
-      if (nextLayer == null) {
-         _edges = null;
-         _edgeDifferentials = null;
-      } else {
-         _edges = new double[nextLayer.length];
-         _edgeDifferentials = new double[nextLayer.length];
-
-         for (int i = 0; i < _edges.length; i++) {
-            _edges[i] = DEFAULT_EDGE_WEIGHT;
-         }
-      }
-   }
-
-   void resetNetInput() {
-      _netInput = 0.0;
-   }
-
-   void setOutput(double output) {
-      _output = output;
-   }
-
-   void updateOutput() {
-      _output = _function.getOutput(_netInput + _bias);
-   }
-
-   public void feedIntoNextLayer() {
-      if (_nextLayer == null) {
-         return;
-      }
-
-      for (int i = 0; i < _nextLayer.length; i++) {
-         _nextLayer[i]._netInput += _output * _edges[i];
-      }
-   }
-
-   public void calculateDifferentials() {
-      _outputDifferential = 0.0;
-      for (int i = 0; i < _edges.length; i++) {
-         _edgeDifferentials[i] = _output * _nextLayer[i]._inputDifferential;
-         _outputDifferential += _edges[i] * _nextLayer[i]._inputDifferential;
-      }
-      _inputDifferential = _function.getSlope(_netInput, _output) *
-               _outputDifferential;
-   }
+public interface FeedforwardNeuron {
 
    /**
-    * This should be called only for output nodes
-    * 
-    * @param targetOutput
+    * Reset the net input of this node back to 0.
     */
-   public void calculateDifferentials(double targetOutput) {
-      _outputDifferential = _output - targetOutput;
-      _inputDifferential = _function.getSlope(_netInput, _output) *
-               _outputDifferential;
-   }
+   void resetNetInput();
 
-   public void adjustWeights(double volatility) {
-      for (int i = 0; i < _edges.length; i++) {
-         _edges[i] -= _edgeDifferentials[i] * volatility;
-      }
+   /**
+    * Manually change the output of the neuron. Useful for input nodes in
+    * general.
+    * 
+    * @param output The new output of this neuron
+    */
+   void setOutput(double output);
 
-      final double biasDifferential = _inputDifferential * _bias;
-      _bias -= biasDifferential * volatility;
-   }
+   /**
+    * @return The output of this neuron
+    */
+   double getOutput();
 
-   public double getOutput() {
-      return _output;
-   }
+   /**
+    * Set the output to a value based on the input, activation function, and
+    * bias.
+    */
+   void updateOutput();
+
+   /**
+    * Feed the output of this neuron into the inputs of the next neurons, based
+    * on the edge weights between it and them.
+    */
+   void propagate();
+
+   /**
+    * (Re-)calculate the gradient-related fields of this neuron.
+    */
+   void calculateGradient();
+
+   /**
+    * Determine the gradient of this neuron based on its desired output.
+    * 
+    * @param targetOutput The target output of this neuron
+    */
+   void calculateGradient(double targetOutput);
+
+   /**
+    * Change the weights/bias/etc. of the neuron in order for the neural network
+    * it's a part of to show better results.
+    */
+   void adjust();
+
 }
