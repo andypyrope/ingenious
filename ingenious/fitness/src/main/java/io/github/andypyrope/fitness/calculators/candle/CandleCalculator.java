@@ -20,6 +20,7 @@ class CandleCalculator implements Calculator {
    private final Candle[][] _candles;
    private final int[] _samplesPerDataset;
    private final int _outputCandleCount;
+   private final int _outputCandleOffset;
 
    // Settings from DNA
    private final int _inputCandleCount;
@@ -50,6 +51,7 @@ class CandleCalculator implements Calculator {
       _dna = dna;
       _candles = normalizedCandles;
       _outputCandleCount = settings.getOutputCandleCount();
+      _outputCandleOffset = settings.getOutputCandleOffset();
 
       _passesWhenGettingFitness = settings.getPassesWhenGettingFitness();
 
@@ -104,7 +106,8 @@ class CandleCalculator implements Calculator {
       double result = 0.0;
       for (int i = 0; i < _candles.length; i++) {
          final int from = _inputCandleCount - 1;
-         final int to = _candles[i].length - _outputCandleCount - 1;
+         final int to = _candles[i].length - _outputCandleCount -
+               _outputCandleOffset - 1;
          for (int j = 0; j < _samplesPerDataset[i]; j++) {
             final int index = ThreadLocalRandom.current().nextInt(from, to);
             _network.calculate(getInputArrayAtIndex(i, index));
@@ -138,8 +141,9 @@ class CandleCalculator implements Calculator {
 
    private void updatePositionInDataset() {
       _position++;
-      if (_dataset == null ||
-            _position + _outputCandleCount >= _dataset.length) {
+      if (_dataset == null || _position + _outputCandleOffset +
+            _outputCandleCount >= _dataset.length) {
+
          getNextDataset();
          _position = _inputCandleCount - 1;
       }
@@ -162,7 +166,8 @@ class CandleCalculator implements Calculator {
    private double[] getOutputArrayAtIndex(int datasetIndex, int index) {
       final double[] result = new double[_outputCandleCount];
       for (int i = 0; i < _outputCandleCount; i++) {
-         result[i] = _candles[datasetIndex][index + i + 1].getClosingPrice();
+         result[i] = _candles[datasetIndex][index + _outputCandleOffset + i + 1]
+               .getClosingPrice();
          result[i] /= _datasetMaximums[datasetIndex];
       }
       return result;

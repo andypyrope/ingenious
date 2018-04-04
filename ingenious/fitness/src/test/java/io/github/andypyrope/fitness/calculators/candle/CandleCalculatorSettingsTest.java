@@ -19,6 +19,9 @@ class CandleCalculatorSettingsTest {
          settings.getMinPassesPerInput() < settings.getMaxPassesPerInput());
       assertTrue(settings.getPassesWhenGettingFitness() > 0);
       assertTrue(settings.getOutputCandleCount() > 0);
+      assertEquals(0, settings.getOutputCandleOffset());
+      settings.setOutputCandleOffset(8);
+      assertEquals(8, settings.getOutputCandleOffset());
       assertEquals(1, settings.getCandleDistance());
       assertEquals(ChronoUnit.DAYS, settings.getCandleDistanceUnit());
 

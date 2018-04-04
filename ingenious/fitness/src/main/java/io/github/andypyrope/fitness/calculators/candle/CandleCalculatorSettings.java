@@ -27,6 +27,7 @@ public class CandleCalculatorSettings {
    private int _passesWhenGettingFitness = 1000;
 
    private int _outputCandleCount = 7;
+   private int _outputCandleOffset = 0;
    private long _candleDistance = 1;
    private TemporalUnit _candleDistanceUnit = ChronoUnit.DAYS;
 
@@ -194,6 +195,22 @@ public class CandleCalculatorSettings {
     */
    public void setOutputCandleCount(int outputCandleCount) {
       _outputCandleCount = outputCandleCount;
+   }
+
+   /**
+    * @return The number of indices after which the output candles should start
+    */
+   public int getOutputCandleOffset() {
+      return _outputCandleOffset;
+   }
+
+   /**
+    * @param outputCandleOffset The number of indices after which the output
+    *           candles should start (0 by default - directly after the last
+    *           input candle)
+    */
+   public void setOutputCandleOffset(int outputCandleOffset) {
+      _outputCandleOffset = outputCandleOffset;
    }
 
    /**

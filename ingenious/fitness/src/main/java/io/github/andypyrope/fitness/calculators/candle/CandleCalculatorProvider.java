@@ -24,17 +24,18 @@ public class CandleCalculatorProvider implements CalculatorProvider {
       for (int i = 0; i < datasets.length; i++) {
          final CandleDataset current = new CandleDataset(datasets[i]);
 
-         if (current.getData().length < settings.getOutputCandleCount() +
-               settings.getMaxInputSize()) {
+         if (current.getData().length < settings.getOutputCandleOffset() +
+               settings.getOutputCandleCount() + settings.getMaxInputSize()) {
             throw new InvalidCalculatorSettingsException(
                String.format(
                   "The size of dataset '%s', %d, is smaller than the sum " +
                         "of the maximum input nodes, %d, and " +
-                        "the number of output nodes, %d",
+                        "the number of output nodes, %d, plus their offset, %d",
                   datasets[i],
                   current.getData().length,
                   settings.getMaxInputSize(),
-                  settings.getOutputCandleCount()));
+                  settings.getOutputCandleCount(),
+                  settings.getOutputCandleOffset()));
          }
          _normalizedCandles[i] = current.getSmoothData(
             settings.getCandleDistance(),

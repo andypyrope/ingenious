@@ -20,12 +20,13 @@ public class ConsoleApp {
 
       final String[] datasets = new String[] { "datasets/" + datasetPath };
       final CandleCalculatorSettings settings = new CandleCalculatorSettings();
-      settings.setMaxHiddenLayers(5);
-      settings.setMaxHiddenSize(20);
-      settings.setMaxVolatility(1000);
+      settings.setMaxHiddenLayers(10);
+      settings.setMaxHiddenSize(40);
+      settings.setOutputCandleCount(1);
+      settings.setOutputCandleOffset(6);
 
       final World world = new SimpleWorld(
-         new SimpleWorldSettings(20, 0.50, 1000000L),
+         new SimpleWorldSettings(20, 0.50, 100000L),
          new CandleCalculatorProvider(datasets, settings));
 
       new ConsoleInteractor(world, scanner).launch();

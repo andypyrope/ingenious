@@ -48,7 +48,7 @@ public class CandleCalculatorProviderTest {
       assertEquals(
          "The size of dataset 'datasets/candle/two-candles.csv', 2, is " +
                "smaller than the sum of the maximum input nodes, 1, " +
-               "and the number of output nodes, 20",
+               "and the number of output nodes, 20, plus their offset, 0",
          _exception.getMessage());
       assertEquals(InvalidCalculatorSettingsException.class,
          _exception.getClass());
