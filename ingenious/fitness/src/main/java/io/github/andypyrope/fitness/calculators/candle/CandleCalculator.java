@@ -117,7 +117,8 @@ class CandleCalculator implements Calculator {
       }
 
       _hasCachedFitness = true;
-      _cachedFitness = -1.0 * result / _passesWhenGettingFitness;
+      final double average = result / _passesWhenGettingFitness;
+      _cachedFitness = 1.0 / average;
       return _cachedFitness;
    }
 
@@ -156,8 +157,8 @@ class CandleCalculator implements Calculator {
    private double[] getInputArrayAtIndex(int datasetIndex, int index) {
       final double[] result = new double[_inputCandleCount];
       for (int i = 0; i < _inputCandleCount; i++) {
-         result[i] = _candles[datasetIndex][index - _inputCandleCount + i + 1]
-               .getClosingPrice();
+         result[i] = getNormalizedPrice(datasetIndex,
+            index - _inputCandleCount + i + 1);
          result[i] /= _datasetMaximums[datasetIndex];
       }
       return result;
@@ -166,11 +167,17 @@ class CandleCalculator implements Calculator {
    private double[] getOutputArrayAtIndex(int datasetIndex, int index) {
       final double[] result = new double[_outputCandleCount];
       for (int i = 0; i < _outputCandleCount; i++) {
-         result[i] = _candles[datasetIndex][index + _outputCandleOffset + i + 1]
-               .getClosingPrice();
-         result[i] /= _datasetMaximums[datasetIndex];
+         result[i] = getNormalizedPrice(datasetIndex,
+            index + _outputCandleOffset + i + 1);
+         result[i] -= getNormalizedPrice(datasetIndex, index);
+         result[i] = (result[i] / 2.0) + 0.5;
       }
       return result;
+   }
+
+   private double getNormalizedPrice(int datasetIndex, int index) {
+      return _candles[datasetIndex][index].getClosingPrice() /
+            _datasetMaximums[datasetIndex];
    }
 
    private void getNextDataset() {

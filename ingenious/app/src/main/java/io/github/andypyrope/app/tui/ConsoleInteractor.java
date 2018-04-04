@@ -59,7 +59,7 @@ public class ConsoleInteractor {
 
    private void printWorldInfo() {
       System.out.println(
-         String.format("Gen %02d. Fitness: %3.3f %3.3f %3.3f %3.3f. Population: %d",
+         String.format("Gen %02d. Fitness: %3.1f %3.1f %3.1f %3.1f. Population: %d",
             _world.getGeneration(),
             _world.getMinFitness(),
             _world.getMeanFitness(),
