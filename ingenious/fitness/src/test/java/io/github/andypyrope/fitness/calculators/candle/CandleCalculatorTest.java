@@ -15,8 +15,7 @@ import io.github.andypyrope.platform.dna.Dna;
 public class CandleCalculatorTest {
 
    private static final int[] DEFAULT_READ_RESULTS = new int[] {};
-   private static final double[] DEFAULT_READ_DOUBLE_RESUTLS = new double[] {
-      0.53 };
+   private static final double[] DEFAULT_READ_DOUBLE_RESUTLS = new double[] {};
    private static final int[] DEFAULT_READ_BOUND_INT_RESUTLS = new int[] { 5, 2,
       1, 4 };
 

@@ -51,7 +51,6 @@ public class CandleCalculatorProvider implements CalculatorProvider {
    public int getDesiredDnaLength() {
       int desiredDnaLength = 0;
       desiredDnaLength++; // _inputCandleCount
-      desiredDnaLength++; // _volatility
       desiredDnaLength++; // _passesPerInput
       desiredDnaLength++; // _hiddenLayerCount
       desiredDnaLength += _settings.getMaxHiddenLayers(); // hiddenLayers

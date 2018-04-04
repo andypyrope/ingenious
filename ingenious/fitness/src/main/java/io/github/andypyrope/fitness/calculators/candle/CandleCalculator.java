@@ -23,7 +23,6 @@ class CandleCalculator implements Calculator {
 
    // Settings from DNA
    private final int _inputCandleCount;
-   private final double _volatility;
    private final int _passesPerInput;
    private final int _hiddenLayerCount;
 
@@ -56,7 +55,6 @@ class CandleCalculator implements Calculator {
 
       _inputCandleCount = _dna.read(settings.getMinInputSize(),
          settings.getMaxInputSize() + 1);
-      _volatility = _dna.readDouble() * settings.getMaxVolatility();
       _passesPerInput = _dna.read(settings.getMinPassesPerInput(),
          settings.getMaxPassesPerInput() + 1);
       _hiddenLayerCount = _dna.read(settings.getMinHiddenLayers(),
@@ -72,8 +70,7 @@ class CandleCalculator implements Calculator {
          _inputCandleCount,
          hiddenLayers,
          _outputCandleCount,
-         new LogisticFunction(),
-         _volatility);
+         new LogisticFunction());
 
       _studyingComplexity = _network.getEdgeCount();
 

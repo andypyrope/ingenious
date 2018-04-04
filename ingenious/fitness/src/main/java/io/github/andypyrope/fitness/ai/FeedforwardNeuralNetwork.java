@@ -4,32 +4,28 @@ import io.github.andypyrope.fitness.ai.activation.ActivationFunction;
 
 public class FeedforwardNeuralNetwork {
 
-   private final double _volatility;
    private final FeedforwardNeuron[][] _neurons;
    private final FeedforwardNeuron[] _inputNeurons;
    private final FeedforwardNeuron[] _outputNeurons;
    private final int _edgeCount;
 
    public FeedforwardNeuralNetwork(int inputNodeCount, int[] hidden,
-      int outputNodeCount, ActivationFunction activationFunction,
-      double volatility) {
+      int outputNodeCount, ActivationFunction activationFunction) {
 
       this(
          inputNodeCount,
          hidden,
          outputNodeCount,
          activationFunction,
-         activationFunction,
-         volatility);
+         activationFunction);
    }
 
    public FeedforwardNeuralNetwork(int inputNodeCount, int[] hidden,
       int outputNodeCount, ActivationFunction hiddenLayerFunction,
-      ActivationFunction outputLayerFunction, double volatility) {
+      ActivationFunction outputLayerFunction) {
 
-      _volatility = volatility;
-      _neurons = new BackpropFeedforwardNeuron[hidden.length + 2][];
-      BackpropFeedforwardNeuron[] nextLayer = createNeuronArray(outputNodeCount,
+      _neurons = new RpropFeedforwardNeuron[hidden.length + 2][];
+      RpropFeedforwardNeuron[] nextLayer = createNeuronArray(outputNodeCount,
          null,
          outputLayerFunction);
 
@@ -59,15 +55,12 @@ public class FeedforwardNeuralNetwork {
       return _edgeCount;
    }
 
-   private BackpropFeedforwardNeuron[] createNeuronArray(int size,
-      BackpropFeedforwardNeuron[] nextLayer, ActivationFunction function) {
+   private RpropFeedforwardNeuron[] createNeuronArray(int size,
+      RpropFeedforwardNeuron[] nextLayer, ActivationFunction function) {
 
-      final BackpropFeedforwardNeuron[] result = new BackpropFeedforwardNeuron[size];
+      final RpropFeedforwardNeuron[] result = new RpropFeedforwardNeuron[size];
       for (int i = 0; i < size; i++) {
-         result[i] = new BackpropFeedforwardNeuron(
-            nextLayer,
-            function,
-            _volatility);
+         result[i] = new RpropFeedforwardNeuron(nextLayer, function);
       }
       return result;
    }

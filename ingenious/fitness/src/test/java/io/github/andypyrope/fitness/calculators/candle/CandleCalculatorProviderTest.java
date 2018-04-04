@@ -56,10 +56,10 @@ public class CandleCalculatorProviderTest {
 
    @Test
    public void testGetDesiredDnaLength() {
-      assertEquals(14, getProvider().getDesiredDnaLength());
+      assertEquals(13, getProvider().getDesiredDnaLength());
 
       _settings.setMaxHiddenLayers(100);
-      assertEquals(104, getProvider().getDesiredDnaLength());
+      assertEquals(103, getProvider().getDesiredDnaLength());
    }
 
    @Test
