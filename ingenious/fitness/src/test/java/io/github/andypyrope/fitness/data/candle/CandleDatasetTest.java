@@ -36,6 +36,13 @@ public class CandleDatasetTest {
    }
 
    @Test
+   public void testWithEqualDates() {
+      final Candle[] data = tryToCreate("datasets/candle/test-equal-dates.csv")
+            .getData();
+      assertNotNull(data);
+   }
+
+   @Test
    public void testNonCsvCreation() {
       assertNull(tryToCreate("datasets/candle/test.txt"));
       assertEquals(
