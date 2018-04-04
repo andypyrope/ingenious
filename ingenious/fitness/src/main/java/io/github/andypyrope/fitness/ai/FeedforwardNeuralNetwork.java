@@ -36,7 +36,7 @@ public class FeedforwardNeuralNetwork {
       // Output layer
       _neurons[_neurons.length - 1] = nextLayer;
       _outputNeurons = _neurons[_neurons.length - 1];
-      
+
       int edgeCount = 0;
 
       // Hidden layer(s)
@@ -54,7 +54,7 @@ public class FeedforwardNeuralNetwork {
       edgeCount += inputNodeCount * nextLayer.length;
       _edgeCount = edgeCount;
    }
-   
+
    public int getEdgeCount() {
       return _edgeCount;
    }
@@ -64,15 +64,19 @@ public class FeedforwardNeuralNetwork {
 
       final BackpropFeedforwardNeuron[] result = new BackpropFeedforwardNeuron[size];
       for (int i = 0; i < size; i++) {
-         result[i] = new BackpropFeedforwardNeuron(nextLayer, function, _volatility);
+         result[i] = new BackpropFeedforwardNeuron(
+            nextLayer,
+            function,
+            _volatility);
       }
       return result;
    }
 
    public void calculate(double[] inputValues) {
+      // All
       for (int i = 0; i < _neurons.length; i++) {
-         for (int j = 0; j < _neurons[i].length; j++) {
-            _neurons[i][j].resetNetInput();
+         for (FeedforwardNeuron neuron : _neurons[i]) {
+            neuron.resetNetInput();
          }
       }
 
@@ -84,9 +88,9 @@ public class FeedforwardNeuralNetwork {
 
       // Hidden / Output
       for (int i = 1; i < _neurons.length; i++) {
-         for (int j = 0; j < _neurons[i].length; j++) {
-            _neurons[i][j].updateOutput();
-            _neurons[i][j].propagate();
+         for (FeedforwardNeuron neuron : _neurons[i]) {
+            neuron.updateOutput();
+            neuron.propagate();
          }
       }
    }
@@ -97,24 +101,23 @@ public class FeedforwardNeuralNetwork {
     * @param targetOutput The expected output
     */
    public void adjust(double[] targetOutput) {
-      // Assuming it's already been calculated
-
       // Output
       for (int i = 0; i < _outputNeurons.length; i++) {
          _outputNeurons[i].calculateGradient(targetOutput[i]);
+         _outputNeurons[i].adjust();
       }
 
       // Hidden
       for (int i = _neurons.length - 2; i >= 1; i--) {
-         for (int j = 0; j < _neurons[i].length; j++) {
-            _neurons[i][j].calculateGradient();
-            _neurons[i][j].adjust();
+         for (FeedforwardNeuron neuron : _neurons[i]) {
+            neuron.calculateGradient();
+            neuron.adjust();
          }
       }
 
       // Input
-      for (int i = 0; i < _inputNeurons.length; i++) {
-         _inputNeurons[i].adjust();
+      for (FeedforwardNeuron neuron : _inputNeurons) {
+         neuron.adjust();
       }
    }
 

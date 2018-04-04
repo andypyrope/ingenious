@@ -39,9 +39,12 @@ class FeedforwardNeuralNetworkTest {
 
       final double allowedError = .005;
       assertTrue(allowedError > network.getEucliedanDistance(output));
-      assertArrayEquals(
-         new double[] { 0.9556649180059656, 0.10999176239284271 },
-         network.getOutput());
+
+      final double[] actualOutput = network.getOutput();
+      // 0.95566 and 0.10999
+      assertArrayEquals(new int[] { 95566, 10999 },
+         new int[] { (int) (actualOutput[0] * 100000),
+            (int) (actualOutput[1] * 100000) });
    }
 
    @Test

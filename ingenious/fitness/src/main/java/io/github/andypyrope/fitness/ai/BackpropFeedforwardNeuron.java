@@ -10,7 +10,6 @@ class BackpropFeedforwardNeuron extends FeedforwardNeuronBase {
 
    private double _inputGradient;
    private double _outputGradient;
-   private final double[] _edgeGradients;
    private final BackpropFeedforwardNeuron[] _nextLayer;
 
    private final double _volatility;
@@ -21,8 +20,6 @@ class BackpropFeedforwardNeuron extends FeedforwardNeuronBase {
       super(function, nextLayer);
 
       _nextLayer = nextLayer;
-      _edgeGradients = nextLayer == null ? null : new double[nextLayer.length];
-
       _volatility = volatility;
    }
 
@@ -35,7 +32,6 @@ class BackpropFeedforwardNeuron extends FeedforwardNeuronBase {
    public void calculateGradient() {
       _outputGradient = 0.0;
       for (int i = 0; i < _edges.length; i++) {
-         _edgeGradients[i] = _output * _nextLayer[i]._inputGradient;
          _outputGradient += _edges[i] * _nextLayer[i]._inputGradient;
       }
       _inputGradient = _function.getSlope(_netInput, _output) * _outputGradient;
@@ -59,11 +55,14 @@ class BackpropFeedforwardNeuron extends FeedforwardNeuronBase {
     */
    @Override
    public void adjust() {
-      for (int i = 0; i < _edges.length; i++) {
-         _edges[i] -= _edgeGradients[i] * _volatility;
+      if (_edges != null) {
+         for (int i = 0; i < _edges.length; i++) {
+            final double edgeGradient = _output * _nextLayer[i]._inputGradient;
+            _edges[i] -= edgeGradient * _volatility;
+         }
       }
 
-      final double biasDifferential = _inputGradient * _bias;
-      _bias -= biasDifferential * _volatility;
+      final double biasGradient = _inputGradient * _bias;
+      _bias -= biasGradient * _volatility;
    }
 }
