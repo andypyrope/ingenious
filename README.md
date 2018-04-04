@@ -46,6 +46,6 @@ and...
                 - `Dataset` [optional] - a dataset contains parsed data necessary for fitness calculation
             - `Organism[]`
                 - `Dna` for the calculator
-                - `Dna` for the organism itself if it needs that (e.g. to determine its gender)
+                - `Dna` [optional] - for the organism itself if it needs that (e.g. to determine its gender)
                 - `Calculator`
                     - `NeuralNetwork` [optional] - basically the brain of the organism
