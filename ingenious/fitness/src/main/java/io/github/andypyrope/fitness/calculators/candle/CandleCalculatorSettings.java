@@ -10,8 +10,8 @@ import java.time.temporal.TemporalUnit;
  */
 public class CandleCalculatorSettings {
 
-   private int _minInputSize = 3;
-   private int _maxInputSize = 25;
+   private int _minInputCandles = 3;
+   private int _maxInputCandles = 25;
 
    private int _minHiddenLayers = 0;
    private int _maxHiddenLayers = 10;
@@ -34,29 +34,29 @@ public class CandleCalculatorSettings {
    /**
     * @return The minimum number of candles an organism can desire
     */
-   public int getMinInputSize() {
-      return _minInputSize;
+   public int getMinInputCandles() {
+      return _minInputCandles;
    }
 
    /**
-    * @param minInputSize The minimum number of candles an organism can desire
+    * @param minInputCandles The minimum number of candles an organism can desire
     */
-   public void setMinInputSize(int minInputSize) {
-      _minInputSize = minInputSize;
+   public void setMinInputCandles(int minInputCandles) {
+      _minInputCandles = minInputCandles;
    }
 
    /**
     * @return The maximum number of candles an organism can desire
     */
-   public int getMaxInputSize() {
-      return _maxInputSize;
+   public int getMaxInputCandles() {
+      return _maxInputCandles;
    }
 
    /**
-    * @param maxInputSize The maximum number of candles an organism can desire
+    * @param maxInputCandles The maximum number of candles an organism can desire
     */
-   public void setMaxInputSize(int maxInputSize) {
-      _maxInputSize = maxInputSize;
+   public void setMaxInputCandles(int maxInputCandles) {
+      _maxInputCandles = maxInputCandles;
    }
 
    /**

@@ -25,7 +25,7 @@ public class CandleCalculatorProvider implements CalculatorProvider {
          final CandleDataset current = new CandleDataset(datasets[i]);
 
          if (current.getData().length < settings.getOutputCandleOffset() +
-               settings.getOutputCandleCount() + settings.getMaxInputSize()) {
+               settings.getOutputCandleCount() + settings.getMaxInputCandles()) {
             throw new InvalidCalculatorSettingsException(
                String.format(
                   "The size of dataset '%s', %d, is smaller than the sum " +
@@ -33,7 +33,7 @@ public class CandleCalculatorProvider implements CalculatorProvider {
                         "the number of output nodes, %d, plus their offset, %d",
                   datasets[i],
                   current.getData().length,
-                  settings.getMaxInputSize(),
+                  settings.getMaxInputCandles(),
                   settings.getOutputCandleCount(),
                   settings.getOutputCandleOffset()));
          }
@@ -61,7 +61,7 @@ public class CandleCalculatorProvider implements CalculatorProvider {
 
    @Override
    public long getMaxStudyingComplexity() {
-      final long inputToFirstHidden = _settings.getMaxInputSize() *
+      final long inputToFirstHidden = _settings.getMaxInputCandles() *
             _settings.getMaxHiddenSize();
       final long intraHiddenLayer = (_settings.getMaxHiddenLayers() - 1) *
             _settings.getMaxHiddenSize() * _settings.getMaxHiddenSize();

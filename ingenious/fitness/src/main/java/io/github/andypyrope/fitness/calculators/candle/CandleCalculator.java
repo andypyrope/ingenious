@@ -55,8 +55,8 @@ class CandleCalculator implements Calculator {
 
       _passesWhenGettingFitness = settings.getPassesWhenGettingFitness();
 
-      _inputCandleCount = _dna.read(settings.getMinInputSize(),
-         settings.getMaxInputSize() + 1);
+      _inputCandleCount = _dna.read(settings.getMinInputCandles(),
+         settings.getMaxInputCandles() + 1);
       _passesPerInput = _dna.read(settings.getMinPassesPerInput(),
          settings.getMaxPassesPerInput() + 1);
       _hiddenLayerCount = _dna.read(settings.getMinHiddenLayers(),

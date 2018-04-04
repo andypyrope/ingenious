@@ -29,7 +29,7 @@ public class CandleCalculatorProviderTest {
       EasyMock.expect(_dna.read(EasyMock.anyInt(), EasyMock.anyInt()))
             .andReturn(5).anyTimes();
       EasyMock.replay(_dna);
-      _settings.setMaxInputSize(1);
+      _settings.setMaxInputCandles(1);
       _settings.setOutputCandleCount(1);
    }
 
@@ -72,7 +72,7 @@ public class CandleCalculatorProviderTest {
       _settings.setOutputCandleCount(0);
       assertEquals(61900, getProvider().getMaxStudyingComplexity());
 
-      _settings.setMaxInputSize(2);
+      _settings.setMaxInputCandles(2);
       assertEquals(61925, getProvider().getMaxStudyingComplexity());
    }
 
