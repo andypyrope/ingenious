@@ -1,22 +1,21 @@
 package io.github.andypyrope.app.tui;
 
+import io.github.andypyrope.evolution.worlds.World;
+
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.github.andypyrope.evolution.worlds.World;
-
-public class ConsoleInteractor {
-
-   private final World _world;
-   private final Scanner _scanner;
+public class ConsoleUi {
 
    private static final Pattern COMMAND_HELP = Pattern.compile("help");
    private static final Pattern COMMAND_ITERATE = Pattern
             .compile("iterate ?(\\d+)?");
    private static final Pattern COMMAND_EXIT = Pattern.compile("exit");
+   private final World _world;
+   private final Scanner _scanner;
 
-   public ConsoleInteractor(World world, Scanner scanner) {
+   public ConsoleUi(World world, Scanner scanner) {
       _world = world;
       _scanner = scanner;
    }
@@ -37,7 +36,9 @@ public class ConsoleInteractor {
          showHelp();
       } else if (COMMAND_ITERATE.matcher(command).matches()) {
          final Matcher matcher = COMMAND_ITERATE.matcher(command);
-         matcher.find();
+         if (!matcher.find()) {
+            return true;
+         }
          final String iterations = matcher.group(1);
          iterate(iterations == null ? 1 : Integer.parseInt(iterations));
       } else if (COMMAND_EXIT.matcher(command).matches()) {

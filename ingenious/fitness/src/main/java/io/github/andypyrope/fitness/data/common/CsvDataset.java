@@ -1,34 +1,29 @@
 package io.github.andypyrope.fitness.data.common;
 
+import io.github.andypyrope.fitness.data.DatasetCreationException;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import io.github.andypyrope.fitness.data.DatasetCreationException;
 
 public abstract class CsvDataset {
 
    private static final String DEFAULT_SEPARATOR = ",";
 
-   protected final String _filename;
+   private final List<String> _columns;
+   private final Map<String, Integer> _columnIndices;
 
-   protected final List<String> _columns;
-   protected final Map<String, Integer> _columnIndices;
    protected final int _rowCount;
 
    private final List<String[]> _rawRows;
 
    public CsvDataset(final String filename) {
       final String separator = DEFAULT_SEPARATOR;
-      _filename = filename;
 
       if (!filename.endsWith(".csv")) {
          throw new DatasetCreationException(
@@ -36,8 +31,9 @@ public abstract class CsvDataset {
                filename));
       }
 
-      final List<String> lines = new ArrayList<>();
-      final URL resource = getClass().getClassLoader().getResource(filename);
+      final List<String> lines;
+      final URL resource = getClass().getClassLoader()
+            .getResource(FilenameUtils.separatorsToUnix(filename));
       if (resource == null) {
          throw new DatasetCreationException(
             String.format("Data file '%s' does not exist", filename));
@@ -45,7 +41,7 @@ public abstract class CsvDataset {
       final File file = new File(resource.getFile());
 
       try (Stream<String> stream = Files.lines(file.toPath())) {
-         lines.addAll(stream.collect(Collectors.toList()));
+         lines = stream.collect(Collectors.toList());
       } catch (IOException e) {
          throw new DatasetCreationException(
             String.format("Failed to load dataset '%s'", filename),
@@ -104,8 +100,7 @@ public abstract class CsvDataset {
       return _rawRows.get(row)[columnIndex];
    }
 
-   protected boolean hasColumns(final String[] columns) {
-      return Arrays.stream(columns)
-            .allMatch(column -> _columns.contains(column));
+   private boolean hasColumns(final String[] columns) {
+      return Arrays.stream(columns).allMatch(_columns::contains);
    }
 }

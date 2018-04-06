@@ -19,6 +19,7 @@
       <maven.compiler.target>${java.version}</maven.compiler.target>
       <junit.jupiter.version>5.0.0</junit.jupiter.version>
       <junit.platform.version>1.1.0</junit.platform.version>
+      <apache.commons-io.version>2.6</apache.commons-io.version>
    </properties>
 
    <dependencies>
@@ -43,6 +44,11 @@
          <artifactId>junit-jupiter-engine</artifactId>
          <version>${junit.jupiter.version}</version>
          <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>commons-io</groupId>
+         <artifactId>commons-io</artifactId>
+         <version>${apache.commons-io.version}</version>
       </dependency>
    </dependencies>
 

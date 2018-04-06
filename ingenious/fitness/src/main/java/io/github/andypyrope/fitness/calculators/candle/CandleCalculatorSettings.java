@@ -10,31 +10,56 @@ import java.time.temporal.TemporalUnit;
  */
 public class CandleCalculatorSettings {
 
-   private int _minInputCandles = 3;
-   private int _maxInputCandles = 25;
+   private static final int DEFAULT_MIN_INPUT_CANDLES = 3;
+   private static final int DEFAULT_MAX_INPUT_CANDLES = 25;
 
-   private int _minHiddenLayers = 0;
-   private int _maxHiddenLayers = 10;
+   private static final int DEFAULT_MIN_HIDDEN_LAYERS = 0;
+   private static final int DEFAULT_MAX_HIDDEN_LAYERS = 10;
 
-   private int _minHiddenSize = 1;
-   private int _maxHiddenSize = 25;
+   private static final int DEFAULT_MIN_HIDDEN_SIZE = 1;
+   private static final int DEFAULT_MAX_HIDDEN_SIZE = 25;
 
-   private double _maxVolatility = 100.0;
+   private static final double DEFAULT_MAX_VOLATILITY = 100.0;
 
-   private int _minPassesPerInput = 1;
-   private int _maxPassesPerInput = 100;
+   private static final int DEFAULT_MIN_PASSES_PER_INPUT = 1;
+   private static final int DEFAULT_MAX_PASSES_PER_INPUT = 100;
 
-   private int _passesWhenGettingFitness = 1000;
+   private static final int DEFAULT_PASSES_WHEN_GETTING_FITNESS = 1000;
 
-   private int _outputCandleCount = 7;
-   private int _outputCandleOffset = 0;
-   private long _candleDistance = 1;
-   private TemporalUnit _candleDistanceUnit = ChronoUnit.DAYS;
+   private static final int DEFAULT_OUTPUT_CANDLE_COUNT = 7;
+   private static final int DEFAULT_OUTPUT_CANDLE_OFFSET = 0;
+
+   private static final int DEFAULT_CANDLE_DISTANCE = 1;
+   private static final TemporalUnit DEFAULT_CANDLE_DISTANCE_UNIT = ChronoUnit.DAYS;
+
+
+   private int _minInputCandles = DEFAULT_MIN_INPUT_CANDLES;
+   private int _maxInputCandles = DEFAULT_MAX_INPUT_CANDLES;
+
+   private int _minHiddenLayers = DEFAULT_MIN_HIDDEN_LAYERS;
+   private int _maxHiddenLayers = DEFAULT_MAX_HIDDEN_LAYERS;
+
+   private int _minHiddenSize = DEFAULT_MIN_HIDDEN_SIZE;
+   private int _maxHiddenSize = DEFAULT_MAX_HIDDEN_SIZE;
+
+   private double _maxVolatility = DEFAULT_MAX_VOLATILITY;
+
+   private int _minPassesPerInput = DEFAULT_MIN_PASSES_PER_INPUT;
+   private int _maxPassesPerInput = DEFAULT_MAX_PASSES_PER_INPUT;
+
+   private int _passesWhenGettingFitness = DEFAULT_PASSES_WHEN_GETTING_FITNESS;
+
+   private int _outputCandleCount = DEFAULT_OUTPUT_CANDLE_COUNT;
+   private int _outputCandleOffset = DEFAULT_OUTPUT_CANDLE_OFFSET;
+
+   private long _candleDistance = DEFAULT_CANDLE_DISTANCE;
+   private TemporalUnit _candleDistanceUnit = DEFAULT_CANDLE_DISTANCE_UNIT;
+
 
    /**
     * @return The minimum number of candles an organism can desire
     */
-   public int getMinInputCandles() {
+   int getMinInputCandles() {
       return _minInputCandles;
    }
 
@@ -48,7 +73,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The maximum number of candles an organism can desire
     */
-   public int getMaxInputCandles() {
+   int getMaxInputCandles() {
       return _maxInputCandles;
    }
 
@@ -62,7 +87,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The minimum number of hidden layers in the neural network
     */
-   public int getMinHiddenLayers() {
+   int getMinHiddenLayers() {
       return _minHiddenLayers;
    }
 
@@ -77,7 +102,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The maximum number of hidden layers in the neural network
     */
-   public int getMaxHiddenLayers() {
+   int getMaxHiddenLayers() {
       return _maxHiddenLayers;
    }
 
@@ -92,7 +117,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The minimum number of neurons in a single hidden layer
     */
-   public int getMinHiddenSize() {
+   int getMinHiddenSize() {
       return _minHiddenSize;
    }
 
@@ -107,7 +132,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The maximum number of neurons in a single hidden layer
     */
-   public int getMaxHiddenSize() {
+   int getMaxHiddenSize() {
       return _maxHiddenSize;
    }
 
@@ -122,7 +147,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The maximum volatility of the neural network of a calculator
     */
-   public double getMaxVolatility() {
+   double getMaxVolatility() {
       return _maxVolatility;
    }
 
@@ -138,7 +163,7 @@ public class CandleCalculatorSettings {
     * @return The minimum number of passes a calculator can make with the same
     *         input-output pair
     */
-   public int getMinPassesPerInput() {
+   int getMinPassesPerInput() {
       return _minPassesPerInput;
    }
 
@@ -154,7 +179,7 @@ public class CandleCalculatorSettings {
     * @return The maximum number of passes a calculator can make with the same
     *         input-output pair
     */
-   public int getMaxPassesPerInput() {
+   int getMaxPassesPerInput() {
       return _maxPassesPerInput;
    }
 
@@ -170,7 +195,7 @@ public class CandleCalculatorSettings {
     * @return The number of passes to make while calculating the fitness of an
     *         organism
     */
-   public int getPassesWhenGettingFitness() {
+   int getPassesWhenGettingFitness() {
       return _passesWhenGettingFitness;
    }
 
@@ -186,7 +211,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The number of output candles
     */
-   public int getOutputCandleCount() {
+   int getOutputCandleCount() {
       return _outputCandleCount;
    }
 
@@ -200,7 +225,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The number of indices after which the output candles should start
     */
-   public int getOutputCandleOffset() {
+   int getOutputCandleOffset() {
       return _outputCandleOffset;
    }
 
@@ -216,7 +241,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The distance between two candles.
     */
-   public long getCandleDistance() {
+   long getCandleDistance() {
       return _candleDistance;
    }
 
@@ -232,7 +257,7 @@ public class CandleCalculatorSettings {
    /**
     * @return The unit in which the distance between the candles is
     */
-   public TemporalUnit getCandleDistanceUnit() {
+   TemporalUnit getCandleDistanceUnit() {
       return _candleDistanceUnit;
    }
 
