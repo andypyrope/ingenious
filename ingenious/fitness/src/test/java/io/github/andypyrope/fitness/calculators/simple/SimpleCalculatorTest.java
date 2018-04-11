@@ -2,6 +2,7 @@ package io.github.andypyrope.fitness.calculators.simple;
 
 import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.InvalidDnaException;
+import io.github.andypyrope.fitness.testutil.TestUtil;
 import io.github.andypyrope.platform.dna.Dna;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ class SimpleCalculatorTest {
    @Test
    void testCreationWithNull() {
       assertNull(tryToCreate(null));
-      assertEquals(_exceptionClass, InvalidDnaException.class);
+      assertEquals(InvalidDnaException.class, _exceptionClass);
    }
 
    @Test
@@ -30,8 +31,9 @@ class SimpleCalculatorTest {
       EasyMock.replay(dnaMock);
 
       final Calculator calculator = tryToCreate(dnaMock);
-      compareDoubles(fitness, calculator.getFitness());
-      compareDoubles(fitness, calculator.getFitness());
+      assertNotNull(calculator);
+      TestUtil.compareDoubles(fitness, calculator.getFitness());
+      TestUtil.compareDoubles(fitness, calculator.getFitness());
 
       EasyMock.verify(dnaMock);
    }
@@ -43,7 +45,7 @@ class SimpleCalculatorTest {
 
    @Test
    void testCanStudy() {
-      assertEquals(false, tryToCreate().canStudy());
+      assertFalse(tryToCreate().canStudy());
    }
 
    @Test
@@ -53,10 +55,6 @@ class SimpleCalculatorTest {
 
    private Calculator tryToCreate() {
       return tryToCreate(EasyMock.createNiceMock(Dna.class));
-   }
-
-   private void compareDoubles(double a, double b) {
-      assertTrue(Math.abs(a - b) < 0.0000001);
    }
 
    private Calculator tryToCreate(Dna dna) {

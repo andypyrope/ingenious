@@ -4,14 +4,13 @@ import io.github.andypyrope.platform.settings.InvalidConstraintException;
 import io.github.andypyrope.platform.settings.InvalidDefaultValueException;
 import io.github.andypyrope.platform.settings.InvalidValueException;
 import io.github.andypyrope.platform.settings.helpers.SettingTestUtil;
+import io.github.andypyrope.platform.testutil.TestUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StandardDoubleSettingTest {
-
-   private static final double DOUBLE_COMPARISON_PRECISION = 0.0000001;
 
    private static final String DEF_LABEL = "label";
    private static final String DEF_ID = "id";
@@ -41,7 +40,7 @@ class StandardDoubleSettingTest {
 
    @Test
    void testGetValue() {
-      compareDoubles(DEF_DEFAULT_VALUE, makeSetting().getValue());
+      TestUtil.compareDoubles(DEF_DEFAULT_VALUE, makeSetting().getValue());
    }
 
    @Test
@@ -76,14 +75,10 @@ class StandardDoubleSettingTest {
    void testResetToDefault() {
       final DoubleSetting setting = makeSetting();
       setting.setValue(DEF_DEFAULT_VALUE + 1);
-      compareDoubles(DEF_DEFAULT_VALUE + 1, setting.getValue());
+      TestUtil.compareDoubles(DEF_DEFAULT_VALUE + 1, setting.getValue());
 
       setting.resetToDefault();
-      compareDoubles(DEF_DEFAULT_VALUE, setting.getValue());
-   }
-
-   private void compareDoubles(double first, double second) {
-      assertTrue(Math.abs(first - second) < DOUBLE_COMPARISON_PRECISION);
+      TestUtil.compareDoubles(DEF_DEFAULT_VALUE, setting.getValue());
    }
 
    private DoubleSetting makeSetting() {
