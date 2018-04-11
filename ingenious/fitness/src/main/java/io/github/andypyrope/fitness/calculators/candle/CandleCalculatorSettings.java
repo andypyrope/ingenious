@@ -31,7 +31,9 @@ public class CandleCalculatorSettings implements CalculatorSettings {
 
    private static final int DEFAULT_PASSES_WHEN_GETTING_FITNESS = 1000;
 
+   private static final int MIN_OUTPUT_CANDLE_COUNT = 1;
    private static final int DEFAULT_OUTPUT_CANDLE_COUNT = 7;
+   private static final int MAX_OUTPUT_CANDLE_COUNT = 20;
    private static final int DEFAULT_OUTPUT_CANDLE_OFFSET = 0;
 
    private static final int DEFAULT_CANDLE_DISTANCE = 1;
@@ -56,7 +58,7 @@ public class CandleCalculatorSettings implements CalculatorSettings {
 
    private IntSetting _outputCandleCount = new StandardIntSetting(
          "Output candle count", "output-candle-count",
-         1, DEFAULT_OUTPUT_CANDLE_COUNT, 20);
+         MIN_OUTPUT_CANDLE_COUNT, DEFAULT_OUTPUT_CANDLE_COUNT, MAX_OUTPUT_CANDLE_COUNT);
    private int _outputCandleOffset = DEFAULT_OUTPUT_CANDLE_OFFSET;
 
    private long _candleDistance = DEFAULT_CANDLE_DISTANCE;

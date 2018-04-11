@@ -9,6 +9,8 @@ public class IntDna implements Dna {
 
    private static final int MASK_AFTER_SHIFT = 0x7FFFFFFF;
 
+   private static final double MAX_READ_RESULT = 1L << 31;
+
    private int _currentPosition = 0;
    private final int[] _data;
 
@@ -96,7 +98,7 @@ public class IntDna implements Dna {
 
    @Override
    public double readDouble() {
-      return (((double) read()) / (1L << 31));
+      return (((double) read()) / MAX_READ_RESULT);
    }
 
    @Override

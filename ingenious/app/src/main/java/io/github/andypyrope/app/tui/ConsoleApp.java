@@ -27,9 +27,9 @@ class ConsoleApp {
       final String[] datasets = new String[]{
             Paths.get("datasets", datasetPath).toString()};
       final CandleCalculatorSettings settings = new CandleCalculatorSettings();
-      settings.setMaxHiddenLayers(10);
-      settings.setMaxHiddenSize(40);
-      settings.setOutputCandleOffset(6);
+//      settings.setMaxHiddenLayers(10);
+//      settings.setMaxHiddenSize(40);
+//      settings.setOutputCandleOffset(6);
 
       final ConsoleUi ui = new ConsoleUi(scanner);
 
