@@ -18,16 +18,14 @@ public class ByteDna implements Dna {
 
    /**
     * Combines two DNA instances to produce a third one.
-    * 
+    *
     * @param parent1 The first parent
     * @param parent2 The second parent
-    * @throws DnaLengthMismatchException
+    * @throws DnaLengthMismatchException If the DNA length of the parents does not match
     */
-   public ByteDna(ByteDna parent1, ByteDna parent2)
-            throws DnaLengthMismatchException {
+   public ByteDna(ByteDna parent1, ByteDna parent2) throws DnaLengthMismatchException {
       if (parent1._data.length != parent2._data.length) {
-         throw new DnaLengthMismatchException(
-            String.format(
+         throw new DnaLengthMismatchException(String.format(
                "Cannot copulate byte DNA with length %d and byte DNA with length %d",
                parent1._data.length,
                parent2._data.length));
@@ -43,10 +41,10 @@ public class ByteDna implements Dna {
       final ByteDna rightParent = dataShouldBeSwapped ? parent1 : parent2;
       System.arraycopy(leftParent._data, 0, _data, 0, cutPosition);
       System.arraycopy(rightParent._data,
-         cutPosition,
-         _data,
-         cutPosition,
-         length - cutPosition);
+            cutPosition,
+            _data,
+            cutPosition,
+            length - cutPosition);
    }
 
    @Override

@@ -18,16 +18,14 @@ public class IntDna implements Dna {
 
    /**
     * Combines two DNA instances to produce a third one.
-    * 
+    *
     * @param parent1 The first parent
     * @param parent2 The second parent
-    * @throws DnaLengthMismatchException
+    * @throws DnaLengthMismatchException If the DNA length of the parents does not match
     */
-   public IntDna(IntDna parent1, IntDna parent2)
-      throws DnaLengthMismatchException {
+   public IntDna(IntDna parent1, IntDna parent2) throws DnaLengthMismatchException {
       if (parent1._data.length != parent2._data.length) {
-         throw new DnaLengthMismatchException(
-            String.format(
+         throw new DnaLengthMismatchException(String.format(
                "Cannot copulate int DNA with length %d and int DNA with length %d",
                parent1._data.length,
                parent2._data.length));
@@ -43,10 +41,10 @@ public class IntDna implements Dna {
       final IntDna rightParent = dataShouldBeSwapped ? parent1 : parent2;
       System.arraycopy(leftParent._data, 0, _data, 0, cutPosition);
       System.arraycopy(rightParent._data,
-         cutPosition,
-         _data,
-         cutPosition,
-         length - cutPosition);
+            cutPosition,
+            _data,
+            cutPosition,
+            length - cutPosition);
    }
 
    @Override
@@ -76,8 +74,7 @@ public class IntDna implements Dna {
    }
 
    /**
-    * Reads the next element as it would an unsigned int, but made 2 times
-    * smaller.
+    * Reads the next element as it would an unsigned int, but made 2 times smaller.
     */
    @Override
    public int read() {
