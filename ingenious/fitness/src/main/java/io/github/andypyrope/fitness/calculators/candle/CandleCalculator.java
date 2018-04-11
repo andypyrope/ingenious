@@ -52,6 +52,7 @@ class CandleCalculator implements Calculator {
 
       _passesWhenGettingFitness = settings.getPassesWhenGettingFitness();
 
+      dna.resetReader();
       _inputCandleCount = dna.read(settings.getMinInputCandles(),
          settings.getMaxInputCandles() + 1);
       _passesPerInput = dna.read(settings.getMinPassesPerInput(),

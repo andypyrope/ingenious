@@ -59,9 +59,4 @@ public class CandleCalculatorProvider implements CalculatorProvider {
 
       return desiredDnaLength;
    }
-
-   @Override
-   public long getMaxStudyingComplexity() {
-      return _settings.getMaxNeuralNetworkEdges();
-   }
 }

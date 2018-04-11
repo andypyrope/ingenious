@@ -14,15 +14,15 @@ public class SimpleWorldSettings {
       _allowedComplexityPerOrganism = allowedComplexityPerOrganism;
    }
 
-   public final long getAllowedComplexityPerOrganism() {
+   long getAllowedComplexityPerOrganism() {
       return _allowedComplexityPerOrganism;
    }
 
-   public final int getSize() {
+   int getSize() {
       return _size;
    }
 
-   public final double getCopulationRatio() {
+   double getCopulationRatio() {
       return _copulationRatio;
    }
 }

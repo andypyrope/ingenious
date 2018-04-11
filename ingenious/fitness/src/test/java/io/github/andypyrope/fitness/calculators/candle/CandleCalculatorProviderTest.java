@@ -29,6 +29,8 @@ class CandleCalculatorProviderTest {
       EasyMock.expect(_dna.readDouble()).andReturn(0.5).anyTimes();
       EasyMock.expect(_dna.read(EasyMock.anyInt(), EasyMock.anyInt()))
             .andReturn(5).anyTimes();
+      _dna.resetReader();
+      EasyMock.expectLastCall();
       EasyMock.replay(_dna);
       _settings.setMaxInputCandles(1);
       ((IntSetting) _settings.getSettings()[0]).setValue(1);
@@ -62,25 +64,6 @@ class CandleCalculatorProviderTest {
 
       _settings.setMaxHiddenLayers(100);
       assertEquals(103, getProvider().getDesiredDnaLength());
-   }
-
-   @Test
-   void testGetMaxStudyingComplexity() throws Exception {
-      assertNotNull(getProvider());
-      assertEquals(5675, new CandleCalculatorProvider(_datasets, _settings)
-            .getMaxStudyingComplexity());
-
-      _settings.setMaxHiddenLayers(100);
-      assertEquals(61925, new CandleCalculatorProvider(_datasets, _settings)
-            .getMaxStudyingComplexity());
-
-      ((IntSetting) _settings.getSettings()[0]).setValue(1);
-      assertEquals(61925, new CandleCalculatorProvider(_datasets, _settings)
-            .getMaxStudyingComplexity());
-
-      _settings.setMaxInputCandles(1);
-      assertEquals(61925, new CandleCalculatorProvider(_datasets, _settings)
-            .getMaxStudyingComplexity());
    }
 
    @Test

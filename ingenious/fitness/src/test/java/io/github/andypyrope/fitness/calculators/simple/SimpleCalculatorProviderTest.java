@@ -19,10 +19,4 @@ class SimpleCalculatorProviderTest {
    void testGetDesiredDnaLength() {
       assertEquals(50, new SimpleCalculatorProvider().getDesiredDnaLength());
    }
-
-   @Test
-   void testGetMaxStudyingComplexity() {
-      assertEquals(0,
-         new SimpleCalculatorProvider().getMaxStudyingComplexity());
-   }
 }

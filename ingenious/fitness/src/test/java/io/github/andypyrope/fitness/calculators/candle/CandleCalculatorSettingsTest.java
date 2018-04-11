@@ -1,5 +1,6 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
+import io.github.andypyrope.fitness.calculators.CalculatorSettings;
 import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
@@ -42,4 +43,9 @@ class CandleCalculatorSettingsTest {
       settings.setCandleDistanceUnit(ChronoUnit.CENTURIES);
    }
 
+   @Test
+   void testGetSettings() {
+      final CalculatorSettings settings = new CandleCalculatorSettings();
+      assertEquals(1, settings.getSettings().length);
+   }
 }

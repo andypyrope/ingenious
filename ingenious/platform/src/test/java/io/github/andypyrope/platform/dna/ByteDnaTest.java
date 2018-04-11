@@ -28,7 +28,7 @@ class ByteDnaTest {
 
    @Test
    void testMutationAndReading() {
-      final ByteDna dna = new ByteDna(LENGTH);
+      final Dna dna = new ByteDna(LENGTH);
       // All bits become 1
       dna.mutate(1.0);
 
@@ -64,7 +64,7 @@ class ByteDnaTest {
       assertEquals(LENGTH, new ByteDna(LENGTH).size());
    }
 
-   private ByteDna tryToCopulate(final ByteDna first, final ByteDna second) {
+   private Dna tryToCopulate(final ByteDna first, final ByteDna second) {
       try {
          return new ByteDna(first, second);
       } catch (DnaLengthMismatchException e) {

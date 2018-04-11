@@ -9,7 +9,6 @@ import java.util.List;
 public class SimpleWorld implements World {
 
    private final List<SimpleOrganism> _organisms;
-   private final CalculatorProvider _provider;
    private final SimpleWorldSettings _settings;
 
    private double _minFitness;
@@ -22,10 +21,9 @@ public class SimpleWorld implements World {
          CalculatorProvider provider) {
       _settings = settings;
       _organisms = new ArrayList<>(_settings.getSize());
-      _provider = provider;
 
       for (int i = 0; i < _settings.getSize(); i++) {
-         final SimpleOrganism organism = new SimpleOrganism(_provider);
+         final SimpleOrganism organism = new SimpleOrganism(provider);
          organism.studyIfPossible(_settings.getAllowedComplexityPerOrganism());
          _organisms.add(organism);
       }

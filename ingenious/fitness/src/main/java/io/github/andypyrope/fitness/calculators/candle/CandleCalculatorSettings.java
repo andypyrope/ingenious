@@ -56,7 +56,7 @@ public class CandleCalculatorSettings implements CalculatorSettings {
 
    private int _passesWhenGettingFitness = DEFAULT_PASSES_WHEN_GETTING_FITNESS;
 
-   private IntSetting _outputCandleCount = new StandardIntSetting(
+   private final IntSetting _outputCandleCount = new StandardIntSetting(
          "Output candle count", "output-candle-count",
          MIN_OUTPUT_CANDLE_COUNT, DEFAULT_OUTPUT_CANDLE_COUNT, MAX_OUTPUT_CANDLE_COUNT);
    private int _outputCandleOffset = DEFAULT_OUTPUT_CANDLE_OFFSET;
@@ -268,14 +268,5 @@ public class CandleCalculatorSettings implements CalculatorSettings {
     */
    public void setCandleDistanceUnit(TemporalUnit candleDistanceUnit) {
       _candleDistanceUnit = candleDistanceUnit;
-   }
-
-   long getMaxNeuralNetworkEdges() {
-      final long inputToFirstHidden = _maxInputCandles * _maxHiddenSize;
-      final long intraHiddenLayer = (_maxHiddenLayers - 1) * _maxHiddenSize *
-            _maxHiddenSize;
-      final long lastHiddenToOutput = _maxHiddenSize * _outputCandleCount.getValue();
-
-      return inputToFirstHidden + intraHiddenLayer + lastHiddenToOutput;
    }
 }

@@ -84,6 +84,8 @@ class CandleCalculatorTest {
          EasyMock.expect(_dna.read(EasyMock.anyInt(), EasyMock.anyInt()))
                .andReturn(boundReadResult);
       }
+      _dna.resetReader();
+      EasyMock.expectLastCall();
       EasyMock.replay(_dna);
    }
 

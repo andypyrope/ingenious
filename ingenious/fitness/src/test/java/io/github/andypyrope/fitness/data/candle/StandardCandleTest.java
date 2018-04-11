@@ -13,8 +13,8 @@ class StandardCandleTest {
    private static final String DEFAULT_CLOSING_PRICE = "2.01";
 
    @Test
-   void testMinimal() {
-      Candle candle = new StandardCandle(
+   void testMinimalWithNull() {
+      final Candle candle = new StandardCandle(
             null,
             DEFAULT_DATE,
             null,
@@ -25,8 +25,11 @@ class StandardCandleTest {
       TestUtil.compareDoubles(candle.getClosingPrice(), candle.getLowestPrice());
       TestUtil.compareDoubles(candle.getClosingPrice(), candle.getHighestPrice());
       TestUtil.compareDoubles(2.01, candle.getClosingPrice());
+   }
 
-      candle = new StandardCandle(
+   @Test
+   void testMinimalWithEmptyStrings() {
+      final Candle candle = new StandardCandle(
             null,
             DEFAULT_DATE,
             "",

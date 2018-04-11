@@ -17,9 +17,4 @@ public class SimpleCalculatorProvider implements CalculatorProvider {
    public int getDesiredDnaLength() {
       return DESIRED_DNA_LENGTH;
    }
-
-   @Override
-   public long getMaxStudyingComplexity() {
-      return 0;
-   }
 }
