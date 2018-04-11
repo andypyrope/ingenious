@@ -9,14 +9,14 @@ class BackpropFeedforwardNeuronTest {
 
    @Test
    void testCalculateGradientAndAdjust() {
-      final BackpropFeedforwardNeuron[][] neurons = makeNeurons(
+      final FeedforwardNeuron[][] neurons = makeNeurons(
          new int[] { 1, 2, 3, 2, 1 });
 
       neurons[0][0].setOutput(0.24);
       neurons[0][0].propagate();
 
       for (int i = 1; i < neurons.length; i++) {
-         for (BackpropFeedforwardNeuron neuron : neurons[i]) {
+         for (FeedforwardNeuron neuron : neurons[i]) {
             neuron.updateOutput();
             neuron.propagate();
          }
@@ -28,18 +28,18 @@ class BackpropFeedforwardNeuronTest {
       }
 
       for (int i = neurons.length - 2; i >= 1; i--) {
-         for (BackpropFeedforwardNeuron neuron : neurons[i]) {
+         for (FeedforwardNeuron neuron : neurons[i]) {
             neuron.calculateGradient();
             neuron.adjust();
          }
       }
 
-      for (BackpropFeedforwardNeuron neuron : neurons[0]) {
+      for (FeedforwardNeuron neuron : neurons[0]) {
          neuron.adjust();
       }
 
       for (int i = 1; i < neurons.length; i++) {
-         for (BackpropFeedforwardNeuron neuron : neurons[i]) {
+         for (FeedforwardNeuron neuron : neurons[i]) {
             neuron.resetNetInput();
          }
       }
@@ -47,7 +47,7 @@ class BackpropFeedforwardNeuronTest {
       neurons[0][0].propagate();
 
       for (int i = 1; i < neurons.length; i++) {
-         for (BackpropFeedforwardNeuron neuron : neurons[i]) {
+         for (FeedforwardNeuron neuron : neurons[i]) {
             neuron.updateOutput();
             neuron.propagate();
          }
@@ -57,7 +57,7 @@ class BackpropFeedforwardNeuronTest {
 
    @Test
    void testResetInput() {
-      final BackpropFeedforwardNeuron[][] neurons = makeNeurons(
+      final FeedforwardNeuron[][] neurons = makeNeurons(
          new int[] { 1, 1 });
 
       neurons[0][0].setOutput(0.5);
@@ -75,7 +75,7 @@ class BackpropFeedforwardNeuronTest {
       compareDoubles(0.5, neurons[1][0].getOutput());
    }
 
-   private BackpropFeedforwardNeuron[][] makeNeurons(int[] count) {
+   private FeedforwardNeuron[][] makeNeurons(int[] count) {
       final BackpropFeedforwardNeuron[][] result = new BackpropFeedforwardNeuron[count.length][];
 
       for (int i = result.length - 1; i >= 0; i--) {

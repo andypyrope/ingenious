@@ -9,7 +9,7 @@ class RpropFeedforwardNeuronTest {
 
    @Test
    void testCalculateGradientAndAdjust() {
-      final RpropFeedforwardNeuron[][] neurons = makeNeurons(
+      final FeedforwardNeuron[][] neurons = makeNeurons(
          new int[] { 1, 10, 1 });
 
       neurons[0][0].setOutput(0.24);
@@ -31,9 +31,9 @@ class RpropFeedforwardNeuronTest {
       compareDoubles(0.081766, neurons[neurons.length - 1][0].getOutput());
    }
 
-   private void makePass(RpropFeedforwardNeuron[][] neurons, double[] input) {
-      for (int i = 0; i < neurons.length; i++) {
-         for (RpropFeedforwardNeuron neuron : neurons[i]) {
+   private void makePass(FeedforwardNeuron[][] neurons, double[] input) {
+      for (final FeedforwardNeuron[] neuron1 : neurons) {
+         for (FeedforwardNeuron neuron : neuron1) {
             neuron.resetNetInput();
          }
       }
@@ -43,14 +43,14 @@ class RpropFeedforwardNeuronTest {
       }
 
       for (int i = 1; i < neurons.length; i++) {
-         for (RpropFeedforwardNeuron neuron : neurons[i]) {
+         for (FeedforwardNeuron neuron : neurons[i]) {
             neuron.updateOutput();
             neuron.propagate();
          }
       }
    }
 
-   private void adjust(RpropFeedforwardNeuron[][] neurons, double[] output) {
+   private void adjust(FeedforwardNeuron[][] neurons, double[] output) {
       // Output
       for (int i = 0; i < neurons[neurons.length - 1].length; i++) {
          neurons[neurons.length - 1][i].calculateGradient(output[i]);
@@ -71,7 +71,7 @@ class RpropFeedforwardNeuronTest {
       }
    }
 
-   private RpropFeedforwardNeuron[][] makeNeurons(int[] count) {
+   private FeedforwardNeuron[][] makeNeurons(int[] count) {
       final RpropFeedforwardNeuron[][] result = new RpropFeedforwardNeuron[count.length][];
 
       for (int i = result.length - 1; i >= 0; i--) {
