@@ -4,6 +4,7 @@ import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.CalculatorProvider;
 import io.github.andypyrope.fitness.calculators.InvalidCalculatorSettingsException;
 import io.github.andypyrope.fitness.data.candle.Candle;
+import io.github.andypyrope.fitness.data.candle.CandleDataset;
 import io.github.andypyrope.fitness.data.candle.CsvCandleDataset;
 import io.github.andypyrope.platform.dna.Dna;
 
@@ -22,7 +23,7 @@ public class CandleCalculatorProvider implements CalculatorProvider {
       _settings = settings;
       _normalizedCandles = new Candle[datasets.length][];
       for (int i = 0; i < datasets.length; i++) {
-         final CsvCandleDataset current = new CsvCandleDataset(datasets[i]);
+         final CandleDataset current = new CsvCandleDataset(datasets[i]);
 
          if (current.getData().length < settings.getOutputCandleOffset() +
                settings.getOutputCandleCount() + settings.getMaxInputCandles()) {

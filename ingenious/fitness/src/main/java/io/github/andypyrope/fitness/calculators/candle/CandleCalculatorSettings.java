@@ -1,5 +1,10 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
+import io.github.andypyrope.fitness.calculators.CalculatorSettings;
+import io.github.andypyrope.platform.settings.Setting;
+import io.github.andypyrope.platform.settings.numeric.IntSetting;
+import io.github.andypyrope.platform.settings.numeric.StandardIntSetting;
+
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 
@@ -8,7 +13,7 @@ import java.time.temporal.TemporalUnit;
  * CandleCalculator}. Contains reasonable default values that can always be changed if
  * necessary.
  */
-public class CandleCalculatorSettings {
+public class CandleCalculatorSettings implements CalculatorSettings {
 
    private static final int DEFAULT_MIN_INPUT_CANDLES = 3;
    private static final int DEFAULT_MAX_INPUT_CANDLES = 25;
@@ -49,12 +54,18 @@ public class CandleCalculatorSettings {
 
    private int _passesWhenGettingFitness = DEFAULT_PASSES_WHEN_GETTING_FITNESS;
 
-   private int _outputCandleCount = DEFAULT_OUTPUT_CANDLE_COUNT;
+   private IntSetting _outputCandleCount = new StandardIntSetting(
+         "Output candle count", "output-candle-count",
+         1, DEFAULT_OUTPUT_CANDLE_COUNT, 20);
    private int _outputCandleOffset = DEFAULT_OUTPUT_CANDLE_OFFSET;
 
    private long _candleDistance = DEFAULT_CANDLE_DISTANCE;
    private TemporalUnit _candleDistanceUnit = DEFAULT_CANDLE_DISTANCE_UNIT;
 
+   @Override
+   public Setting[] getSettings() {
+      return new Setting[]{_outputCandleCount};
+   }
 
    /**
     * @return The minimum number of candles an organism can desire
@@ -208,14 +219,7 @@ public class CandleCalculatorSettings {
     * @return The number of output candles
     */
    int getOutputCandleCount() {
-      return _outputCandleCount;
-   }
-
-   /**
-    * @param outputCandleCount The number of output candles
-    */
-   public void setOutputCandleCount(int outputCandleCount) {
-      _outputCandleCount = outputCandleCount;
+      return _outputCandleCount.getValue();
    }
 
    /**
@@ -268,7 +272,7 @@ public class CandleCalculatorSettings {
       final long inputToFirstHidden = _maxInputCandles * _maxHiddenSize;
       final long intraHiddenLayer = (_maxHiddenLayers - 1) * _maxHiddenSize *
             _maxHiddenSize;
-      final long lastHiddenToOutput = _maxHiddenSize * _outputCandleCount;
+      final long lastHiddenToOutput = _maxHiddenSize * _outputCandleCount.getValue();
 
       return inputToFirstHidden + intraHiddenLayer + lastHiddenToOutput;
    }

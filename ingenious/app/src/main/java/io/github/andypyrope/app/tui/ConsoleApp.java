@@ -29,14 +29,17 @@ class ConsoleApp {
       final CandleCalculatorSettings settings = new CandleCalculatorSettings();
       settings.setMaxHiddenLayers(10);
       settings.setMaxHiddenSize(40);
-      settings.setOutputCandleCount(1);
       settings.setOutputCandleOffset(6);
+
+      final ConsoleUi ui = new ConsoleUi(scanner);
+
+      ui.configure(settings.getSettings());
 
       final World world = new SimpleWorld(
             new SimpleWorldSettings(20, 0.50, 100000L),
             new CandleCalculatorProvider(datasets, settings));
 
-      new ConsoleUi(world, scanner).launch();
+      ui.launch(world);
    }
 
 }

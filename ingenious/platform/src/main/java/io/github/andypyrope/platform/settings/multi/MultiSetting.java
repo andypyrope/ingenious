@@ -1,11 +1,12 @@
 package io.github.andypyrope.platform.settings.multi;
 
+import io.github.andypyrope.platform.settings.InvalidValueException;
 import io.github.andypyrope.platform.settings.Setting;
 
 /**
  * A collection of many text-based options the user can choose from.
  */
-interface MultiSetting extends Setting {
+public interface MultiSetting extends Setting {
 
    /**
     * @return The available options.
@@ -16,8 +17,9 @@ interface MultiSetting extends Setting {
     * Select a specific option.
     *
     * @param index The index of the option to select.
+    * @throws InvalidValueException If the value is not within the constraints.
     */
-   void select(int index);
+   void select(int index) throws InvalidValueException;
 
    /**
     * @return The currently selected option.

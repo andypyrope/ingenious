@@ -4,6 +4,7 @@ import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.CalculatorProvider;
 import io.github.andypyrope.fitness.calculators.InvalidCalculatorSettingsException;
 import io.github.andypyrope.platform.dna.Dna;
+import io.github.andypyrope.platform.settings.numeric.IntSetting;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class CandleCalculatorProviderTest {
             .andReturn(5).anyTimes();
       EasyMock.replay(_dna);
       _settings.setMaxInputCandles(1);
-      _settings.setOutputCandleCount(1);
+      ((IntSetting) _settings.getSettings()[0]).setValue(1);
    }
 
    @Test
@@ -42,7 +43,7 @@ class CandleCalculatorProviderTest {
 
    @Test
    void testProvideWithInvalidSettings() {
-      _settings.setOutputCandleCount(20);
+      ((IntSetting) _settings.getSettings()[0]).setValue(20);
       assertNull(getProvider());
       assertEquals(String.format("The size of dataset '%s', 2, is " +
                   "smaller than the sum of the maximum input nodes, 1, " +
@@ -64,18 +65,22 @@ class CandleCalculatorProviderTest {
    }
 
    @Test
-   void testGetMaxStudyingComplexity() {
+   void testGetMaxStudyingComplexity() throws Exception {
       assertNotNull(getProvider());
-      assertEquals(5675, getProvider().getMaxStudyingComplexity());
+      assertEquals(5675, new CandleCalculatorProvider(_datasets, _settings)
+            .getMaxStudyingComplexity());
 
       _settings.setMaxHiddenLayers(100);
-      assertEquals(61925, getProvider().getMaxStudyingComplexity());
+      assertEquals(61925, new CandleCalculatorProvider(_datasets, _settings)
+            .getMaxStudyingComplexity());
 
-      _settings.setOutputCandleCount(0);
-      assertEquals(61900, getProvider().getMaxStudyingComplexity());
+      ((IntSetting) _settings.getSettings()[0]).setValue(1);
+      assertEquals(61925, new CandleCalculatorProvider(_datasets, _settings)
+            .getMaxStudyingComplexity());
 
-      _settings.setMaxInputCandles(2);
-      assertEquals(61925, getProvider().getMaxStudyingComplexity());
+      _settings.setMaxInputCandles(1);
+      assertEquals(61925, new CandleCalculatorProvider(_datasets, _settings)
+            .getMaxStudyingComplexity());
    }
 
    @Test

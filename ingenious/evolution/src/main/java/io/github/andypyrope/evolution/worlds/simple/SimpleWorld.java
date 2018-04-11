@@ -54,10 +54,10 @@ public class SimpleWorld implements World {
          }
       }
       sortOrganisms();
-      updateStats();
       while (_organisms.size() > _settings.getSize()) {
          _organisms.remove(_organisms.size() - 1);
       }
+      updateStats();
 
       _generation++;
    }

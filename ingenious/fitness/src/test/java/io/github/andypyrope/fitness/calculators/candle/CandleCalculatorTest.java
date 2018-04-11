@@ -4,6 +4,7 @@ import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.InvalidDnaException;
 import io.github.andypyrope.fitness.data.candle.Candle;
 import io.github.andypyrope.platform.dna.Dna;
+import io.github.andypyrope.platform.settings.numeric.IntSetting;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CandleCalculatorTest {
 
-   private static final double[] DEFAULT_READ_DOUBLE_RESUTLS = new double[] {};
-   private static final int[] DEFAULT_READ_BOUND_INT_RESUTLS = new int[] { 5, 2,
-      1, 4 };
+   private static final double[] DEFAULT_READ_DOUBLE_RESUTLS = new double[]{};
+   private static final int[] DEFAULT_READ_BOUND_INT_RESUTLS = new int[]{5, 2,
+         1, 4};
 
-   private static final double[][] DEFAULT_CANDLE_VALUES = new double[][] {
-      new double[] { 1.01, 2, 3, 4, 5, 6, 7, 8 },
-      new double[] { 3.32, 5.62, 1.12, 1, 2, 3, 4, 5, 6, 7 } };
+   private static final double[][] DEFAULT_CANDLE_VALUES = new double[][]{
+         new double[]{1.01, 2, 3, 4, 5, 6, 7, 8},
+         new double[]{3.32, 5.62, 1.12, 1, 2, 3, 4, 5, 6, 7}};
 
    private Dna _dna;
    private Candle[][] _candles;
@@ -34,7 +35,7 @@ class CandleCalculatorTest {
       );
       setCandleMocks(DEFAULT_CANDLE_VALUES);
 
-      _settings.setOutputCandleCount(3);
+      ((IntSetting) _settings.getSettings()[0]).setValue(3);
    }
 
    @Test
@@ -42,7 +43,7 @@ class CandleCalculatorTest {
       assertNull(tryToCreate(null));
       assertEquals(InvalidDnaException.class, _exceptionClass);
       assertEquals("Cannot instantiate SimpleCalculator with null DNA",
-         _exception.getMessage());
+            _exception.getMessage());
    }
 
    @Test

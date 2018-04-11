@@ -28,7 +28,7 @@ public class StandardIntSetting extends SettingBase implements IntSetting {
     * @param defaultValue The default value of the setting.
     * @param maxValue     The maximum value (inclusive) of the setting.
     */
-   StandardIntSetting(final String label, final String id, final int minValue,
+   public StandardIntSetting(final String label, final String id, final int minValue,
          final int defaultValue, final int maxValue) {
 
       super(label, id);

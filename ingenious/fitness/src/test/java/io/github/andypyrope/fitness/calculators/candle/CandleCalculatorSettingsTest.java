@@ -1,10 +1,11 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CandleCalculatorSettingsTest {
 
@@ -16,7 +17,7 @@ class CandleCalculatorSettingsTest {
       assertTrue(settings.getMinHiddenSize() < settings.getMaxHiddenSize());
       assertTrue(settings.getMaxVolatility() > 0.0);
       assertTrue(
-         settings.getMinPassesPerInput() < settings.getMaxPassesPerInput());
+            settings.getMinPassesPerInput() < settings.getMaxPassesPerInput());
       assertTrue(settings.getPassesWhenGettingFitness() > 0);
       assertTrue(settings.getOutputCandleCount() > 0);
       assertEquals(0, settings.getOutputCandleOffset());
@@ -36,7 +37,6 @@ class CandleCalculatorSettingsTest {
       settings.setMaxPassesPerInput(43);
 
       settings.setPassesWhenGettingFitness(35);
-      settings.setOutputCandleCount(12);
 
       settings.setCandleDistance(3);
       settings.setCandleDistanceUnit(ChronoUnit.CENTURIES);

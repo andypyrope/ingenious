@@ -1,11 +1,12 @@
 package io.github.andypyrope.platform.settings.text;
 
+import io.github.andypyrope.platform.settings.InvalidValueException;
 import io.github.andypyrope.platform.settings.Setting;
 
 /**
  * A simple text value (string).
  */
-interface TextSetting extends Setting {
+public interface TextSetting extends Setting {
 
    /**
     * @return The current value of the setting.
@@ -16,6 +17,7 @@ interface TextSetting extends Setting {
     * Update the value of this setting
     *
     * @param value The target value
+    * @throws InvalidValueException If the value is not within the constraints.
     */
-   void setValue(String value);
+   void setValue(String value) throws InvalidValueException;
 }
