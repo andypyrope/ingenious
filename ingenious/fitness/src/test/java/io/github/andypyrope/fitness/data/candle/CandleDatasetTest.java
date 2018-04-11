@@ -19,8 +19,8 @@ class CandleDatasetTest {
       assertNotNull(data);
 
       assertEquals(2626.07, data[0].getClosingPrice());
-      assertEquals(2634.89, data[0].getHigh());
-      assertEquals(2620.32, data[0].getLow());
+      assertEquals(2634.89, data[0].getHighestPrice());
+      assertEquals(2620.32, data[0].getLowestPrice());
       assertEquals(2627.82, data[0].getOpeningPrice());
 
       // Test that the sorting works properly

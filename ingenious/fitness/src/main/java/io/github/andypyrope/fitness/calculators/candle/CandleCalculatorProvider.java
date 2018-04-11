@@ -61,13 +61,6 @@ public class CandleCalculatorProvider implements CalculatorProvider {
 
    @Override
    public long getMaxStudyingComplexity() {
-      final long inputToFirstHidden = _settings.getMaxInputCandles() *
-            _settings.getMaxHiddenSize();
-      final long intraHiddenLayer = (_settings.getMaxHiddenLayers() - 1) *
-            _settings.getMaxHiddenSize() * _settings.getMaxHiddenSize();
-      final long lastHiddenToOutput = _settings.getMaxHiddenSize() *
-            _settings.getOutputCandleCount();
-
-      return inputToFirstHidden + intraHiddenLayer + lastHiddenToOutput;
+      return _settings.getMaxNeuralNetworkEdges();
    }
 }

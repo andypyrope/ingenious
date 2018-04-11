@@ -40,8 +40,8 @@ class RpropFeedforwardNeuronTest {
          result[i] = new RpropFeedforwardNeuron[count[i]];
          for (int j = 0; j < count[i]; j++) {
             result[i][j] = new RpropFeedforwardNeuron(
-                  i == result.length - 1 ? null : result[i + 1],
-                  new LogisticFunction());
+                  new LogisticFunction(), i == result.length - 1 ? null : result[i + 1]
+            );
          }
       }
 

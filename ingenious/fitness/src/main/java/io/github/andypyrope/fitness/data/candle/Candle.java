@@ -12,7 +12,7 @@ public interface Candle {
    /**
     * @return The highest price during the lifespan of the candle
     */
-   double getHigh();
+   double getHighestPrice();
 
    /**
     * @return The price at which the lifespan of the candle has begun
@@ -22,7 +22,7 @@ public interface Candle {
    /**
     * @return The lowest price during the lifspan of the candle
     */
-   double getLow();
+   double getLowestPrice();
 
    /**
     * @return The price at which the lifespan of the candle has ended

@@ -7,6 +7,8 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    private static final double INITIAL_BIAS = 0.0;
    private static final double INITIAL_EDGE_WEIGHT = 1.0;
 
+   final int _edgeCount;
+
    final double[] _edges;
    final ActivationFunction _function;
    private final FeedforwardNeuronBase[] _nextLayer;
@@ -21,17 +23,17 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
       _function = function;
       _nextLayer = nextLayer;
 
-      _edges = nextLayer == null ? null : new double[nextLayer.length];
-      if (_edges != null) {
-         for (int i = 0; i < _edges.length; i++) {
-            _edges[i] = INITIAL_EDGE_WEIGHT;
-         }
+      _edgeCount = nextLayer == null ? 0 : nextLayer.length;
+
+      _edges = new double[_edgeCount];
+      for (int i = 0; i < _edgeCount; i++) {
+         _edges[i] = INITIAL_EDGE_WEIGHT;
       }
    }
 
    /**
     * (non-Javadoc)
-    * 
+    *
     * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#resetNetInput()
     */
    @Override
@@ -41,7 +43,7 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
 
    /**
     * (non-Javadoc)
-    * 
+    *
     * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#setOutput(double)
     */
    @Override
@@ -51,7 +53,7 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
 
    /**
     * (non-Javadoc)
-    * 
+    *
     * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#getOutput()
     */
    @Override
@@ -60,8 +62,7 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    }
 
    /**
-    * Update the output of the node based on its net input, bias and activation
-    * function.
+    * Update the output of the node based on its net input, bias and activation function.
     */
    @Override
    public void updateOutput() {
@@ -70,7 +71,7 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
 
    /**
     * (non-Javadoc)
-    * 
+    *
     * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#propagate()
     */
    @Override
@@ -83,29 +84,4 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
          _nextLayer[i]._netInput += _output * _edges[i];
       }
    }
-
-   /**
-    * (non-Javadoc)
-    * 
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#calculateGradient()
-    */
-   @Override
-   abstract public void calculateGradient();
-
-   /**
-    * (non-Javadoc)
-    * 
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#calculateGradient(
-    *      double)
-    */
-   @Override
-   abstract public void calculateGradient(double targetOutput);
-
-   /**
-    * (non-Javadoc)
-    * 
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#adjust()
-    */
-   @Override
-   abstract public void adjust();
 }

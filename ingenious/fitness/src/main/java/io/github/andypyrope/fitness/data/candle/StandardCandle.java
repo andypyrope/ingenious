@@ -7,35 +7,37 @@ import java.time.format.DateTimeFormatter;
 public class StandardCandle implements Candle {
    private final LocalDateTime _time;
 
-   private final double _open;
-   private final double _high;
-   private final double _low;
-   private final double _close;
+   private final double _openingPrice;
+   private final double _highestPrice;
+   private final double _lowestPrice;
+   private final double _closingPrice;
 
-   StandardCandle(String time, String date, String open, String high,
-      String low, String close) {
+   StandardCandle(String time, String date, String openingPrice, String highestPrice,
+         String lowestPrice, String closingPrice) {
 
-      nullCheck(close, "closing price");
+      nullCheck(closingPrice, "closing price");
       nullCheck(date, "date");
 
-      _close = Double.parseDouble(close);
-      _open = open == null || open.equals("")
-         ? _close
-         : Double.parseDouble(open);
-      _high = high == null || high.equals("")
-         ? _close
-         : Double.parseDouble(high);
-      _low = low == null || low.equals("") ? _close : Double.parseDouble(low);
+      _closingPrice = Double.parseDouble(closingPrice);
+      _openingPrice = openingPrice == null || openingPrice.isEmpty()
+            ? _closingPrice
+            : Double.parseDouble(openingPrice);
+      _highestPrice = highestPrice == null || highestPrice.isEmpty()
+            ? _closingPrice
+            : Double.parseDouble(highestPrice);
+      _lowestPrice = lowestPrice == null || lowestPrice.isEmpty()
+            ? _closingPrice
+            : Double.parseDouble(lowestPrice);
 
       final String effectiveTime = time == null ? "00:00:00" : time;
       _time = LocalDateTime.parse(date + "T" + effectiveTime,
-         DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            DateTimeFormatter.ISO_LOCAL_DATE_TIME);
    }
 
    /**
-    * @param time The time of this candle
+    * @param time     The time of this candle
     * @param previous The candle temporally before this one
-    * @param next The candle temporally after this one
+    * @param next     The candle temporally after this one
     */
    StandardCandle(LocalDateTime time, Candle previous, Candle next) {
       final long previousToNow = Duration.between(previous.getTime(), time)
@@ -44,19 +46,21 @@ public class StandardCandle implements Candle {
       final long sum = previousToNow + nowToNext;
 
       final double prevRatio = sum == 0
-         ? 0.5
-         : 1.0 - (double) (previousToNow) / sum;
+            ? 0.5
+            : 1.0 - (double) (previousToNow) / sum;
       final double nextRatio = sum == 0
-         ? 0.5
-         : 1.0 - (double) (nowToNext) / sum;
+            ? 0.5
+            : 1.0 - (double) (nowToNext) / sum;
 
       _time = time;
-      _open = previous.getOpeningPrice() * prevRatio +
+      _openingPrice = previous.getOpeningPrice() * prevRatio +
             next.getOpeningPrice() * nextRatio;
-      _close = previous.getClosingPrice() * prevRatio +
+      _closingPrice = previous.getClosingPrice() * prevRatio +
             next.getClosingPrice() * nextRatio;
-      _low = previous.getLow() * prevRatio + next.getLow() * nextRatio;
-      _high = previous.getHigh() * prevRatio + next.getHigh() * nextRatio;
+      _lowestPrice =
+            previous.getLowestPrice() * prevRatio + next.getLowestPrice() * nextRatio;
+      _highestPrice =
+            previous.getHighestPrice() * prevRatio + next.getHighestPrice() * nextRatio;
    }
 
    private void nullCheck(String value, String valueType) {
@@ -76,11 +80,11 @@ public class StandardCandle implements Candle {
 
    /*
     * (non-Javadoc)
-    * @see io.github.andypyrope.fitness.data.candle.Candle#getHigh()
+    * @see io.github.andypyrope.fitness.data.candle.Candle#getHighestPrice()
     */
    @Override
-   public double getHigh() {
-      return _high;
+   public double getHighestPrice() {
+      return _highestPrice;
    }
 
    /*
@@ -89,16 +93,16 @@ public class StandardCandle implements Candle {
     */
    @Override
    public double getOpeningPrice() {
-      return _open;
+      return _openingPrice;
    }
 
    /*
     * (non-Javadoc)
-    * @see io.github.andypyrope.fitness.data.candle.Candle#getLow()
+    * @see io.github.andypyrope.fitness.data.candle.Candle#getLowestPrice()
     */
    @Override
-   public double getLow() {
-      return _low;
+   public double getLowestPrice() {
+      return _lowestPrice;
    }
 
    /*
@@ -107,6 +111,6 @@ public class StandardCandle implements Candle {
     */
    @Override
    public double getClosingPrice() {
-      return _close;
+      return _closingPrice;
    }
 }

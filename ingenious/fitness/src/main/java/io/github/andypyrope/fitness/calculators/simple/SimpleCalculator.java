@@ -12,7 +12,7 @@ class SimpleCalculator implements Calculator {
    SimpleCalculator(Dna dna) {
       if (dna == null) {
          throw new InvalidDnaException(
-            "Cannot instantiate SimpleCalculator with null DNA");
+               "Cannot instantiate SimpleCalculator with null DNA");
       }
       _dna = dna;
    }
@@ -34,10 +34,11 @@ class SimpleCalculator implements Calculator {
    }
 
    private int getNumberOfOnes(int value) {
+      int currentValue = value;
       int result = 0;
       for (int i = 0; i < Integer.BYTES; i++) {
-         result += value & 1;
-         value >>= 1;
+         result += currentValue & 1;
+         currentValue >>= 1;
       }
       return result;
    }

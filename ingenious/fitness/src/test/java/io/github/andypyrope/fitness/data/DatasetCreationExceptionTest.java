@@ -1,23 +1,21 @@
 package io.github.andypyrope.fitness.data;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DatasetCreationExceptionTest {
 
    @Test
    void test() {
       final String message = "some message";
-      assertNull(new DatasetCreationException().getMessage());
       assertEquals(message, new DatasetCreationException(message).getMessage());
 
       final Exception cause = new Exception();
-      final DatasetCreationException datasetCreationException = new DatasetCreationException(
-         message,
+      final DatasetCreationException exception = new DatasetCreationException(message,
          cause);
-      assertEquals(message, datasetCreationException.getMessage());
-      assertEquals(cause, datasetCreationException.getCause());
+      assertEquals(message, exception.getMessage());
+      assertEquals(cause, exception.getCause());
    }
 
 }

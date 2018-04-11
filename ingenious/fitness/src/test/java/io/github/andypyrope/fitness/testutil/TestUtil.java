@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestUtil {
 
-   private static final double DOUBLE_COMPARISON_PRECISION = 0.0000001;
+   private static final double DOUBLE_COMPARISON_PRECISION = 0.00001;
 
    public static void compareDoubles(double expected, double actual) {
       if (Math.abs(expected - actual) > DOUBLE_COMPARISON_PRECISION) {

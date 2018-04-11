@@ -1,12 +1,9 @@
 package io.github.andypyrope.fitness.ai;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import io.github.andypyrope.fitness.ai.activation.LogisticFunction;
 import org.junit.jupiter.api.Test;
 
-import io.github.andypyrope.fitness.ai.activation.LogisticFunction;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FeedforwardNeuralNetworkTest {
 
@@ -24,20 +21,20 @@ class FeedforwardNeuralNetworkTest {
       final double[] output = new double[] { 0.96, 0.11 };
 
       assertEquals(Math.sqrt(output[0] * output[0] + output[1] * output[1]),
-         network.getEucliedanDistance(output));
+            network.getEuclideanDistance(output));
 
       network.calculate(input);
-      final double initialError = network.getEucliedanDistance(output);
+      final double initialError = network.getEuclideanDistance(output);
 
       for (int i = 0; i < 100; i++) {
          network.adjust(output);
          network.calculate(input);
       }
 
-      assertTrue(initialError > network.getEucliedanDistance(output));
+      assertTrue(initialError > network.getEuclideanDistance(output));
 
       final double allowedError = .005;
-      assertTrue(allowedError > network.getEucliedanDistance(output));
+      assertTrue(allowedError > network.getEuclideanDistance(output));
 
       final double[] actualOutput = network.getOutput();
       // 0.95566 and 0.10999
@@ -59,7 +56,7 @@ class FeedforwardNeuralNetworkTest {
       final double[] input = new double[] { 1.0 };
       final double[] output = new double[] { 0.0 };
 
-      assertEquals(0.0, network.getEucliedanDistance(output));
+      assertEquals(0.0, network.getEuclideanDistance(output));
 
       network.calculate(input);
 
@@ -68,6 +65,6 @@ class FeedforwardNeuralNetworkTest {
          network.calculate(input);
       }
       final double allowedError = .09;
-      assertTrue(allowedError > network.getEucliedanDistance(output));
+      assertTrue(allowedError > network.getEuclideanDistance(output));
    }
 }

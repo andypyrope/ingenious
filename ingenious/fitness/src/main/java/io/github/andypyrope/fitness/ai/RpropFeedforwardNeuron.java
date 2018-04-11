@@ -4,11 +4,10 @@ import io.github.andypyrope.fitness.ai.activation.ActivationFunction;
 
 /**
  * The neuron that operates in accordance with the RPROP (resilient propagation)
- * algorithm. It is almost the same as the standard backward propagation
- * algorithm with the only difference being that the volatility of the
- * edges/biases changes (according to the gradient) instead of staying with the
- * same value. One of the many benefits of this algorithm is that it counteracts
- * the vanishing gradient problem.
+ * algorithm. It is almost the same as the standard backward propagation algorithm with
+ * the only difference being that the volatility of the edges/biases changes (according to
+ * the gradient) instead of staying with the same value. One of the many benefits of this
+ * algorithm is that it counteracts the vanishing gradient problem.
  */
 class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
 
@@ -25,27 +24,22 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
    private double _biasVolatility = INITIAL_VOLATILITY;
    private double _lastBiasGradient;
 
-   RpropFeedforwardNeuron(RpropFeedforwardNeuron[] nextLayer,
-      ActivationFunction function) {
+   RpropFeedforwardNeuron(ActivationFunction function,
+         RpropFeedforwardNeuron[] nextLayer) {
 
       super(function, nextLayer);
       _nextLayer = nextLayer;
 
-      if (nextLayer == null) {
-         _lastEdgeGradients = null;
-         _edgeVolatility = null;
-      } else {
-         _lastEdgeGradients = new double[nextLayer.length];
-         _edgeVolatility = new double[nextLayer.length];
-         for (int i = 0; i < _edgeVolatility.length; i++) {
-            _edgeVolatility[i] = INITIAL_VOLATILITY;
-         }
+      _lastEdgeGradients = new double[_edgeCount];
+      _edgeVolatility = new double[_edgeCount];
+      for (int i = 0; i < _edgeCount; i++) {
+         _edgeVolatility[i] = INITIAL_VOLATILITY;
       }
    }
 
    /**
     * (non-Javadoc)
-    * 
+    *
     * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#calculateGradient()
     */
    @Override
@@ -60,7 +54,7 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
 
    /**
     * (non-Javadoc)
-    * 
+    *
     * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#calculateGradient(double)
     */
    @Override
@@ -71,15 +65,13 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
 
    /**
     * (non-Javadoc)
-    * 
+    *
     * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#adjust()
     */
    @Override
    public void adjust() {
-      if (_edges != null) {
-         for (int i = 0; i < _edges.length; i++) {
-            adjustEdge(i);
-         }
+      for (int i = 0; i < _edgeCount; i++) {
+         adjustEdge(i);
       }
       adjustBias();
    }
@@ -89,8 +81,8 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
       final double gradientMult = gradient * _lastEdgeGradients[index];
 
       _edges[index] -= getDelta(gradient,
-         _lastEdgeGradients[index],
-         _edgeVolatility[index]);
+            _lastEdgeGradients[index],
+            _edgeVolatility[index]);
 
       if (gradientMult < 0) {
          _edgeVolatility[index] *= LOWER_VOLATILITY_MULTIPLIER;
@@ -115,7 +107,7 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
    }
 
    private double getDelta(double gradient, double lastGradient,
-      double volatility) {
+         double volatility) {
 
       double delta = Math.copySign(volatility, gradient);
       return gradient * lastGradient < 0 ? -1 * delta : delta;

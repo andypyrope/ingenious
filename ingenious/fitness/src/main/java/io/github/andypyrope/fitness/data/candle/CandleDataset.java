@@ -1,13 +1,12 @@
 package io.github.andypyrope.fitness.data.candle;
 
-import java.text.ParseException;
+import io.github.andypyrope.fitness.data.common.CsvDataset;
+
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import io.github.andypyrope.fitness.data.common.CsvDataset;
 
 public class CandleDataset extends CsvDataset {
 
@@ -22,7 +21,6 @@ public class CandleDataset extends CsvDataset {
 
    /**
     * @param filename The file name to the dataset file
-    * @throws ParseException If a date/time is invalid
     */
    public CandleDataset(final String filename) {
       super(filename);
@@ -68,7 +66,7 @@ public class CandleDataset extends CsvDataset {
          }
       }
 
-      return result.toArray(new Candle[result.size()]);
+      return result.toArray(new Candle[0]);
    }
 
 }

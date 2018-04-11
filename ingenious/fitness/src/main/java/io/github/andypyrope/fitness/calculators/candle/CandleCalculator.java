@@ -1,7 +1,5 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import io.github.andypyrope.fitness.ai.FeedforwardNeuralNetwork;
 import io.github.andypyrope.fitness.ai.activation.LogisticFunction;
 import io.github.andypyrope.fitness.calculators.Calculator;
@@ -9,10 +7,10 @@ import io.github.andypyrope.fitness.calculators.InvalidDnaException;
 import io.github.andypyrope.fitness.data.candle.Candle;
 import io.github.andypyrope.platform.dna.Dna;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 class CandleCalculator implements Calculator {
 
-   // Settings passed in constructor
-   private final Dna _dna;
    private final double[] _datasetMaximums;
    /**
     * Normalized (temporally) candles
@@ -25,7 +23,6 @@ class CandleCalculator implements Calculator {
    // Settings from DNA
    private final int _inputCandleCount;
    private final int _passesPerInput;
-   private final int _hiddenLayerCount;
 
    private final int _passesWhenGettingFitness;
 
@@ -48,23 +45,23 @@ class CandleCalculator implements Calculator {
          throw new InvalidDnaException(
             "Cannot instantiate SimpleCalculator with null DNA");
       }
-      _dna = dna;
+      // Settings passed in constructor
       _candles = normalizedCandles;
       _outputCandleCount = settings.getOutputCandleCount();
       _outputCandleOffset = settings.getOutputCandleOffset();
 
       _passesWhenGettingFitness = settings.getPassesWhenGettingFitness();
 
-      _inputCandleCount = _dna.read(settings.getMinInputCandles(),
+      _inputCandleCount = dna.read(settings.getMinInputCandles(),
          settings.getMaxInputCandles() + 1);
-      _passesPerInput = _dna.read(settings.getMinPassesPerInput(),
+      _passesPerInput = dna.read(settings.getMinPassesPerInput(),
          settings.getMaxPassesPerInput() + 1);
-      _hiddenLayerCount = _dna.read(settings.getMinHiddenLayers(),
-         settings.getMaxHiddenLayers() + 1);
+      final int hiddenLayerCount = dna.read(settings.getMinHiddenLayers(),
+            settings.getMaxHiddenLayers() + 1);
 
-      final int[] hiddenLayers = new int[_hiddenLayerCount];
-      for (int i = 0; i < _hiddenLayerCount; i++) {
-         hiddenLayers[i] = _dna.read(settings.getMinHiddenSize(),
+      final int[] hiddenLayers = new int[hiddenLayerCount];
+      for (int i = 0; i < hiddenLayerCount; i++) {
+         hiddenLayers[i] = dna.read(settings.getMinHiddenSize(),
             settings.getMaxHiddenSize() + 1);
       }
 
@@ -81,9 +78,9 @@ class CandleCalculator implements Calculator {
       for (int i = 0; i < _candles.length; i++) {
          final Candle[] current = _candles[i];
          maxDatasetSize = Math.max(maxDatasetSize, current.length);
-         for (int j = 0; j < current.length; j++) {
+         for (final Candle aCurrent : current) {
             _datasetMaximums[i] = Math.max(_datasetMaximums[i],
-               current[j].getClosingPrice());
+                  aCurrent.getClosingPrice());
          }
       }
       int actualTotalSamples = 0;
@@ -112,7 +109,7 @@ class CandleCalculator implements Calculator {
             final int index = ThreadLocalRandom.current().nextInt(from, to);
             _network.calculate(getInputArrayAtIndex(i, index));
             result += _network
-                  .getEucliedanDistance(getOutputArrayAtIndex(i, index));
+                  .getEuclideanDistance(getOutputArrayAtIndex(i, index));
          }
       }
 
@@ -170,7 +167,7 @@ class CandleCalculator implements Calculator {
          result[i] = getNormalizedPrice(datasetIndex,
             index + _outputCandleOffset + i + 1);
          result[i] -= getNormalizedPrice(datasetIndex, index);
-         result[i] = (result[i] / 2.0) + 0.5;
+         result[i] = (result[i] + 1.0) / 2;
       }
       return result;
    }

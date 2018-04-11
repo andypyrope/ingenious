@@ -4,9 +4,9 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 
 /**
- * A bean that contains the manually entered constraints/settings required by
- * {@link CandleCalculator}. Contains reasonable default values that can always
- * be changed if necessary.
+ * A bean that contains the manually entered constraints/settings required by {@link
+ * CandleCalculator}. Contains reasonable default values that can always be changed if
+ * necessary.
  */
 public class CandleCalculatorSettings {
 
@@ -92,8 +92,7 @@ public class CandleCalculatorSettings {
    }
 
    /**
-    * @param minHiddenLayers The minimum number of hidden layers in the neural
-    *           network
+    * @param minHiddenLayers The minimum number of hidden layers in the neural network
     */
    public void setMinHiddenLayers(int minHiddenLayers) {
       _minHiddenLayers = minHiddenLayers;
@@ -107,8 +106,7 @@ public class CandleCalculatorSettings {
    }
 
    /**
-    * @param maxHiddenLayers The maximum number of hidden layers in the neural
-    *           network
+    * @param maxHiddenLayers The maximum number of hidden layers in the neural network
     */
    public void setMaxHiddenLayers(int maxHiddenLayers) {
       _maxHiddenLayers = maxHiddenLayers;
@@ -122,8 +120,8 @@ public class CandleCalculatorSettings {
    }
 
    /**
-    * @param minHiddenSize The minimum number of neurons in a single hidden
-    *           layer in the neural network
+    * @param minHiddenSize The minimum number of neurons in a single hidden layer in the
+    *                      neural network
     */
    public void setMinHiddenSize(int minHiddenSize) {
       _minHiddenSize = minHiddenSize;
@@ -137,8 +135,8 @@ public class CandleCalculatorSettings {
    }
 
    /**
-    * @param maxHiddenSize The maximum number of neurons in a single hidden
-    *           layer in the neural network
+    * @param maxHiddenSize The maximum number of neurons in a single hidden layer in the
+    *                      neural network
     */
    public void setMaxHiddenSize(int maxHiddenSize) {
       _maxHiddenSize = maxHiddenSize;
@@ -152,8 +150,7 @@ public class CandleCalculatorSettings {
    }
 
    /**
-    * @param maxVolatility The maximum volatility of the neural network of a
-    *           calculator
+    * @param maxVolatility The maximum volatility of the neural network of a calculator
     */
    public void setMaxVolatility(double maxVolatility) {
       _maxVolatility = maxVolatility;
@@ -161,15 +158,15 @@ public class CandleCalculatorSettings {
 
    /**
     * @return The minimum number of passes a calculator can make with the same
-    *         input-output pair
+    *       input-output pair
     */
    int getMinPassesPerInput() {
       return _minPassesPerInput;
    }
 
    /**
-    * @param minPassesPerInput The minimum number of passes a calculator can
-    *           make with the same input-output pair
+    * @param minPassesPerInput The minimum number of passes a calculator can make with the
+    *                          same input-output pair
     */
    public void setMinPassesPerInput(int minPassesPerInput) {
       _minPassesPerInput = minPassesPerInput;
@@ -177,32 +174,31 @@ public class CandleCalculatorSettings {
 
    /**
     * @return The maximum number of passes a calculator can make with the same
-    *         input-output pair
+    *       input-output pair
     */
    int getMaxPassesPerInput() {
       return _maxPassesPerInput;
    }
 
    /**
-    * @param maxPassesPerInput The maximum number of passes a calculator can
-    *           make with the same input-output pair
+    * @param maxPassesPerInput The maximum number of passes a calculator can make with the
+    *                          same input-output pair
     */
    public void setMaxPassesPerInput(int maxPassesPerInput) {
       _maxPassesPerInput = maxPassesPerInput;
    }
 
    /**
-    * @return The number of passes to make while calculating the fitness of an
-    *         organism
+    * @return The number of passes to make while calculating the fitness of an organism
     */
    int getPassesWhenGettingFitness() {
       return _passesWhenGettingFitness;
    }
 
    /**
-    * @param passesWhenGettingFitness The number of passes to make while
-    *           calculating the fitness of an organism. More means more accurate
-    *           but also slower.
+    * @param passesWhenGettingFitness The number of passes to make while calculating the
+    *                                 fitness of an organism. More means more accurate but
+    *                                 also slower.
     */
    public void setPassesWhenGettingFitness(int passesWhenGettingFitness) {
       _passesWhenGettingFitness = passesWhenGettingFitness;
@@ -230,9 +226,9 @@ public class CandleCalculatorSettings {
    }
 
    /**
-    * @param outputCandleOffset The number of indices after which the output
-    *           candles should start (0 by default - directly after the last
-    *           input candle)
+    * @param outputCandleOffset The number of indices after which the output candles
+    *                           should start (0 by default - directly after the last input
+    *                           candle)
     */
    public void setOutputCandleOffset(int outputCandleOffset) {
       _outputCandleOffset = outputCandleOffset;
@@ -246,9 +242,9 @@ public class CandleCalculatorSettings {
    }
 
    /**
-    * @param candleDistance The distance between two candles. If the candles are
-    *           not with such a distance, new ones are created to fill the gaps
-    *           and ones that are too dense are omitted.
+    * @param candleDistance The distance between two candles. If the candles are not with
+    *                       such a distance, new ones are created to fill the gaps and
+    *                       ones that are too dense are omitted.
     */
    public void setCandleDistance(long candleDistance) {
       _candleDistance = candleDistance;
@@ -262,10 +258,18 @@ public class CandleCalculatorSettings {
    }
 
    /**
-    * @param candleDistanceUnit The unit in which the distance between the
-    *           candles is
+    * @param candleDistanceUnit The unit in which the distance between the candles is
     */
    public void setCandleDistanceUnit(TemporalUnit candleDistanceUnit) {
       _candleDistanceUnit = candleDistanceUnit;
+   }
+
+   long getMaxNeuralNetworkEdges() {
+      final long inputToFirstHidden = _maxInputCandles * _maxHiddenSize;
+      final long intraHiddenLayer = (_maxHiddenLayers - 1) * _maxHiddenSize *
+            _maxHiddenSize;
+      final long lastHiddenToOutput = _maxHiddenSize * _outputCandleCount;
+
+      return inputToFirstHidden + intraHiddenLayer + lastHiddenToOutput;
    }
 }

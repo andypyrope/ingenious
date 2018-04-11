@@ -1,19 +1,22 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
 import io.github.andypyrope.fitness.calculators.Calculator;
+import io.github.andypyrope.fitness.calculators.CalculatorProvider;
 import io.github.andypyrope.fitness.calculators.InvalidCalculatorSettingsException;
 import io.github.andypyrope.platform.dna.Dna;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CandleCalculatorProviderTest {
 
    private Exception _exception;
-   private String[] _datasets = new String[] {
-      "datasets/candle/two-candles.csv" };
+   private String[] _datasets = new String[]{
+         Paths.get("datasets", "candle", "two-candles.csv").toString()};
    private final CandleCalculatorSettings _settings = new CandleCalculatorSettings();
 
    private Dna _dna;
@@ -32,9 +35,8 @@ class CandleCalculatorProviderTest {
 
    @Test
    void testProvide() throws InvalidCalculatorSettingsException {
-      final Calculator calculator = new CandleCalculatorProvider(
-         _datasets,
-         _settings).provide(_dna);
+      final Calculator calculator = new CandleCalculatorProvider(_datasets, _settings)
+            .provide(_dna);
       assertNotNull(calculator);
    }
 
@@ -42,17 +44,19 @@ class CandleCalculatorProviderTest {
    void testProvideWithInvalidSettings() {
       _settings.setOutputCandleCount(20);
       assertNull(getProvider());
-      assertEquals(
-         "The size of dataset 'datasets/candle/two-candles.csv', 2, is " +
-               "smaller than the sum of the maximum input nodes, 1, " +
-               "and the number of output nodes, 20, plus their offset, 0",
-         _exception.getMessage());
+      assertEquals(String.format("The size of dataset '%s', 2, is " +
+                  "smaller than the sum of the maximum input nodes, 1, " +
+                  "and the number of output nodes, 20, plus their offset, 0",
+            Paths.get("datasets", "candle", "two-candles.csv").toString()),
+            _exception.getMessage());
+
       assertEquals(InvalidCalculatorSettingsException.class,
-         _exception.getClass());
+            _exception.getClass());
    }
 
    @Test
    void testGetDesiredDnaLength() {
+      assertNotNull(getProvider());
       assertEquals(13, getProvider().getDesiredDnaLength());
 
       _settings.setMaxHiddenLayers(100);
@@ -61,6 +65,7 @@ class CandleCalculatorProviderTest {
 
    @Test
    void testGetMaxStudyingComplexity() {
+      assertNotNull(getProvider());
       assertEquals(5675, getProvider().getMaxStudyingComplexity());
 
       _settings.setMaxHiddenLayers(100);
@@ -75,13 +80,13 @@ class CandleCalculatorProviderTest {
 
    @Test
    void testWithDatasets() {
-      _datasets = new String[] { "i-do-not-exist.csv", "welp" };
+      _datasets = new String[]{"i-do-not-exist.csv", "welp"};
       assertNull(getProvider());
       assertEquals("Data file 'i-do-not-exist.csv' does not exist",
-         _exception.getMessage());
+            _exception.getMessage());
    }
 
-   private CandleCalculatorProvider getProvider() {
+   private CalculatorProvider getProvider() {
       try {
          return new CandleCalculatorProvider(_datasets, _settings);
       } catch (Exception e) {

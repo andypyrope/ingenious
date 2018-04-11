@@ -8,12 +8,10 @@ import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CandleCalculatorTest {
 
-   private static final int[] DEFAULT_READ_RESULTS = new int[] {};
    private static final double[] DEFAULT_READ_DOUBLE_RESUTLS = new double[] {};
    private static final int[] DEFAULT_READ_BOUND_INT_RESUTLS = new int[] { 5, 2,
       1, 4 };
@@ -32,9 +30,8 @@ class CandleCalculatorTest {
 
    @BeforeEach
    void setUp() {
-      setDnaMock(DEFAULT_READ_RESULTS,
-         DEFAULT_READ_DOUBLE_RESUTLS,
-         DEFAULT_READ_BOUND_INT_RESUTLS);
+      setDnaMock(
+      );
       setCandleMocks(DEFAULT_CANDLE_VALUES);
 
       _settings.setOutputCandleCount(3);
@@ -43,7 +40,7 @@ class CandleCalculatorTest {
    @Test
    void testCreationWithNull() {
       assertNull(tryToCreate(null));
-      assertEquals(_exceptionClass, InvalidDnaException.class);
+      assertEquals(InvalidDnaException.class, _exceptionClass);
       assertEquals("Cannot instantiate SimpleCalculator with null DNA",
          _exception.getMessage());
    }
@@ -64,7 +61,7 @@ class CandleCalculatorTest {
 
    @Test
    void testCanStudy() {
-      assertEquals(true, tryToCreate().canStudy());
+      assertTrue(tryToCreate().canStudy());
    }
 
    @Test
@@ -75,18 +72,14 @@ class CandleCalculatorTest {
       }
    }
 
-   private void setDnaMock(int[] readResults, double[] readDoubleResults,
-      int[] boundReadResults) {
+   private void setDnaMock() {
 
       _dna = EasyMock.createMock(Dna.class);
 
-      for (int readResult : readResults) {
-         EasyMock.expect(_dna.read()).andReturn(readResult);
-      }
-      for (double readDoubleResult : readDoubleResults) {
+      for (double readDoubleResult : CandleCalculatorTest.DEFAULT_READ_DOUBLE_RESUTLS) {
          EasyMock.expect(_dna.readDouble()).andReturn(readDoubleResult);
       }
-      for (int boundReadResult : boundReadResults) {
+      for (int boundReadResult : CandleCalculatorTest.DEFAULT_READ_BOUND_INT_RESUTLS) {
          EasyMock.expect(_dna.read(EasyMock.anyInt(), EasyMock.anyInt()))
                .andReturn(boundReadResult);
       }

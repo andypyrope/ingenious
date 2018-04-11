@@ -22,8 +22,8 @@ class StandardCandleTest {
             null,
             DEFAULT_CLOSING_PRICE);
       TestUtil.compareDoubles(candle.getClosingPrice(), candle.getOpeningPrice());
-      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getLow());
-      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getHigh());
+      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getLowestPrice());
+      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getHighestPrice());
       TestUtil.compareDoubles(2.01, candle.getClosingPrice());
 
       candle = new StandardCandle(
@@ -34,8 +34,8 @@ class StandardCandleTest {
             "",
             DEFAULT_CLOSING_PRICE);
       TestUtil.compareDoubles(candle.getClosingPrice(), candle.getOpeningPrice());
-      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getLow());
-      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getHigh());
+      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getLowestPrice());
+      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getHighestPrice());
       TestUtil.compareDoubles(2.01, candle.getClosingPrice());
    }
 
@@ -69,8 +69,8 @@ class StandardCandleTest {
             firstCandle,
             secondCandle);
       TestUtil.compareDoubles(31.477676108374382, middleCandle.getOpeningPrice());
-      TestUtil.compareDoubles(115.87073768472906, middleCandle.getHigh());
-      TestUtil.compareDoubles(28.008048029556647, middleCandle.getLow());
+      TestUtil.compareDoubles(115.87073768472906, middleCandle.getHighestPrice());
+      TestUtil.compareDoubles(28.008048029556647, middleCandle.getLowestPrice());
       TestUtil.compareDoubles(99.21542444108496, middleCandle.getClosingPrice());
    }
 
@@ -100,10 +100,11 @@ class StandardCandleTest {
             (firstCandle.getOpeningPrice() + secondCandle.getOpeningPrice()) / 2.0,
             middleCandle.getOpeningPrice());
       TestUtil.compareDoubles(
-            (firstCandle.getHigh() + secondCandle.getHigh()) / 2.0,
-            middleCandle.getHigh());
-      TestUtil.compareDoubles((firstCandle.getLow() + secondCandle.getLow()) / 2.0,
-            middleCandle.getLow());
+            (firstCandle.getHighestPrice() + secondCandle.getHighestPrice()) / 2.0,
+            middleCandle.getHighestPrice());
+      TestUtil.compareDoubles(
+            (firstCandle.getLowestPrice() + secondCandle.getLowestPrice()) / 2.0,
+            middleCandle.getLowestPrice());
       TestUtil.compareDoubles(
             (firstCandle.getClosingPrice() + secondCandle.getClosingPrice()) / 2.0,
             middleCandle.getClosingPrice());
@@ -119,8 +120,8 @@ class StandardCandleTest {
             "24.00",
             "123.01");
       TestUtil.compareDoubles(1.20, candle.getOpeningPrice());
-      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getHigh());
-      TestUtil.compareDoubles(24.00, candle.getLow());
+      TestUtil.compareDoubles(candle.getClosingPrice(), candle.getHighestPrice());
+      TestUtil.compareDoubles(24.00, candle.getLowestPrice());
       TestUtil.compareDoubles(123.01, candle.getClosingPrice());
    }
 

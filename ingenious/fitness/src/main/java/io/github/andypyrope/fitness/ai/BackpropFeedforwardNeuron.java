@@ -55,11 +55,9 @@ class BackpropFeedforwardNeuron extends FeedforwardNeuronBase {
     */
    @Override
    public void adjust() {
-      if (_edges != null) {
-         for (int i = 0; i < _edges.length; i++) {
-            final double edgeGradient = _output * _nextLayer[i]._inputGradient;
-            _edges[i] -= edgeGradient * _volatility;
-         }
+      for (int i = 0; i < _edgeCount; i++) {
+         final double edgeGradient = _output * _nextLayer[i]._inputGradient;
+         _edges[i] -= edgeGradient * _volatility;
       }
 
       final double biasGradient = _inputGradient * _bias;

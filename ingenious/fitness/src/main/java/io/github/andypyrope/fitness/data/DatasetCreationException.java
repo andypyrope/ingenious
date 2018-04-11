@@ -3,10 +3,6 @@ package io.github.andypyrope.fitness.data;
 public class DatasetCreationException extends RuntimeException {
    private static final long serialVersionUID = 2713447823726914113L;
 
-   public DatasetCreationException() {
-      super();
-   }
-
    public DatasetCreationException(String message) {
       super(message);
    }
