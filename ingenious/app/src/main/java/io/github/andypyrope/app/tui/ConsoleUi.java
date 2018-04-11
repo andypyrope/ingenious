@@ -10,7 +10,7 @@ class ConsoleUi {
 
    private static final Pattern COMMAND_HELP = Pattern.compile("help");
    private static final Pattern COMMAND_ITERATE = Pattern
-            .compile("iterate ?(\\d+)?");
+         .compile("iterate ?(\\d+)?");
    private static final Pattern COMMAND_EXIT = Pattern.compile("exit");
    private final World _world;
    private final Scanner _scanner;
@@ -59,14 +59,7 @@ class ConsoleUi {
    }
 
    private void printWorldInfo() {
-      System.out.println(
-         String.format("Gen %02d. Fitness: %3.1f %3.1f %3.1f %3.1f. Population: %d",
-            _world.getGeneration(),
-            _world.getMinFitness(),
-            _world.getMeanFitness(),
-            _world.getMedianFitness(),
-            _world.getMaxFitness(),
-            _world.size()));
+      System.out.println(_world.getInfo());
    }
 
    private String acceptInput() {
