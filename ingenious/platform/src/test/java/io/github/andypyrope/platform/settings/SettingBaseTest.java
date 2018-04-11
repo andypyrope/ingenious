@@ -11,7 +11,6 @@ class SettingBaseTest {
 
    private static final String SOME_LABEL = "some-label";
    private static final String SOME_ID = "some-id";
-   private static final String FETCHED_RAW_VALUE = "some-raw-value";
    private final PersistenceManager _persistenceManager =
          EasyMock.createMock(PersistenceManager.class);
 
@@ -47,26 +46,26 @@ class SettingBaseTest {
       EasyMock.replay(_persistenceManager);
 
       final SomeSetting setting = new SomeSetting(SOME_LABEL, SOME_ID);
-      setting._default = true;
+      setting._isDefault = true;
       setting.save(_persistenceManager, true);
       EasyMock.verify(_persistenceManager);
    }
 
    @Test
    void testSaveDefaultAndNotErase() {
-      _persistenceManager.setValue(SOME_ID, FETCHED_RAW_VALUE);
+      _persistenceManager.setValue(SOME_ID, SomeSetting.FETCHED_RAW_VALUE);
       EasyMock.expectLastCall().once();
       EasyMock.replay(_persistenceManager);
 
       final SomeSetting setting = new SomeSetting(SOME_LABEL, SOME_ID);
-      setting._default = true;
+      setting._isDefault = true;
       setting.save(_persistenceManager, false);
       EasyMock.verify(_persistenceManager);
    }
 
    @Test
    void testSaveNotDefaultAndErase() {
-      _persistenceManager.setValue(SOME_ID, FETCHED_RAW_VALUE);
+      _persistenceManager.setValue(SOME_ID, SomeSetting.FETCHED_RAW_VALUE);
       EasyMock.expectLastCall().once();
       EasyMock.replay(_persistenceManager);
 
@@ -76,7 +75,7 @@ class SettingBaseTest {
 
    @Test
    void testSaveNotDefaultAndNotErase() {
-      _persistenceManager.setValue(SOME_ID, FETCHED_RAW_VALUE);
+      _persistenceManager.setValue(SOME_ID, SomeSetting.FETCHED_RAW_VALUE);
       EasyMock.expectLastCall().once();
       EasyMock.replay(_persistenceManager);
 
@@ -98,9 +97,10 @@ class SettingBaseTest {
 
    private class SomeSetting extends SettingBase {
 
+      static final String FETCHED_RAW_VALUE = "some-raw-value";
       static final String UNSET = "unset";
       String _appliedRawValue = UNSET;
-      boolean _default = false;
+      boolean _isDefault = false;
 
       SomeSetting(final String label, final String id) {
          super(label, id);
@@ -118,7 +118,7 @@ class SettingBaseTest {
 
       @Override
       public boolean isDefault() {
-         return _default;
+         return _isDefault;
       }
 
       @Override
