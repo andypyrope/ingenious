@@ -10,7 +10,7 @@ import io.github.andypyrope.fitness.calculators.candle.CandleCalculatorSettings;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-public class ConsoleApp {
+class ConsoleApp {
 
    public static void main(String[] args) throws InvalidCalculatorSettingsException {
       try (Scanner scanner = new Scanner(System.in)) {

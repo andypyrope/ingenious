@@ -1,18 +1,15 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
+import io.github.andypyrope.fitness.calculators.Calculator;
+import io.github.andypyrope.fitness.calculators.InvalidCalculatorSettingsException;
+import io.github.andypyrope.platform.dna.Dna;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.github.andypyrope.fitness.calculators.Calculator;
-import io.github.andypyrope.fitness.calculators.InvalidCalculatorSettingsException;
-import io.github.andypyrope.platform.dna.Dna;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CandleCalculatorProviderTest {
+class CandleCalculatorProviderTest {
 
    private Exception _exception;
    private String[] _datasets = new String[] {
@@ -22,7 +19,7 @@ public class CandleCalculatorProviderTest {
    private Dna _dna;
 
    @BeforeEach
-   public void setUp() {
+   void setUp() {
       _dna = EasyMock.createMock(Dna.class);
       EasyMock.expect(_dna.read()).andReturn(1).anyTimes();
       EasyMock.expect(_dna.readDouble()).andReturn(0.5).anyTimes();
@@ -34,7 +31,7 @@ public class CandleCalculatorProviderTest {
    }
 
    @Test
-   public void testProvide() throws InvalidCalculatorSettingsException {
+   void testProvide() throws InvalidCalculatorSettingsException {
       final Calculator calculator = new CandleCalculatorProvider(
          _datasets,
          _settings).provide(_dna);
@@ -42,7 +39,7 @@ public class CandleCalculatorProviderTest {
    }
 
    @Test
-   public void testProvideWithInvalidSettings() {
+   void testProvideWithInvalidSettings() {
       _settings.setOutputCandleCount(20);
       assertNull(getProvider());
       assertEquals(
@@ -55,7 +52,7 @@ public class CandleCalculatorProviderTest {
    }
 
    @Test
-   public void testGetDesiredDnaLength() {
+   void testGetDesiredDnaLength() {
       assertEquals(13, getProvider().getDesiredDnaLength());
 
       _settings.setMaxHiddenLayers(100);
@@ -63,7 +60,7 @@ public class CandleCalculatorProviderTest {
    }
 
    @Test
-   public void testGetMaxStudyingComplexity() {
+   void testGetMaxStudyingComplexity() {
       assertEquals(5675, getProvider().getMaxStudyingComplexity());
 
       _settings.setMaxHiddenLayers(100);
@@ -77,7 +74,7 @@ public class CandleCalculatorProviderTest {
    }
 
    @Test
-   public void testWithDatasets() {
+   void testWithDatasets() {
       _datasets = new String[] { "i-do-not-exist.csv", "welp" };
       assertNull(getProvider());
       assertEquals("Data file 'i-do-not-exist.csv' does not exist",

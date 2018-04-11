@@ -14,7 +14,7 @@ public abstract class SettingBase implements Setting {
     * @param label The label of the setting.
     * @param id    The ID of the setting.
     */
-   public SettingBase(final String label, final String id) {
+   protected SettingBase(final String label, final String id) {
       _label = label;
       _id = id == null ? label : id;
    }

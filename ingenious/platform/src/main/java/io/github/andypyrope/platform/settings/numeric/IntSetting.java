@@ -5,7 +5,7 @@ import io.github.andypyrope.platform.settings.Setting;
 /**
  * An integer setting.
  */
-public interface IntSetting extends Setting {
+interface IntSetting extends Setting {
 
    /**
     * @return The current value.

@@ -1,18 +1,17 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import org.easymock.EasyMock;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.InvalidDnaException;
 import io.github.andypyrope.fitness.data.candle.Candle;
 import io.github.andypyrope.platform.dna.Dna;
+import org.easymock.EasyMock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class CandleCalculatorTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+class CandleCalculatorTest {
 
    private static final int[] DEFAULT_READ_RESULTS = new int[] {};
    private static final double[] DEFAULT_READ_DOUBLE_RESUTLS = new double[] {};
@@ -32,7 +31,7 @@ public class CandleCalculatorTest {
    private final CandleCalculatorSettings _settings = new CandleCalculatorSettings();
 
    @BeforeEach
-   public void setUp() {
+   void setUp() {
       setDnaMock(DEFAULT_READ_RESULTS,
          DEFAULT_READ_DOUBLE_RESUTLS,
          DEFAULT_READ_BOUND_INT_RESUTLS);
@@ -42,7 +41,7 @@ public class CandleCalculatorTest {
    }
 
    @Test
-   public void testCreationWithNull() {
+   void testCreationWithNull() {
       assertNull(tryToCreate(null));
       assertEquals(_exceptionClass, InvalidDnaException.class);
       assertEquals("Cannot instantiate SimpleCalculator with null DNA",
@@ -50,7 +49,7 @@ public class CandleCalculatorTest {
    }
 
    @Test
-   public void testGetFitness() {
+   void testGetFitness() {
       final Calculator calculator = tryToCreate();
       final double fitness = calculator.getFitness();
       assertEquals(fitness, calculator.getFitness());
@@ -59,17 +58,17 @@ public class CandleCalculatorTest {
    }
 
    @Test
-   public void testGetStudyingComplexity() {
+   void testGetStudyingComplexity() {
       assertEquals(32, tryToCreate().getStudyingComplexity());
    }
 
    @Test
-   public void testCanStudy() {
+   void testCanStudy() {
       assertEquals(true, tryToCreate().canStudy());
    }
 
    @Test
-   public void testStudy() {
+   void testStudy() {
       final Calculator calculator = tryToCreate();
       for (int i = 0; i < 10; i++) {
          calculator.study();

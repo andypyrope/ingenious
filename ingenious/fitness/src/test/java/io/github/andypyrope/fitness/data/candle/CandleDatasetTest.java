@@ -1,22 +1,19 @@
 package io.github.andypyrope.fitness.data.candle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import io.github.andypyrope.fitness.data.DatasetCreationException;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import io.github.andypyrope.fitness.data.DatasetCreationException;
-
-public class CandleDatasetTest {
+class CandleDatasetTest {
 
    private String _exceptionMessage;
 
    @Test
-   public void testCreation() {
+   void testCreation() {
       final Candle[] data = tryToCreate("datasets/candle/test-creation.csv")
             .getData();
       assertNotNull(data);
@@ -36,14 +33,14 @@ public class CandleDatasetTest {
    }
 
    @Test
-   public void testWithEqualDates() {
+   void testWithEqualDates() {
       final Candle[] data = tryToCreate("datasets/candle/test-equal-dates.csv")
             .getData();
       assertNotNull(data);
    }
 
    @Test
-   public void testNonCsvCreation() {
+   void testNonCsvCreation() {
       assertNull(tryToCreate("datasets/candle/test.txt"));
       assertEquals(
          "The data file 'datasets/candle/test.txt' should have a CSV extension",
@@ -51,7 +48,7 @@ public class CandleDatasetTest {
    }
 
    @Test
-   public void testNonExistentCreation() {
+   void testNonExistentCreation() {
       assertNull(tryToCreate("datasets/candle/test-nonexistent.csv"));
       assertEquals(
          "Data file 'datasets/candle/test-nonexistent.csv' does not exist",
@@ -59,7 +56,7 @@ public class CandleDatasetTest {
    }
 
    @Test
-   public void testDuplicateColumn() {
+   void testDuplicateColumn() {
       assertNull(tryToCreate("datasets/candle/test-duplicate-column.csv"));
       assertEquals(
          "The column 'CLOSE' in CSV file 'datasets/candle/test-duplicate-column.csv' has been encountered twice",
@@ -67,7 +64,7 @@ public class CandleDatasetTest {
    }
 
    @Test
-   public void testIncorrectCellCount() {
+   void testIncorrectCellCount() {
       assertNull(tryToCreate("datasets/candle/test-incorrect-cell-count.csv"));
       assertEquals(
          "Line '3' in CSV file 'datasets/candle/test-incorrect-cell-count.csv' " +
@@ -76,7 +73,7 @@ public class CandleDatasetTest {
    }
 
    @Test
-   public void testMissingColumn() {
+   void testMissingColumn() {
       assertNull(tryToCreate("datasets/candle/test-missing-column.csv"));
       assertEquals("Column 'close' does not exist", _exceptionMessage);
    }

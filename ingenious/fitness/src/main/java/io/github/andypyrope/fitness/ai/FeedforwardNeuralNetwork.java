@@ -20,9 +20,9 @@ public class FeedforwardNeuralNetwork {
          activationFunction);
    }
 
-   public FeedforwardNeuralNetwork(int inputNodeCount, int[] hidden,
-      int outputNodeCount, ActivationFunction hiddenLayerFunction,
-      ActivationFunction outputLayerFunction) {
+   private FeedforwardNeuralNetwork(int inputNodeCount, int[] hidden,
+         int outputNodeCount, ActivationFunction hiddenLayerFunction,
+         ActivationFunction outputLayerFunction) {
 
       _neurons = new RpropFeedforwardNeuron[hidden.length + 2][];
       RpropFeedforwardNeuron[] nextLayer = createNeuronArray(outputNodeCount,

@@ -1,28 +1,25 @@
 package io.github.andypyrope.fitness.calculators.simple;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.easymock.EasyMock;
-import org.junit.jupiter.api.Test;
-
 import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.InvalidDnaException;
 import io.github.andypyrope.platform.dna.Dna;
+import org.easymock.EasyMock;
+import org.junit.jupiter.api.Test;
 
-public class SimpleCalculatorTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class SimpleCalculatorTest {
 
    private Class<? extends Exception> _exceptionClass;
 
    @Test
-   public void testCreationWithNull() {
+   void testCreationWithNull() {
       assertNull(tryToCreate(null));
       assertEquals(_exceptionClass, InvalidDnaException.class);
    }
 
    @Test
-   public void testGetFitness() {
+   void testGetFitness() {
       final Dna dnaMock = EasyMock.createNiceMock(Dna.class);
       final int dnaSize = 8;
       final double fitness = dnaSize * 2;
@@ -40,17 +37,17 @@ public class SimpleCalculatorTest {
    }
 
    @Test
-   public void testGetStudyingComplexity() {
+   void testGetStudyingComplexity() {
       assertEquals(0, tryToCreate().getStudyingComplexity());
    }
 
    @Test
-   public void testCanStudy() {
+   void testCanStudy() {
       assertEquals(false, tryToCreate().canStudy());
    }
 
    @Test
-   public void testStudy() {
+   void testStudy() {
       tryToCreate().study();
    }
 

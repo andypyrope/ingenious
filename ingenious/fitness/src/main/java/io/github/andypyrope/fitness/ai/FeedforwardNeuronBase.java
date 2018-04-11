@@ -7,15 +7,15 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    private static final double INITIAL_BIAS = 0.0;
    private static final double INITIAL_EDGE_WEIGHT = 1.0;
 
-   protected double _bias;
-   protected double _netInput;
-   protected double _output;
-   protected final FeedforwardNeuronBase[] _nextLayer;
-   protected final double[] _edges;
-   protected final ActivationFunction _function;
+   final double[] _edges;
+   final ActivationFunction _function;
+   private final FeedforwardNeuronBase[] _nextLayer;
+   double _bias;
+   double _netInput;
+   double _output;
 
-   public FeedforwardNeuronBase(ActivationFunction function,
-      FeedforwardNeuronBase[] nextLayer) {
+   FeedforwardNeuronBase(ActivationFunction function,
+         FeedforwardNeuronBase[] nextLayer) {
 
       _bias = INITIAL_BIAS;
       _function = function;

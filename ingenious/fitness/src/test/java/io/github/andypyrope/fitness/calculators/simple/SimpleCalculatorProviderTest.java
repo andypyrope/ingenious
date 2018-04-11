@@ -1,28 +1,27 @@
 package io.github.andypyrope.fitness.calculators.simple;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import io.github.andypyrope.platform.dna.Dna;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
-import io.github.andypyrope.platform.dna.Dna;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class SimpleCalculatorProviderTest {
+class SimpleCalculatorProviderTest {
 
    @Test
-   public void testProvide() {
+   void testProvide() {
       assertNotNull(new SimpleCalculatorProvider()
             .provide(EasyMock.createNiceMock(Dna.class)));
    }
 
    @Test
-   public void testGetDesiredDnaLength() {
+   void testGetDesiredDnaLength() {
       assertEquals(50, new SimpleCalculatorProvider().getDesiredDnaLength());
    }
 
    @Test
-   public void testGetMaxStudyingComplexity() {
+   void testGetMaxStudyingComplexity() {
       assertEquals(0,
          new SimpleCalculatorProvider().getMaxStudyingComplexity());
    }

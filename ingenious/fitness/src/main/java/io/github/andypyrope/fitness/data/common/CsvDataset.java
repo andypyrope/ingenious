@@ -22,7 +22,7 @@ public abstract class CsvDataset {
 
    private final List<String[]> _rawRows;
 
-   public CsvDataset(final String filename) {
+   protected CsvDataset(final String filename) {
       final String separator = DEFAULT_SEPARATOR;
 
       if (!filename.endsWith(".csv")) {
@@ -96,7 +96,7 @@ public abstract class CsvDataset {
       return getCell(row, _columnIndices.get(column));
    }
 
-   protected String getCell(int row, int columnIndex) {
+   private String getCell(int row, int columnIndex) {
       return _rawRows.get(row)[columnIndex];
    }
 

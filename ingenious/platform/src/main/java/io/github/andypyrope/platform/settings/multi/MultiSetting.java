@@ -5,7 +5,7 @@ import io.github.andypyrope.platform.settings.Setting;
 /**
  * A collection of many text-based options the user can choose from.
  */
-public interface MultiSetting extends Setting {
+interface MultiSetting extends Setting {
 
    /**
     * @return The available options.

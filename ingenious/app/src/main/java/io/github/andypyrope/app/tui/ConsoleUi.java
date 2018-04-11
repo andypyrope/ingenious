@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ConsoleUi {
+class ConsoleUi {
 
    private static final Pattern COMMAND_HELP = Pattern.compile("help");
    private static final Pattern COMMAND_ITERATE = Pattern
@@ -15,12 +15,12 @@ public class ConsoleUi {
    private final World _world;
    private final Scanner _scanner;
 
-   public ConsoleUi(World world, Scanner scanner) {
+   ConsoleUi(World world, Scanner scanner) {
       _world = world;
       _scanner = scanner;
    }
 
-   public void launch() {
+   void launch() {
       printWorldInfo();
       System.out.print(" >> ");
       while (acceptCommand()) {

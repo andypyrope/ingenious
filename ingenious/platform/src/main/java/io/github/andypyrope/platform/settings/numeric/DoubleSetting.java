@@ -5,7 +5,7 @@ import io.github.andypyrope.platform.settings.Setting;
 /**
  * A setting with a non-integer value.
  */
-public interface DoubleSetting extends Setting {
+interface DoubleSetting extends Setting {
 
    /**
     * @return The current value.

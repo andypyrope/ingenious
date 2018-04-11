@@ -1,6 +1,6 @@
 package io.github.andypyrope.fitness.ai;
 
-public interface FeedforwardNeuron {
+interface FeedforwardNeuron {
 
    /**
     * Reset the net input of this node back to 0.

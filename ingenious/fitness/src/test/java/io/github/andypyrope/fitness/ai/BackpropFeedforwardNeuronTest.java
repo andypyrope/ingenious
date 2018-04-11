@@ -1,15 +1,14 @@
 package io.github.andypyrope.fitness.ai;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import io.github.andypyrope.fitness.ai.activation.LogisticFunction;
 import org.junit.jupiter.api.Test;
 
-import io.github.andypyrope.fitness.ai.activation.LogisticFunction;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BackpropFeedforwardNeuronTest {
 
    @Test
-   public void testCalculateGradientAndAdjust() {
+   void testCalculateGradientAndAdjust() {
       final BackpropFeedforwardNeuron[][] neurons = makeNeurons(
          new int[] { 1, 2, 3, 2, 1 });
 
@@ -57,7 +56,7 @@ class BackpropFeedforwardNeuronTest {
    }
 
    @Test
-   public void testResetInput() {
+   void testResetInput() {
       final BackpropFeedforwardNeuron[][] neurons = makeNeurons(
          new int[] { 1, 1 });
 

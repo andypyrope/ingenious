@@ -1,19 +1,19 @@
 package io.github.andypyrope.fitness.data.candle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StandardCandleTest {
+class StandardCandleTest {
 
    private static final String DEFAULT_DATE = "2018-03-12";
    private static final String DEFAULT_CLOSING_PRICE = "2.01";
 
    @Test
-   public void testMinimal() {
+   void testMinimal() {
       Candle candle = new StandardCandle(
          null,
          DEFAULT_DATE,
@@ -40,7 +40,7 @@ public class StandardCandleTest {
    }
 
    @Test
-   public void testCandleBetweenTwoOthers() {
+   void testCandleBetweenTwoOthers() {
       final double firstOpen = 21.21;
       final double firstHigh = 120.64;
       final double firstLow = 28;
@@ -75,7 +75,7 @@ public class StandardCandleTest {
    }
 
    @Test
-   public void testCandleBetweenTwoWithTheSameTime() {
+   void testCandleBetweenTwoWithTheSameTime() {
       final Candle firstCandle = new StandardCandle(
          "23:01:03",
          "2018-03-12",
@@ -109,7 +109,7 @@ public class StandardCandleTest {
    }
 
    @Test
-   public void testFull() {
+   void testFull() {
       final Candle candle = new StandardCandle(
          "20:12",
          DEFAULT_DATE,
@@ -124,7 +124,7 @@ public class StandardCandleTest {
    }
 
    @Test
-   public void testNoClosingPrice() {
+   void testNoClosingPrice() {
       String exceptionMessage = null;
       try {
          new StandardCandle(null, DEFAULT_DATE, null, null, null, null);
@@ -135,7 +135,7 @@ public class StandardCandleTest {
    }
 
    @Test
-   public void testNoDate() {
+   void testNoDate() {
       String exceptionMessage = null;
       try {
          new StandardCandle(

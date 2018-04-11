@@ -1,33 +1,33 @@
 package io.github.andypyrope.platform.dna;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class IntDnaTest {
 
    private static final int LENGTH = 100;
 
    @Test
-   public void testConstructor() {
+   void testConstructor() {
       final Dna dna = new IntDna(LENGTH);
       dna.randomize();
    }
 
    @Test
-   public void testCopulation() {
+   void testCopulation() {
       for (int i = 0; i < 10; i++) {
          assertNotNull(tryToCopulate(new IntDna(LENGTH), new IntDna(LENGTH)));
       }
    }
 
    @Test
-   public void testCopulationMismatch() {
+   void testCopulationMismatch() {
       assertNull(tryToCopulate(new IntDna(LENGTH), new IntDna(LENGTH + 1)));
    }
 
    @Test
-   public void testMutationAndReading() {
+   void testMutationAndReading() {
       final IntDna dna = new IntDna(LENGTH);
       // All bits become 1
       dna.mutate(1.0);
@@ -60,7 +60,7 @@ class IntDnaTest {
    }
 
    @Test
-   public void testSize() {
+   void testSize() {
       assertEquals(LENGTH, new IntDna(LENGTH).size());
    }
 
