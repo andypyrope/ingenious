@@ -4,15 +4,14 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * An exception thrown when some of settings for a calculator provider are
- * invalid.
+ * An exception thrown when some of settings for a calculator provider are invalid.
  */
 public class InvalidCalculatorSettingsException extends Exception {
    private static final long serialVersionUID = 7444235009026614634L;
 
    /**
-    * Create a generic instance of {@link InvalidCalculatorSettingsException}
-    * about no specific setting or reason.
+    * Create a generic instance of {@link InvalidCalculatorSettingsException} about no
+    * specific setting or reason.
     */
    public InvalidCalculatorSettingsException() {
       super("A setting is invalid");
@@ -20,7 +19,7 @@ public class InvalidCalculatorSettingsException extends Exception {
 
    /**
     * The default constructor with a message.
-    * 
+    *
     * @param message The exception message
     */
    public InvalidCalculatorSettingsException(String message) {
@@ -29,15 +28,13 @@ public class InvalidCalculatorSettingsException extends Exception {
 
    /**
     * Auto-generate a fairly specific message that describes the setting name.
-    * 
-    * @param key The setting key
-    * @param value The setting value
+    *
+    * @param keys The setting keys
     */
    public InvalidCalculatorSettingsException(final String[] keys) {
-      super(
-         keys.length == 1
+      super(keys.length == 1
             ? "The '" + keys[0] + "' setting is invalid"
             : "The following settings are invalid: " +
-                     Arrays.stream(keys).collect(Collectors.joining(", ")));
+                  Arrays.stream(keys).collect(Collectors.joining(", ")));
    }
 }

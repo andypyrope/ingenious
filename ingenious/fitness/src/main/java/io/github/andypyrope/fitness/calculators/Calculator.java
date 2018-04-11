@@ -22,7 +22,7 @@ public interface Calculator {
    void study();
 
    /**
-    * @return Whether there is an implementation of the {@link #study(int)}
+    * @return Whether there is an implementation of the {@link #study}
     *         method
     */
    boolean canStudy();

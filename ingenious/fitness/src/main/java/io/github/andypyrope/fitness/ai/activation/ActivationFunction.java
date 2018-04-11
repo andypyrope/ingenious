@@ -13,8 +13,8 @@ package io.github.andypyrope.fitness.ai.activation;
 public interface ActivationFunction {
    /**
     * Runs the function with 'input' as its parameter
-    * 
-    * @param rawActivation The total net input of a neuron
+    *
+    * @param input The total net input of a neuron
     * @return The actual output of that neuron after it has been manipulated by
     *         the activation function
     */
