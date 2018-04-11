@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CandleCalculatorTest {
 
+   @SuppressWarnings("MismatchedReadAndWriteOfArray")
    private static final double[] DEFAULT_READ_DOUBLE_RESULTS = new double[]{};
    private static final int[] DEFAULT_READ_BOUND_INT_RESULTS = new int[]{5, 2,
          1, 4};
@@ -31,9 +32,8 @@ class CandleCalculatorTest {
 
    @BeforeEach
    void setUp() {
-      setDnaMock(
-      );
-      setCandleMocks(DEFAULT_CANDLE_VALUES);
+      setDnaMock();
+      setCandleMocks();
 
       ((IntSetting) _settings.getSettings()[0]).setValue(3);
    }
@@ -74,30 +74,30 @@ class CandleCalculatorTest {
    }
 
    private void setDnaMock() {
-
       _dna = EasyMock.createMock(Dna.class);
 
-      for (double readDoubleResult : CandleCalculatorTest.DEFAULT_READ_DOUBLE_RESULTS) {
+      //noinspection ConstantConditions
+      for (double readDoubleResult : DEFAULT_READ_DOUBLE_RESULTS) {
          EasyMock.expect(_dna.readDouble()).andReturn(readDoubleResult);
       }
-      for (int boundReadResult : CandleCalculatorTest.DEFAULT_READ_BOUND_INT_RESULTS) {
+      for (int boundReadResult : DEFAULT_READ_BOUND_INT_RESULTS) {
          EasyMock.expect(_dna.read(EasyMock.anyInt(), EasyMock.anyInt()))
                .andReturn(boundReadResult);
       }
       EasyMock.replay(_dna);
    }
 
-   private void setCandleMocks(double[][] values) {
-      _candles = new Candle[values.length][];
+   private void setCandleMocks() {
+      _candles = new Candle[DEFAULT_CANDLE_VALUES.length][];
 
-      for (int i = 0; i < values.length; i++) {
-         _candles[i] = new Candle[values[i].length];
+      for (int i = 0; i < DEFAULT_CANDLE_VALUES.length; i++) {
+         _candles[i] = new Candle[DEFAULT_CANDLE_VALUES[i].length];
 
-         for (int j = 0; j < values[i].length; j++) {
+         for (int j = 0; j < DEFAULT_CANDLE_VALUES[i].length; j++) {
             _candles[i][j] = EasyMock.createNiceMock(Candle.class);
 
             EasyMock.expect(_candles[i][j].getClosingPrice())
-                  .andReturn(values[i][j]).anyTimes();
+                  .andReturn(DEFAULT_CANDLE_VALUES[i][j]).anyTimes();
             EasyMock.replay(_candles[i][j]);
          }
       }
