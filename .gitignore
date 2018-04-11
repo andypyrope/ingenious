@@ -24,7 +24,5 @@ hs_err_pid*
 .classpath
 **/main/resources/datasets/
 target/
-.metadata/
-.recommenders/
 
 .idea/
