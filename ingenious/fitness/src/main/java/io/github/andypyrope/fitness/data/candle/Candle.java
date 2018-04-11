@@ -20,7 +20,7 @@ public interface Candle {
    double getOpeningPrice();
 
    /**
-    * @return The lowest price during the lifspan of the candle
+    * @return The lowest price during the lifespan of the candle
     */
    double getLowestPrice();
 

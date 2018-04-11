@@ -1,7 +1,7 @@
 package io.github.andypyrope.platform.dna;
 
 /**
- * Repesents a single strand of DNA.
+ * Represents a single strand of DNA.
  */
 public interface Dna {
    /**

@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CandleCalculatorTest {
 
-   private static final double[] DEFAULT_READ_DOUBLE_RESUTLS = new double[]{};
-   private static final int[] DEFAULT_READ_BOUND_INT_RESUTLS = new int[]{5, 2,
+   private static final double[] DEFAULT_READ_DOUBLE_RESULTS = new double[]{};
+   private static final int[] DEFAULT_READ_BOUND_INT_RESULTS = new int[]{5, 2,
          1, 4};
 
    private static final double[][] DEFAULT_CANDLE_VALUES = new double[][]{
@@ -77,10 +77,10 @@ class CandleCalculatorTest {
 
       _dna = EasyMock.createMock(Dna.class);
 
-      for (double readDoubleResult : CandleCalculatorTest.DEFAULT_READ_DOUBLE_RESUTLS) {
+      for (double readDoubleResult : CandleCalculatorTest.DEFAULT_READ_DOUBLE_RESULTS) {
          EasyMock.expect(_dna.readDouble()).andReturn(readDoubleResult);
       }
-      for (int boundReadResult : CandleCalculatorTest.DEFAULT_READ_BOUND_INT_RESUTLS) {
+      for (int boundReadResult : CandleCalculatorTest.DEFAULT_READ_BOUND_INT_RESULTS) {
          EasyMock.expect(_dna.read(EasyMock.anyInt(), EasyMock.anyInt()))
                .andReturn(boundReadResult);
       }

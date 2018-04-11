@@ -11,7 +11,7 @@ public interface CalculatorProvider {
    Calculator provide(Dna dna);
 
    /**
-    * @return The number of elements the calculators excpect the DNA to have
+    * @return The number of elements the calculators expect the DNA to have
     */
    int getDesiredDnaLength();
 

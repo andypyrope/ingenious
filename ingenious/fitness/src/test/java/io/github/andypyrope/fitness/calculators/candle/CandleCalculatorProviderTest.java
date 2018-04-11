@@ -85,7 +85,7 @@ class CandleCalculatorProviderTest {
 
    @Test
    void testWithDatasets() {
-      _datasets = new String[]{"i-do-not-exist.csv", "welp"};
+      _datasets = new String[]{"i-do-not-exist.csv", "oh well"};
       assertNull(getProvider());
       assertEquals("Data file 'i-do-not-exist.csv' does not exist",
             _exception.getMessage());

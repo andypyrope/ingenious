@@ -78,32 +78,32 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
 
    private void adjustEdge(int index) {
       final double gradient = _output * _nextLayer[index]._inputGradient;
-      final double gradientMult = gradient * _lastEdgeGradients[index];
+      final double multipliedGradient = gradient * _lastEdgeGradients[index];
 
       _edges[index] -= getDelta(gradient,
             _lastEdgeGradients[index],
             _edgeVolatility[index]);
 
-      if (gradientMult < 0) {
+      if (multipliedGradient < 0) {
          _edgeVolatility[index] *= LOWER_VOLATILITY_MULTIPLIER;
-      } else if (gradientMult > 0) {
+      } else if (multipliedGradient > 0) {
          _edgeVolatility[index] *= HIGHER_VOLATILITY_MULTIPLIER;
       }
-      _lastEdgeGradients[index] = gradientMult < 0 ? 0 : gradient;
+      _lastEdgeGradients[index] = multipliedGradient < 0 ? 0 : gradient;
    }
 
    private void adjustBias() {
       final double gradient = _inputGradient * _bias;
-      final double gradientMult = gradient * _lastBiasGradient;
+      final double multipliedGradient = gradient * _lastBiasGradient;
 
       _bias -= getDelta(gradient, _lastBiasGradient, _biasVolatility);
 
-      if (gradientMult < 0) {
+      if (multipliedGradient < 0) {
          _biasVolatility *= LOWER_VOLATILITY_MULTIPLIER;
-      } else if (gradientMult > 0) {
+      } else if (multipliedGradient > 0) {
          _biasVolatility *= HIGHER_VOLATILITY_MULTIPLIER;
       }
-      _lastBiasGradient = gradientMult < 0 ? 0 : gradient;
+      _lastBiasGradient = multipliedGradient < 0 ? 0 : gradient;
    }
 
    private double getDelta(double gradient, double lastGradient,

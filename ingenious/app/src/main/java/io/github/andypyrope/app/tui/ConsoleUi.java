@@ -110,7 +110,7 @@ class ConsoleUi {
    }
 
    private void showHelp() {
-      System.out.println("Sorry bruh");
+      System.out.println("Sorry bro");
    }
 
    private void iterate(int times) {

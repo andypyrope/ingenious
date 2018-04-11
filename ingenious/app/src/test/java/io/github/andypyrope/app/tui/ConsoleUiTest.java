@@ -44,14 +44,14 @@ class ConsoleUiTest {
    @Test
    void testExit() {
       mockInput("exit");
-      launchInteractor();
+      launchUi();
       verifyOutput(DEFAULT_LINE, INPUT_LINE + EXIT_LINE);
    }
 
    @Test
    void testIterateOnce() {
       mockInput("iterate", "exit");
-      launchInteractor();
+      launchUi();
       verifyOutput(DEFAULT_LINE,
          INPUT_LINE + DEFAULT_LINE,
          INPUT_LINE + EXIT_LINE);
@@ -61,7 +61,7 @@ class ConsoleUiTest {
    void testIterateFiveTimes() {
       _iterateArgument = 5;
       mockInput("iterate 5", "exit");
-      launchInteractor();
+      launchUi();
       verifyOutput(DEFAULT_LINE,
          INPUT_LINE + DEFAULT_LINE,
          INPUT_LINE + EXIT_LINE);
@@ -69,8 +69,8 @@ class ConsoleUiTest {
 
    @Test
    void testIncorrectCommand() {
-      mockInput("sdgasdgkpasdg", "exit");
-      launchInteractor();
+      mockInput("some-incorrect-command", "exit");
+      launchUi();
       verifyOutput(DEFAULT_LINE,
          INPUT_LINE + "Incorrect command",
          INPUT_LINE + EXIT_LINE);
@@ -79,9 +79,9 @@ class ConsoleUiTest {
    @Test
    void testHelp() {
       mockInput("help", "exit");
-      launchInteractor();
+      launchUi();
       verifyOutput(DEFAULT_LINE,
-         INPUT_LINE + "Sorry bruh",
+            INPUT_LINE + "Sorry bro",
          INPUT_LINE + EXIT_LINE);
    }
 
@@ -97,7 +97,7 @@ class ConsoleUiTest {
          _outStream.toString().trim());
    }
 
-   private void launchInteractor() {
+   private void launchUi() {
       final World world = EasyMock.createNiceMock(World.class);
       EasyMock.expect(world.size()).andReturn(DEFAULT_SIZE).anyTimes();
       EasyMock.expect(world.getMinFitness()).andReturn(DEFAULT_MIN_FITNESS)

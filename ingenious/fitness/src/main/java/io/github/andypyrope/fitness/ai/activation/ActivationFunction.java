@@ -5,9 +5,9 @@ package io.github.andypyrope.fitness.ai.activation;
  * <ol>
  * <li>Is non-decreasing</li>
  * <li>Has a defined derivative</li>
- * <li>Usually has a constranied output range</li>
+ * <li>Usually has a constrained output range</li>
  * </ol>
- * This function is used to transfrom the total net input of a node into an
+ * This function is used to transform the total net input of a node into an
  * output, which is then passed onto subsequent neurons
  */
 public interface ActivationFunction {
