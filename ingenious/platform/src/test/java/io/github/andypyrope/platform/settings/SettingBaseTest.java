@@ -11,22 +11,20 @@ class SettingBaseTest {
 
    private static final String SOME_LABEL = "some-label";
    private static final String SOME_ID = "some-id";
-   private static final String UNSET = "unset";
    private static final String FETCHED_RAW_VALUE = "some-raw-value";
    private final PersistenceManager _persistenceManager =
          EasyMock.createMock(PersistenceManager.class);
-   private String _setRawValue = UNSET;
-   private boolean _isDefault = false;
 
    @Test
    void testLoadUndefined() {
       EasyMock.expect(_persistenceManager.getValue(SOME_ID, null)).andReturn(null);
       EasyMock.replay(_persistenceManager);
 
-      new SomeSetting(SOME_LABEL, SOME_ID).load(_persistenceManager);
+      final SomeSetting setting = new SomeSetting(SOME_LABEL, SOME_ID);
+      setting.load(_persistenceManager);
       EasyMock.verify(_persistenceManager);
 
-      assertEquals(UNSET, _setRawValue);
+      assertEquals(SomeSetting.UNSET, setting._appliedRawValue);
    }
 
    @Test
@@ -35,33 +33,34 @@ class SettingBaseTest {
       EasyMock.expect(_persistenceManager.getValue(SOME_ID, null)).andReturn(value);
       EasyMock.replay(_persistenceManager);
 
-      new SomeSetting(SOME_LABEL, SOME_ID).load(_persistenceManager);
+      final SomeSetting setting = new SomeSetting(SOME_LABEL, SOME_ID);
+      setting.load(_persistenceManager);
       EasyMock.verify(_persistenceManager);
 
-      assertEquals(value, _setRawValue);
+      assertEquals(value, setting._appliedRawValue);
    }
 
    @Test
    void testSaveDefaultAndErase() {
-      _isDefault = true;
-
       _persistenceManager.setValue(SOME_ID, null);
       EasyMock.expectLastCall().once();
       EasyMock.replay(_persistenceManager);
 
-      new SomeSetting(SOME_LABEL, SOME_ID).save(_persistenceManager, true);
+      final SomeSetting setting = new SomeSetting(SOME_LABEL, SOME_ID);
+      setting._default = true;
+      setting.save(_persistenceManager, true);
       EasyMock.verify(_persistenceManager);
    }
 
    @Test
    void testSaveDefaultAndNotErase() {
-      _isDefault = true;
-
       _persistenceManager.setValue(SOME_ID, FETCHED_RAW_VALUE);
       EasyMock.expectLastCall().once();
       EasyMock.replay(_persistenceManager);
 
-      new SomeSetting(SOME_LABEL, SOME_ID).save(_persistenceManager, false);
+      final SomeSetting setting = new SomeSetting(SOME_LABEL, SOME_ID);
+      setting._default = true;
+      setting.save(_persistenceManager, false);
       EasyMock.verify(_persistenceManager);
    }
 
@@ -99,6 +98,10 @@ class SettingBaseTest {
 
    private class SomeSetting extends SettingBase {
 
+      static final String UNSET = "unset";
+      String _appliedRawValue = UNSET;
+      boolean _default = false;
+
       SomeSetting(final String label, final String id) {
          super(label, id);
       }
@@ -110,12 +113,12 @@ class SettingBaseTest {
 
       @Override
       protected void applyRawValue(final String rawValue) {
-         _setRawValue = rawValue;
+         _appliedRawValue = rawValue;
       }
 
       @Override
       public boolean isDefault() {
-         return _isDefault;
+         return _default;
       }
 
       @Override
