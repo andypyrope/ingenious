@@ -31,8 +31,10 @@ class SimpleOrganism {
          return;
       }
 
-      long attempts = allowedComplexity / _calculator.getStudyingComplexity();
-      for (long i = 0; i < attempts; i++) {
+      int attempts = (int) Math.min(Integer.MAX_VALUE,
+            allowedComplexity / _calculator.getStudyingComplexity());
+
+      for (int i = 0; i < attempts; i++) {
          _calculator.study();
       }
    }

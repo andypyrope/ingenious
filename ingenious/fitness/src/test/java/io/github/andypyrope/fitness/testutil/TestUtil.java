@@ -17,17 +17,21 @@ public class TestUtil {
       assertTrue(Math.abs(expected - actual) < DOUBLE_COMPARISON_PRECISION);
    }
 
-   public static void compareDoubleArrays(Double[] a, Double[] b) {
-      for (int i = 0; i < a.length; i++) {
-         if (a[i] == null && b[i] == null) {
+   public static void compareDoubleArrays(Double[] first, Double[] second) {
+      for (int i = 0; i < first.length; i++) {
+         if (first[i] == null && second[i] == null) {
             continue;
          }
-         if ((a[i] == null) != (b[i] == null) ||
-               Math.abs(a[i] - b[i]) > 0.00001) {
+
+         if ((first[i] == null) != (second[i] == null)
+               || Math.abs(first[i] - second[i]) > DOUBLE_COMPARISON_PRECISION) {
+
             throw new RuntimeException(String.format(
                   "Expected the 'Double' arrays [%s] and [%s] to be equal",
-                  Arrays.stream(a).map(String::valueOf).collect(Collectors.joining(", ")),
-                  Arrays.stream(b).map(String::valueOf).collect(Collectors.joining(",")))
+                  Arrays.stream(first).map(String::valueOf).collect(
+                        Collectors.joining(", ")),
+                  Arrays.stream(second).map(String::valueOf).collect(
+                        Collectors.joining(",")))
             );
          }
       }
