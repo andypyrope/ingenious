@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class CsvCandleDataset extends CsvDataset implements CandleDataset {
@@ -35,12 +36,7 @@ public class CsvCandleDataset extends CsvDataset implements CandleDataset {
                getCell(i, CLOSE_COLUMN));
       }
 
-      Arrays.sort(_data, (candle1, candle2) -> {
-         if (candle1.getTime().isEqual(candle2.getTime())) {
-            return 0;
-         }
-         return candle1.getTime().isAfter(candle2.getTime()) ? 1 : -1;
-      });
+      Arrays.sort(_data, Comparator.comparing(Candle::getTime));
    }
 
    @Override
