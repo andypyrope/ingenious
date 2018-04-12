@@ -52,33 +52,6 @@ public interface Dna {
    double readDouble();
 
    /**
-    * Reads an array with a specified length
-    *
-    * @param length The desired length of the array
-    * @return An integer array
-    */
-   int[] readArray(int length);
-
-   /**
-    * Reads a matrix with specified height and width
-    *
-    * @param height The desired height (first dimension) of the matrix
-    * @param width  The desired width (second dimension) of the matrix
-    * @return A matrix
-    */
-   int[][] readMatrix(int height, int width);
-
-   /**
-    * Reads a cube (3D matrix) with specified depth, height and width
-    *
-    * @param depth  The desired depth (first dimension) of the 3D matrix
-    * @param height The desired height (second dimension) of the 3D matrix
-    * @param width  The desired width (third dimension) of the 3D matrix
-    * @return A 3D matrix
-    */
-   int[][][] readCube(int depth, int height, int width);
-
-   /**
     * @return The length of the DNA, measured in the number of times {@link #read()} must
     *       be called to arrive at the same spot
     */

@@ -102,35 +102,6 @@ public class IntDna implements Dna {
    }
 
    @Override
-   public int[] readArray(int length) {
-      final int[] result = new int[length];
-      for (int i = 0; i < length; i++) {
-         result[i] = read();
-      }
-      return result;
-   }
-
-   @Override
-   public int[][] readMatrix(int height, int width) {
-      final int[][] result = new int[height][];
-
-      for (int i = 0; i < height; i++) {
-         result[i] = readArray(width);
-      }
-      return result;
-   }
-
-   @Override
-   public int[][][] readCube(int depth, int height, int width) {
-      final int[][][] result = new int[depth][][];
-
-      for (int i = 0; i < depth; i++) {
-         result[i] = readMatrix(height, width);
-      }
-      return result;
-   }
-
-   @Override
    public int size() {
       return _data.length;
    }
