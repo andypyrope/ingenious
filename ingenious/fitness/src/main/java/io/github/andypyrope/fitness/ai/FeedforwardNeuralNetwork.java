@@ -24,8 +24,8 @@ public class FeedforwardNeuralNetwork {
          int outputNodeCount, ActivationFunction hiddenLayerFunction,
          ActivationFunction outputLayerFunction) {
 
-      _layers = new RpropFeedforwardNeuron[hidden.length + 2][];
-      RpropFeedforwardNeuron[] nextLayer = createLayer(outputNodeCount, null,
+      _layers = new FeedforwardNeuron[hidden.length + 2][];
+      FeedforwardNeuron[] nextLayer = createLayer(outputNodeCount, null,
          outputLayerFunction);
 
       // Output layer
@@ -54,8 +54,8 @@ public class FeedforwardNeuralNetwork {
       return _edgeCount;
    }
 
-   private RpropFeedforwardNeuron[] createLayer(int size,
-      RpropFeedforwardNeuron[] nextLayer, ActivationFunction function) {
+   private FeedforwardNeuron[] createLayer(int size,
+         FeedforwardNeuron[] nextLayer, ActivationFunction function) {
 
       final RpropFeedforwardNeuron[] result = new RpropFeedforwardNeuron[size];
       for (int i = 0; i < size; i++) {

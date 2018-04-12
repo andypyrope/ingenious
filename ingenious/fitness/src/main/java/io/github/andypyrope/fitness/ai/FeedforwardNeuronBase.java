@@ -9,21 +9,21 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
 
    final int _edgeCount;
 
+   final FeedforwardNeuron[] _nextLayer;
+   double _inputGradient;
    final double[] _edges;
    final ActivationFunction _function;
-   private final FeedforwardNeuronBase[] _nextLayer;
+   double _outputGradient;
    double _bias;
    double _netInput;
    double _output;
 
-   FeedforwardNeuronBase(ActivationFunction function,
-         FeedforwardNeuronBase[] nextLayer) {
-
+   FeedforwardNeuronBase(ActivationFunction function, FeedforwardNeuron[] nextLayer) {
       _bias = INITIAL_BIAS;
       _function = function;
-      _nextLayer = nextLayer;
+      _nextLayer = nextLayer == null ? new FeedforwardNeuron[0] : nextLayer;
 
-      _edgeCount = nextLayer == null ? 0 : nextLayer.length;
+      _edgeCount = _nextLayer.length;
 
       _edges = new double[_edgeCount];
       for (int i = 0; i < _edgeCount; i++) {
@@ -76,12 +76,18 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
     */
    @Override
    public void propagate() {
-      if (_nextLayer == null) {
-         return;
+      for (int i = 0; i < _edgeCount; i++) {
+         _nextLayer[i].addInto(_output * _edges[i]);
       }
+   }
 
-      for (int i = 0; i < _nextLayer.length; i++) {
-         _nextLayer[i]._netInput += _output * _edges[i];
-      }
+   @Override
+   public void addInto(double amount) {
+      _netInput += amount;
+   }
+
+   @Override
+   public double getInputGradient() {
+      return _inputGradient;
    }
 }

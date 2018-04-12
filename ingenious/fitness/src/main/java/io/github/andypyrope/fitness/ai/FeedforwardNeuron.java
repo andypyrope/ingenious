@@ -8,9 +8,8 @@ interface FeedforwardNeuron {
    void resetNetInput();
 
    /**
-    * Manually change the output of the neuron. Useful for input nodes in
-    * general.
-    * 
+    * Manually change the output of the neuron. Useful for input nodes in general.
+    *
     * @param output The new output of this neuron
     */
    void setOutput(double output);
@@ -21,14 +20,13 @@ interface FeedforwardNeuron {
    double getOutput();
 
    /**
-    * Set the output to a value based on the input, activation function, and
-    * bias.
+    * Set the output to a value based on the input, activation function, and bias.
     */
    void updateOutput();
 
    /**
-    * Feed the output of this neuron into the inputs of the next neurons, based
-    * on the edge weights between it and them.
+    * Feed the output of this neuron into the inputs of the next neurons, based on the
+    * edge weights between it and them.
     */
    void propagate();
 
@@ -39,15 +37,26 @@ interface FeedforwardNeuron {
 
    /**
     * Determine the gradient of this neuron based on its desired output.
-    * 
+    *
     * @param targetOutput The target output of this neuron
     */
    void calculateGradient(double targetOutput);
 
    /**
-    * Change the weights/bias/etc. of the neuron in order for the neural network
-    * it's a part of to show better results.
+    * Change the weights/bias/etc. of the neuron in order for the neural network it's a
+    * part of to show better results.
     */
    void adjust();
 
+   /**
+    * Adds a certain amount to the net input of this node.
+    *
+    * @param amount The amount to add.
+    */
+   void addInto(double amount);
+
+   /**
+    * @return The current gradient of the input of this node.
+    */
+   double getInputGradient();
 }

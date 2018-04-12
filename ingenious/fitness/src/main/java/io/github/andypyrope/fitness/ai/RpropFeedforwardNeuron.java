@@ -15,20 +15,15 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
    private static final double HIGHER_VOLATILITY_MULTIPLIER = 1.2;
    private static final double INITIAL_VOLATILITY = 0.1;
 
-   private double _inputGradient;
-   private double _outputGradient;
    private final double[] _edgeVolatility;
    private final double[] _lastEdgeGradients;
-   private final RpropFeedforwardNeuron[] _nextLayer;
 
    private double _biasVolatility = INITIAL_VOLATILITY;
    private double _lastBiasGradient;
 
-   RpropFeedforwardNeuron(ActivationFunction function,
-         RpropFeedforwardNeuron[] nextLayer) {
+   RpropFeedforwardNeuron(ActivationFunction function, FeedforwardNeuron[] nextLayer) {
 
       super(function, nextLayer);
-      _nextLayer = nextLayer;
 
       _lastEdgeGradients = new double[_edgeCount];
       _edgeVolatility = new double[_edgeCount];
@@ -46,7 +41,7 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
    public void calculateGradient() {
       _outputGradient = 0.0;
       for (int i = 0; i < _edges.length; i++) {
-         _outputGradient += _edges[i] * _nextLayer[i]._inputGradient;
+         _outputGradient += _edges[i] * _nextLayer[i].getInputGradient();
       }
 
       _inputGradient = _function.getSlope(_netInput, _output) * _outputGradient;
@@ -77,7 +72,7 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
    }
 
    private void adjustEdge(int index) {
-      final double gradient = _output * _nextLayer[index]._inputGradient;
+      final double gradient = _output * _nextLayer[index].getInputGradient();
       final double multipliedGradient = gradient * _lastEdgeGradients[index];
 
       _edges[index] -= getDelta(gradient,

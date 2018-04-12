@@ -51,10 +51,10 @@ class BackpropFeedforwardNeuronTest {
    }
 
    private FeedforwardNeuron[][] makeNeurons(int[] count) {
-      final BackpropFeedforwardNeuron[][] result = new BackpropFeedforwardNeuron[count.length][];
+      final FeedforwardNeuron[][] result = new FeedforwardNeuron[count.length][];
 
       for (int i = result.length - 1; i >= 0; i--) {
-         result[i] = new BackpropFeedforwardNeuron[count[i]];
+         result[i] = new FeedforwardNeuron[count[i]];
          for (int j = 0; j < count[i]; j++) {
             result[i][j] = new BackpropFeedforwardNeuron(
                   i == result.length - 1 ? null : result[i + 1],

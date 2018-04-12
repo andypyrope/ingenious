@@ -34,14 +34,14 @@ class RpropFeedforwardNeuronTest {
    }
 
    private FeedforwardNeuron[][] makeNeurons(int[] count) {
-      final RpropFeedforwardNeuron[][] result = new RpropFeedforwardNeuron[count.length][];
+      final FeedforwardNeuron[][] result = new FeedforwardNeuron[count.length][];
 
       for (int i = result.length - 1; i >= 0; i--) {
-         result[i] = new RpropFeedforwardNeuron[count[i]];
+         result[i] = new FeedforwardNeuron[count[i]];
          for (int j = 0; j < count[i]; j++) {
             result[i][j] = new RpropFeedforwardNeuron(
-                  new LogisticFunction(), i == result.length - 1 ? null : result[i + 1]
-            );
+                  new LogisticFunction(),
+                  i == result.length - 1 ? null : result[i + 1]);
          }
       }
 

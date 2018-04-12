@@ -1,6 +1,7 @@
 package io.github.andypyrope.evolution.worlds.simple;
 
 import io.github.andypyrope.evolution.testutil.TestUtil;
+import io.github.andypyrope.evolution.worlds.World;
 import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.CalculatorProvider;
 import io.github.andypyrope.platform.dna.Dna;
@@ -50,7 +51,7 @@ class SimpleWorldTest {
 
    @Test
    void testGenerationAndSize() {
-      final SimpleWorld world = makeSimpleWorld(DEFAULT_SIZE);
+      final World world = makeSimpleWorld(DEFAULT_SIZE);
 
       assertEquals(0, world.getGeneration());
       world.iterate();
@@ -62,7 +63,7 @@ class SimpleWorldTest {
 
    @Test
    void testFitness() {
-      final SimpleWorld world = makeSimpleWorld(DEFAULT_SIZE);
+      final World world = makeSimpleWorld(DEFAULT_SIZE);
       TestUtil.compareDoubles(DEFAULT_FITNESS, world.getMinFitness());
       TestUtil.compareDoubles(DEFAULT_FITNESS, world.getMeanFitness());
       TestUtil.compareDoubles(DEFAULT_FITNESS, world.getMedianFitness());
@@ -71,12 +72,12 @@ class SimpleWorldTest {
 
    @Test
    void testOddSizeMedianFitness() {
-      final SimpleWorld world = makeSimpleWorld(11);
+      final World world = makeSimpleWorld(11);
       world.iterate();
       assertEquals(DEFAULT_FITNESS, world.getMedianFitness());
    }
 
-   private SimpleWorld makeSimpleWorld(int size) {
+   private World makeSimpleWorld(int size) {
       return new SimpleWorld(
             new SimpleWorldSettings(size, DEFAULT_COPULATION_RATIO, 1000L),
             _providerMock);
