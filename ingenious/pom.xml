@@ -16,5 +16,6 @@
       <module>platform</module>
       <module>fitness</module>
       <module>app</module>
+      <module>ai</module>
    </modules>
 </project>

@@ -1,8 +1,8 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
-import io.github.andypyrope.fitness.ai.activation.LogisticFunction;
-import io.github.andypyrope.fitness.ai.feedforward.StandardFeedforwardNeuralNetwork;
-import io.github.andypyrope.fitness.ai.feedforward.neurons.RpropFeedforwardNeuronFactory;
+import io.github.andypyrope.ai.activation.LogisticFunction;
+import io.github.andypyrope.ai.feedforward.StandardFeedforwardNeuralNetwork;
+import io.github.andypyrope.ai.feedforward.neurons.RpropFeedforwardNeuronFactory;
 import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.InvalidDnaException;
 import io.github.andypyrope.fitness.data.candle.Candle;
