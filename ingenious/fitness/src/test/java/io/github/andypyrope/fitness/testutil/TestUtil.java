@@ -1,6 +1,7 @@
 package io.github.andypyrope.fitness.testutil;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,22 +18,37 @@ public class TestUtil {
       assertTrue(Math.abs(expected - actual) < DOUBLE_COMPARISON_PRECISION);
    }
 
-   public static void compareDoubleArrays(Double[] first, Double[] second) {
-      for (int i = 0; i < first.length; i++) {
-         if (first[i] == null && second[i] == null) {
+   public static void compareDoubleArrays(double[] expected, double[] actual) {
+      compareDoubles(Arrays.stream(expected).boxed().collect(Collectors.toList()),
+            Arrays.stream(actual).boxed().collect(Collectors.toList()));
+   }
+
+   public static void compareDoubleArrays(Double[] expected, Double[] actual) {
+      compareDoubles(Arrays.stream(expected).collect(Collectors.toList()),
+            Arrays.stream(actual).collect(Collectors.toList()));
+   }
+
+   private static void compareDoubles(List<Double> expected, List<Double> actual) {
+      final String errorMessage = String.format(
+            "Expected 'Double' array [%s] to be equal to [%s]",
+            actual.stream().map(String::valueOf).collect(Collectors.joining(",")),
+            expected.stream().map(String::valueOf).collect(Collectors.joining(", "))
+      );
+
+      if (expected.size() != actual.size()) {
+         throw new RuntimeException(errorMessage);
+      }
+
+      for (int i = 0; i < expected.size(); i++) {
+         if (expected.get(i) == null && actual.get(i) == null) {
             continue;
          }
 
-         if ((first[i] == null) != (second[i] == null)
-               || Math.abs(first[i] - second[i]) > DOUBLE_COMPARISON_PRECISION) {
+         if ((expected.get(i) == null) != (actual.get(i) == null)
+               ||
+               Math.abs(expected.get(i) - actual.get(i)) > DOUBLE_COMPARISON_PRECISION) {
 
-            throw new RuntimeException(String.format(
-                  "Expected the 'Double' arrays [%s] and [%s] to be equal",
-                  Arrays.stream(first).map(String::valueOf).collect(
-                        Collectors.joining(", ")),
-                  Arrays.stream(second).map(String::valueOf).collect(
-                        Collectors.joining(",")))
-            );
+            throw new RuntimeException(errorMessage);
          }
       }
    }

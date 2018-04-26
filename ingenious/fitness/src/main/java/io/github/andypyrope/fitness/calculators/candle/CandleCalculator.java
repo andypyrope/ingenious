@@ -1,7 +1,8 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
-import io.github.andypyrope.fitness.ai.FeedforwardNeuralNetwork;
 import io.github.andypyrope.fitness.ai.activation.LogisticFunction;
+import io.github.andypyrope.fitness.ai.feedforward.StandardFeedforwardNeuralNetwork;
+import io.github.andypyrope.fitness.ai.feedforward.neurons.RpropFeedforwardNeuronFactory;
 import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.InvalidDnaException;
 import io.github.andypyrope.fitness.data.candle.Candle;
@@ -37,7 +38,7 @@ class CandleCalculator implements Calculator {
    private int _position = -1;
    private int _pass = -1;
 
-   private final FeedforwardNeuralNetwork _network;
+   private final StandardFeedforwardNeuralNetwork _network;
 
    CandleCalculator(Dna dna, Candle[][] normalizedCandles,
       CandleCalculatorSettings settings) {
@@ -66,11 +67,11 @@ class CandleCalculator implements Calculator {
             settings.getMaxHiddenSize() + 1);
       }
 
-      _network = new FeedforwardNeuralNetwork(
+      _network = new StandardFeedforwardNeuralNetwork(
          _inputCandleCount,
          hiddenLayers,
          _outputCandleCount,
-         new LogisticFunction());
+            new RpropFeedforwardNeuronFactory(new LogisticFunction()));
 
       _studyingComplexity = _network.getEdgeCount();
 

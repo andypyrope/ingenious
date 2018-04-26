@@ -1,4 +1,4 @@
-package io.github.andypyrope.fitness.ai;
+package io.github.andypyrope.fitness.ai.feedforward.neurons;
 
 import io.github.andypyrope.fitness.ai.activation.ActivationFunction;
 
@@ -18,7 +18,7 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    double _netInput;
    double _output;
 
-   FeedforwardNeuronBase(ActivationFunction function, FeedforwardNeuron[] nextLayer) {
+   FeedforwardNeuronBase(FeedforwardNeuron[] nextLayer, ActivationFunction function) {
       _bias = INITIAL_BIAS;
       _function = function;
       _nextLayer = nextLayer == null ? new FeedforwardNeuron[0] : nextLayer;
@@ -34,27 +34,17 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    /**
     * (non-Javadoc)
     *
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#resetNetInput()
+    * @see FeedforwardNeuron#setNetInput(double)
     */
    @Override
-   public void resetNetInput() {
-      _netInput = 0.0;
+   public void setNetInput(final double netInput) {
+      _netInput = netInput;
    }
 
    /**
     * (non-Javadoc)
     *
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#setOutput(double)
-    */
-   @Override
-   public void setOutput(double output) {
-      _output = output;
-   }
-
-   /**
-    * (non-Javadoc)
-    *
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#getOutput()
+    * @see FeedforwardNeuron#getOutput()
     */
    @Override
    public double getOutput() {
@@ -62,20 +52,14 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    }
 
    /**
-    * Update the output of the node based on its net input, bias and activation function.
-    */
-   @Override
-   public void updateOutput() {
-      _output = _function.getOutput(_netInput + _bias);
-   }
-
-   /**
     * (non-Javadoc)
     *
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#propagate()
+    * @see FeedforwardNeuron#propagate()
     */
    @Override
    public void propagate() {
+      _output = _function.getOutput(_netInput + _bias);
+
       for (int i = 0; i < _edgeCount; i++) {
          _nextLayer[i].addInto(_output * _edges[i]);
       }

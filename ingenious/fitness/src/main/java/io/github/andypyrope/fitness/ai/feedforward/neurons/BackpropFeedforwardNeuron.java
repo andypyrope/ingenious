@@ -1,4 +1,4 @@
-package io.github.andypyrope.fitness.ai;
+package io.github.andypyrope.fitness.ai.feedforward.neurons;
 
 import io.github.andypyrope.fitness.ai.activation.ActivationFunction;
 
@@ -13,7 +13,7 @@ class BackpropFeedforwardNeuron extends FeedforwardNeuronBase {
    BackpropFeedforwardNeuron(FeedforwardNeuron[] nextLayer,
          ActivationFunction function, double volatility) {
 
-      super(function, nextLayer);
+      super(nextLayer, function);
 
       _volatility = volatility;
    }
@@ -21,39 +21,29 @@ class BackpropFeedforwardNeuron extends FeedforwardNeuronBase {
    /**
     * (non-Javadoc)
     *
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#calculateGradient()
-    */
-   @Override
-   public void calculateGradient() {
-      _outputGradient = 0.0;
-      for (int i = 0; i < _edges.length; i++) {
-         _outputGradient += _edges[i] * _nextLayer[i].getInputGradient();
-      }
-      _inputGradient = _function.getSlope(_netInput, _output) * _outputGradient;
-   }
-
-   /**
-    * (non-Javadoc)
-    *
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#calculateGradient(double)
-    */
-   @Override
-   public void calculateGradient(double targetOutput) {
-      _outputGradient = _output - targetOutput;
-      _inputGradient = _function.getSlope(_netInput, _output) * _outputGradient;
-   }
-
-   /**
-    * (non-Javadoc)
-    *
-    * @see io.github.andypyrope.fitness.ai.FeedforwardNeuron#adjust()
+    * @see FeedforwardNeuron#adjust()
     */
    @Override
    public void adjust() {
+      _outputGradient = 0.0;
+      for (int i = 0; i < _edgeCount; i++) {
+         _outputGradient += _edges[i] * _nextLayer[i].getInputGradient();
+      }
+      _inputGradient = _function.getSlope(_netInput, _output) * _outputGradient;
+
       for (int i = 0; i < _edgeCount; i++) {
          final double edgeGradient = _output * _nextLayer[i].getInputGradient();
          _edges[i] -= edgeGradient * _volatility;
       }
+
+      final double biasGradient = _inputGradient * _bias;
+      _bias -= biasGradient * _volatility;
+   }
+
+   @Override
+   public void adjust(double targetOutput) {
+      _outputGradient = _output - targetOutput;
+      _inputGradient = _function.getSlope(_netInput, _output) * _outputGradient;
 
       final double biasGradient = _inputGradient * _bias;
       _bias -= biasGradient * _volatility;
