@@ -5,7 +5,6 @@ import io.github.andypyrope.ai.activation.ActivationFunction;
 public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
 
    private static final double INITIAL_BIAS = 0.0;
-   private static final double INITIAL_EDGE_WEIGHT = 1.0;
 
    final int _edgeCount;
 
@@ -25,9 +24,11 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
 
       _edgeCount = _nextLayer.length;
 
+      final double edgeWeight = 0.5 / _edgeCount;
+
       _edges = new double[_edgeCount];
       for (int i = 0; i < _edgeCount; i++) {
-         _edges[i] = INITIAL_EDGE_WEIGHT;
+         _edges[i] = edgeWeight;
       }
    }
 

@@ -1,7 +1,18 @@
 package io.github.andypyrope.ai.feedforward.neurons;
 
+import io.github.andypyrope.ai.activation.ActivationFunction;
+import io.github.andypyrope.ai.activation.IdentityFunction;
+
 abstract class FeedforwardNeuronFactoryBase implements FeedforwardNeuronFactory {
 
+   private final ActivationFunction _function;
+
+   /**
+    * @param function The activation function to use.
+    */
+   FeedforwardNeuronFactoryBase(final ActivationFunction function) {
+      _function = function;
+   }
 
    /**
     * Instantiate an input neuron by providing data that may be necessary for finishing
@@ -11,7 +22,7 @@ abstract class FeedforwardNeuronFactoryBase implements FeedforwardNeuronFactory 
     * @return A new {@link FeedforwardNeuron} instance.
     */
    private FeedforwardNeuron makeInputNeuron(FeedforwardNeuron[] nextLayer) {
-      return makeNeuron(nextLayer);
+      return makeNeuron(nextLayer, new IdentityFunction());
    }
 
    /**
@@ -22,7 +33,7 @@ abstract class FeedforwardNeuronFactoryBase implements FeedforwardNeuronFactory 
     * @return A new {@link FeedforwardNeuron} instance.
     */
    private FeedforwardNeuron makeHiddenNeuron(FeedforwardNeuron[] nextLayer) {
-      return makeNeuron(nextLayer);
+      return makeNeuron(nextLayer, _function);
    }
 
    /**
@@ -32,7 +43,7 @@ abstract class FeedforwardNeuronFactoryBase implements FeedforwardNeuronFactory 
     * @return A new {@link FeedforwardNeuron} instance.
     */
    private FeedforwardNeuron makeOutputNeuron() {
-      return makeNeuron(null);
+      return makeNeuron(null, new IdentityFunction());
    }
 
    /**
@@ -43,9 +54,11 @@ abstract class FeedforwardNeuronFactoryBase implements FeedforwardNeuronFactory 
     * their implementations are the same.
     *
     * @param nextLayer The next layer in the neural network.
+    * @param function The activation function to use.
     * @return The newly created {@link FeedforwardNeuron} instance.
     */
-   protected abstract FeedforwardNeuron makeNeuron(final FeedforwardNeuron[] nextLayer);
+   protected abstract FeedforwardNeuron makeNeuron(final FeedforwardNeuron[] nextLayer,
+         final ActivationFunction function);
 
    @Override
    public FeedforwardNeuron[][] makeAllNeurons(final int inputNeuronCount,

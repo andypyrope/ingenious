@@ -1,8 +1,8 @@
 package io.github.andypyrope.ai.activation;
 
+import io.github.andypyrope.ai.testutil.TestUtil;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LogisticFunctionTest {
@@ -45,8 +45,8 @@ class LogisticFunctionTest {
          current += step;
       }
 
-      assertEquals(0.5, function.getOutput(0.0));
-      assertEquals(0.25, function.getSlope(0.0, function.getOutput(0.0)));
+      TestUtil.compareDoubles(0.5, function.getOutput(0.0));
+      TestUtil.compareDoubles(0.25, function.getSlope(0.0, function.getOutput(0.0)));
    }
 
 }

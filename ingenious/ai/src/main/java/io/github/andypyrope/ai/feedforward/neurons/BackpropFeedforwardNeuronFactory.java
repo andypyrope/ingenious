@@ -7,22 +7,22 @@ import io.github.andypyrope.ai.activation.ActivationFunction;
  */
 public class BackpropFeedforwardNeuronFactory extends FeedforwardNeuronFactoryBase {
 
-   private final ActivationFunction _function;
    private final double _volatility;
 
    /**
-    * @param function   The activation function to use in all neurons.
+    * @param function   The activation function to use.
     * @param volatility The volatility of each neuron.
     */
    public BackpropFeedforwardNeuronFactory(final ActivationFunction function,
          final double volatility) {
 
-      _function = function;
+      super(function);
       _volatility = volatility;
    }
 
    @Override
-   public FeedforwardNeuron makeNeuron(final FeedforwardNeuron[] nextLayer) {
-      return new BackpropFeedforwardNeuron(nextLayer, _function, _volatility);
+   protected FeedforwardNeuron makeNeuron(final FeedforwardNeuron[] nextLayer,
+         final ActivationFunction function) {
+      return new BackpropFeedforwardNeuron(nextLayer, function, _volatility);
    }
 }

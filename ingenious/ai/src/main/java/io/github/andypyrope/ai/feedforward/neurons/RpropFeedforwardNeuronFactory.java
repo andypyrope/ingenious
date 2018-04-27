@@ -7,18 +7,16 @@ import io.github.andypyrope.ai.activation.ActivationFunction;
  */
 public class RpropFeedforwardNeuronFactory extends FeedforwardNeuronFactoryBase {
 
-   private final ActivationFunction _function;
-
    /**
     * @param function The activation function to use in all neurons.
     */
-   @SuppressWarnings("WeakerAccess")
    public RpropFeedforwardNeuronFactory(final ActivationFunction function) {
-      _function = function;
+      super(function);
    }
 
    @Override
-   public FeedforwardNeuron makeNeuron(final FeedforwardNeuron[] nextLayer) {
-      return new RpropFeedforwardNeuron(nextLayer, _function);
+   protected FeedforwardNeuron makeNeuron(final FeedforwardNeuron[] nextLayer,
+         final ActivationFunction function) {
+      return new RpropFeedforwardNeuron(nextLayer, function);
    }
 }

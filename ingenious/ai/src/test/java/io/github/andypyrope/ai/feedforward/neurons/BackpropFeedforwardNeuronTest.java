@@ -12,13 +12,13 @@ class BackpropFeedforwardNeuronTest {
 
    @Test
    void testLearningSpeed() {
-      TestUtil.compareDoubleArrays(new double[]{0.563, 0.4969, 0.431, 0.3705},
+      TestUtil.compareDoubleArrays(new double[]{0.1829, 0.0395, 0.0087, 0.0019},
             FeedforwardNeuronTestUtil.getNeuronLearningSpeed(NEURON_FACTORY));
    }
 
    @Test
    void testLearningSpeed2() {
-      TestUtil.compareDoubleArrays(new double[]{0.563, 0.0752, 0.026, 0.0113},
+      TestUtil.compareDoubleArrays(new double[]{0.1829, 0.0117, 0.0, 0.0},
             FeedforwardNeuronTestUtil.getNeuronLearningSpeed(
                   new BackpropFeedforwardNeuronFactory(new LogisticFunction(), 5.34)));
    }

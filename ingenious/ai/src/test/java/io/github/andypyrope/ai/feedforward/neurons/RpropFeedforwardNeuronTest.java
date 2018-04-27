@@ -12,7 +12,7 @@ class RpropFeedforwardNeuronTest {
 
    @Test
    void testLearningSpeed() {
-      TestUtil.compareDoubleArrays(new double[]{0.563, 0.2477, 0.1295, 0.1663},
+      TestUtil.compareDoubleArrays(new double[]{0.1829, 0.0126, 8.0E-4, 1.0E-4},
             FeedforwardNeuronTestUtil.getNeuronLearningSpeed(NEURON_FACTORY));
    }
 }

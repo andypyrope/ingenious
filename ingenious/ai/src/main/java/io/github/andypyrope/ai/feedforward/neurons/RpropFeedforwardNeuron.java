@@ -12,7 +12,7 @@ import io.github.andypyrope.ai.activation.ActivationFunction;
 class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
 
    private static final double LOWER_VOLATILITY_MULTIPLIER = 0.5;
-   private static final double HIGHER_VOLATILITY_MULTIPLIER = 1.2;
+   private static final double HIGHER_VOLATILITY_MULTIPLIER = 1.1;
    private static final double INITIAL_VOLATILITY = 0.1;
 
    private final double[] _edgeVolatility;
@@ -68,37 +68,32 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
    private void adjustEdge(int index) {
       final double gradient = _output * _nextLayer[index].getInputGradient();
       final double multipliedGradient = gradient * _lastEdgeGradients[index];
-
-      _edges[index] -= getDelta(gradient,
-            _lastEdgeGradients[index],
-            _edgeVolatility[index]);
+      final double delta = Math.copySign(_edgeVolatility[index], gradient);
 
       if (multipliedGradient < 0) {
+         _edges[index] -= delta * LOWER_VOLATILITY_MULTIPLIER;
          _edgeVolatility[index] *= LOWER_VOLATILITY_MULTIPLIER;
       } else if (multipliedGradient > 0) {
+         _edges[index] -= delta;
          _edgeVolatility[index] *= HIGHER_VOLATILITY_MULTIPLIER;
       }
+
       _lastEdgeGradients[index] = multipliedGradient < 0 ? 0 : gradient;
    }
 
    private void adjustBias() {
       final double gradient = _inputGradient * _bias;
       final double multipliedGradient = gradient * _lastBiasGradient;
-
-      _bias -= getDelta(gradient, _lastBiasGradient, _biasVolatility);
+      final double delta = Math.copySign(_biasVolatility, gradient);
 
       if (multipliedGradient < 0) {
+         _bias -= delta * LOWER_VOLATILITY_MULTIPLIER;
          _biasVolatility *= LOWER_VOLATILITY_MULTIPLIER;
       } else if (multipliedGradient > 0) {
+         _bias -= delta;
          _biasVolatility *= HIGHER_VOLATILITY_MULTIPLIER;
       }
+
       _lastBiasGradient = multipliedGradient < 0 ? 0 : gradient;
-   }
-
-   private double getDelta(double gradient, double lastGradient,
-         double volatility) {
-
-      double delta = Math.copySign(volatility, gradient);
-      return gradient * lastGradient < 0 ? -1 * delta : delta;
    }
 }

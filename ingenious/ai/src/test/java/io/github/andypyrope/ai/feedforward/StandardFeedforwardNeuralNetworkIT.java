@@ -3,9 +3,8 @@ package io.github.andypyrope.ai.feedforward;
 import io.github.andypyrope.ai.activation.LogisticFunction;
 import io.github.andypyrope.ai.feedforward.neurons.BackpropFeedforwardNeuronFactory;
 import io.github.andypyrope.ai.feedforward.neurons.RpropFeedforwardNeuronFactory;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
 
 class StandardFeedforwardNeuralNetworkIT {
 
@@ -21,10 +20,8 @@ class StandardFeedforwardNeuralNetworkIT {
             INPUT.length, HIDDEN_SIZES, OUTPUT.length,
             new BackpropFeedforwardNeuronFactory(new LogisticFunction(), 0.3));
 
-      System.out.println("== Backprop");
       validateNetworkDistances(network, new double[0]);
-
-      // NOTE andypyrope: There is a bug in the algorithm. Fix it and add a verification.
+      Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.0000000000000000001);
    }
 
    @Test
@@ -33,28 +30,20 @@ class StandardFeedforwardNeuralNetworkIT {
             INPUT.length, HIDDEN_SIZES, OUTPUT.length,
             new RpropFeedforwardNeuronFactory(new LogisticFunction()));
 
-      System.out.println("== RPROP");
       validateNetworkDistances(network, new double[0]);
-
-      // NOTE andypyrope: There is a bug in the algorithm. Fix it and add a verification.
+      Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.00004);
    }
 
    private void validateNetworkDistances(FeedforwardNeuralNetwork network,
          double[] distances) {
 
-      System.out.println(network.getEdgeCount());
-
       network.calculate(INPUT);
 
       for (int i = 0; i < 5; i++) {
-         System.out.println(network.getEuclideanDistance(OUTPUT));
-         System.out.println(Arrays.toString(network.getOutput()));
          for (int j = 0; j < 10; j++) {
             network.adjust(OUTPUT);
             network.calculate(INPUT);
          }
       }
-      System.out.println(network.getEuclideanDistance(OUTPUT));
-      System.out.println(Arrays.toString(network.getOutput()));
    }
 }
