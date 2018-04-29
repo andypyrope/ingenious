@@ -1,6 +1,8 @@
 package io.github.andypyrope.ai.feedforward;
 
+import io.github.andypyrope.ai.activation.LeakyReLuFunction;
 import io.github.andypyrope.ai.activation.LogisticFunction;
+import io.github.andypyrope.ai.activation.ReLuFunction;
 import io.github.andypyrope.ai.feedforward.neurons.BackpropFeedforwardNeuronFactory;
 import io.github.andypyrope.ai.feedforward.neurons.RpropFeedforwardNeuronFactory;
 import org.junit.jupiter.api.Assertions;
@@ -20,8 +22,28 @@ class StandardFeedforwardNeuralNetworkIT {
             INPUT.length, HIDDEN_SIZES, OUTPUT.length,
             new BackpropFeedforwardNeuronFactory(new LogisticFunction(), 0.3));
 
-      validateNetworkDistances(network, new double[0]);
+      trainNetwork(network);
       Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.0000000000000000001);
+   }
+
+   @Test
+   void testWithBackpropWithReLu() {
+      final FeedforwardNeuralNetwork network = new StandardFeedforwardNeuralNetwork(
+            INPUT.length, HIDDEN_SIZES, OUTPUT.length,
+            new BackpropFeedforwardNeuronFactory(new ReLuFunction(), 0.3));
+
+      trainNetwork(network);
+      Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.0000000002);
+   }
+
+   @Test
+   void testWithBackpropWithLeakyReLu() {
+      final FeedforwardNeuralNetwork network = new StandardFeedforwardNeuralNetwork(
+            INPUT.length, HIDDEN_SIZES, OUTPUT.length,
+            new BackpropFeedforwardNeuronFactory(new LeakyReLuFunction(0.1), 0.3));
+
+      trainNetwork(network);
+      Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.0000000002);
    }
 
    @Test
@@ -30,13 +52,21 @@ class StandardFeedforwardNeuralNetworkIT {
             INPUT.length, HIDDEN_SIZES, OUTPUT.length,
             new RpropFeedforwardNeuronFactory(new LogisticFunction()));
 
-      validateNetworkDistances(network, new double[0]);
+      trainNetwork(network);
       Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.00004);
    }
 
-   private void validateNetworkDistances(FeedforwardNeuralNetwork network,
-         double[] distances) {
+   @Test
+   void testWithRpropWithReLu() {
+      final FeedforwardNeuralNetwork network = new StandardFeedforwardNeuralNetwork(
+            INPUT.length, HIDDEN_SIZES, OUTPUT.length,
+            new RpropFeedforwardNeuronFactory(new LogisticFunction()));
 
+      trainNetwork(network);
+      Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.00004);
+   }
+
+   private void trainNetwork(final FeedforwardNeuralNetwork network) {
       network.calculate(INPUT);
 
       for (int i = 0; i < 5; i++) {
