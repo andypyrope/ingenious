@@ -1,7 +1,7 @@
-package io.github.andypyrope.ai.feedforward;
+package io.github.andypyrope.ai.atomic;
 
-import io.github.andypyrope.ai.feedforward.neurons.FeedforwardNeuron;
-import io.github.andypyrope.ai.feedforward.neurons.FeedforwardNeuronFactory;
+import io.github.andypyrope.ai.atomic.neurons.AtomicNeuron;
+import io.github.andypyrope.ai.atomic.neurons.AtomicNeuronFactory;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
@@ -11,16 +11,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
 
-class StandardFeedforwardNeuralNetworkTest {
+class FeedforwardNetworkTest {
 
    private static final int INPUT_SIZE = 2;
    private static final int[] HIDDEN_LAYER_SIZES = new int[]{3, 1};
    private static final int OUTPUT_SIZE = 2;
 
-   private FeedforwardNeuronFactory _neuronFactory;
-   private FeedforwardNeuron[][] _layers;
-   private FeedforwardNeuron[] _inputNeurons;
-   private FeedforwardNeuron[] _outputNeurons;
+   private AtomicNeuronFactory _neuronFactory;
+   private AtomicNeuron[][] _layers;
+   private AtomicNeuron[] _inputNeurons;
+   private AtomicNeuron[] _outputNeurons;
 
    @BeforeEach
    void setUp() {
@@ -32,12 +32,12 @@ class StandardFeedforwardNeuralNetworkTest {
       _neuronFactory = FeedforwardNeuronTestUtil.makeFactoryMock(_layers);
    }
 
-   private FeedforwardNeuron[][] makeNeuronMocks(final int... sizes) {
-      final FeedforwardNeuron[][] result = new FeedforwardNeuron[sizes.length][];
+   private AtomicNeuron[][] makeNeuronMocks(final int... sizes) {
+      final AtomicNeuron[][] result = new AtomicNeuron[sizes.length][];
       for (int i = 0; i < sizes.length; i++) {
-         result[i] = new FeedforwardNeuron[sizes[i]];
+         result[i] = new AtomicNeuron[sizes[i]];
          for (int j = 0; j < sizes[i]; j++) {
-            result[i][j] = EasyMock.createMock(FeedforwardNeuron.class);
+            result[i][j] = EasyMock.createMock(AtomicNeuron.class);
          }
       }
       return result;
@@ -73,7 +73,7 @@ class StandardFeedforwardNeuralNetworkTest {
       }
 
       for (int i = 1; i < _layers.length - 1; i++) {
-         for (final FeedforwardNeuron neuron : _layers[i]) {
+         for (final AtomicNeuron neuron : _layers[i]) {
             neuron.setNetInput(0.0);
             EasyMock.expectLastCall();
 
@@ -91,7 +91,7 @@ class StandardFeedforwardNeuralNetworkTest {
          EasyMock.expectLastCall();
       }
 
-      final FeedforwardNeuralNetwork network = makeNetwork();
+      final AtomicNetwork network = makeNetwork();
       network.calculate(input);
       network.adjust(targetOutput);
    }
@@ -102,7 +102,7 @@ class StandardFeedforwardNeuralNetworkTest {
       for (int i = 0; i < _outputNeurons.length; i++) {
          EasyMock.expect(_outputNeurons[i].getOutput()).andReturn(mockedOutput[i]);
       }
-      final FeedforwardNeuralNetwork network = makeNetwork();
+      final AtomicNetwork network = makeNetwork();
       final double[] actualOutput = network.getOutput();
       TestUtil.compareDoubleArrays(mockedOutput, actualOutput);
    }
@@ -116,19 +116,19 @@ class StandardFeedforwardNeuralNetworkTest {
          EasyMock.expect(_outputNeurons[i].getOutput()).andReturn(mockedOutput[i]);
       }
 
-      final FeedforwardNeuralNetwork network = makeNetwork();
+      final AtomicNetwork network = makeNetwork();
       TestUtil.compareDoubles(0.5, network.getEuclideanDistance(targetOutput));
    }
 
-   private FeedforwardNeuralNetwork makeNetwork() {
+   private AtomicNetwork makeNetwork() {
       forAllNeurons(EasyMock::replay);
-      return new StandardFeedforwardNeuralNetwork(INPUT_SIZE, HIDDEN_LAYER_SIZES,
+      return new FeedforwardNetwork(INPUT_SIZE, HIDDEN_LAYER_SIZES,
             OUTPUT_SIZE, _neuronFactory);
    }
 
-   private void forAllNeurons(final Consumer<FeedforwardNeuron> consumer) {
-      for (final FeedforwardNeuron[] layer : _layers) {
-         for (final FeedforwardNeuron neuron : layer) {
+   private void forAllNeurons(final Consumer<AtomicNeuron> consumer) {
+      for (final AtomicNeuron[] layer : _layers) {
+         for (final AtomicNeuron neuron : layer) {
             consumer.accept(neuron);
          }
       }

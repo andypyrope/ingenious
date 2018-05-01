@@ -1,14 +1,14 @@
-package io.github.andypyrope.ai.feedforward.neurons;
+package io.github.andypyrope.ai.atomic.neurons;
 
 import io.github.andypyrope.ai.activation.ActivationFunction;
 
-public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
+public abstract class AtomicNeuronBase implements AtomicNeuron {
 
    private static final double INITIAL_BIAS = 0.0;
 
    final int _edgeCount;
 
-   final FeedforwardNeuron[] _nextLayer;
+   final AtomicNeuron[] _nextLayer;
    double _inputGradient;
    final double[] _edges;
    final ActivationFunction _function;
@@ -17,10 +17,10 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    double _netInput;
    double _output;
 
-   FeedforwardNeuronBase(FeedforwardNeuron[] nextLayer, ActivationFunction function) {
+   AtomicNeuronBase(AtomicNeuron[] nextLayer, ActivationFunction function) {
       _bias = INITIAL_BIAS;
       _function = function;
-      _nextLayer = nextLayer == null ? new FeedforwardNeuron[0] : nextLayer;
+      _nextLayer = nextLayer == null ? new AtomicNeuron[0] : nextLayer;
 
       _edgeCount = _nextLayer.length;
 
@@ -35,7 +35,7 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    /**
     * (non-Javadoc)
     *
-    * @see FeedforwardNeuron#setNetInput(double)
+    * @see AtomicNeuron#setNetInput(double)
     */
    @Override
    public void setNetInput(final double netInput) {
@@ -45,7 +45,7 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    /**
     * (non-Javadoc)
     *
-    * @see FeedforwardNeuron#getOutput()
+    * @see AtomicNeuron#getOutput()
     */
    @Override
    public double getOutput() {
@@ -55,7 +55,7 @@ public abstract class FeedforwardNeuronBase implements FeedforwardNeuron {
    /**
     * (non-Javadoc)
     *
-    * @see FeedforwardNeuron#propagate()
+    * @see AtomicNeuron#propagate()
     */
    @Override
    public void propagate() {

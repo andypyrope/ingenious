@@ -1,14 +1,14 @@
-package io.github.andypyrope.ai.feedforward.neurons;
+package io.github.andypyrope.ai.atomic.neurons;
 
 import io.github.andypyrope.ai.activation.LogisticFunction;
-import io.github.andypyrope.ai.feedforward.FeedforwardNeuronTestUtil;
+import io.github.andypyrope.ai.atomic.FeedforwardNeuronTestUtil;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import org.junit.jupiter.api.Test;
 
-class BackpropFeedforwardNeuronTest {
+class BackpropNeuronTest {
 
-   private static final FeedforwardNeuronFactory NEURON_FACTORY =
-         new BackpropFeedforwardNeuronFactory(new LogisticFunction(), 0.34);
+   private static final AtomicNeuronFactory NEURON_FACTORY =
+         new BackpropNeuronFactory(new LogisticFunction(), 0.34);
 
    @Test
    void testLearningSpeed() {
@@ -20,6 +20,6 @@ class BackpropFeedforwardNeuronTest {
    void testLearningSpeed2() {
       TestUtil.compareDoubleArrays(new double[]{0.1829, 0.0117, 0.0, 0.0},
             FeedforwardNeuronTestUtil.getNeuronLearningSpeed(
-                  new BackpropFeedforwardNeuronFactory(new LogisticFunction(), 5.34)));
+                  new BackpropNeuronFactory(new LogisticFunction(), 5.34)));
    }
 }

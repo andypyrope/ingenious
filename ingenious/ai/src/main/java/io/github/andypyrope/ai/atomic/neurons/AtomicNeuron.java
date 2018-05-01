@@ -1,6 +1,6 @@
-package io.github.andypyrope.ai.feedforward.neurons;
+package io.github.andypyrope.ai.atomic.neurons;
 
-public interface FeedforwardNeuron {
+public interface AtomicNeuron {
 
    /**
     * Update the net input of the neuron.

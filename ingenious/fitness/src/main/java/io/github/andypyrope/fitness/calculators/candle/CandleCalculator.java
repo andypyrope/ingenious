@@ -1,8 +1,8 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
 import io.github.andypyrope.ai.activation.LogisticFunction;
-import io.github.andypyrope.ai.feedforward.StandardFeedforwardNeuralNetwork;
-import io.github.andypyrope.ai.feedforward.neurons.RpropFeedforwardNeuronFactory;
+import io.github.andypyrope.ai.atomic.FeedforwardNetwork;
+import io.github.andypyrope.ai.atomic.neurons.RpropNeuronFactory;
 import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.InvalidDnaException;
 import io.github.andypyrope.fitness.data.candle.Candle;
@@ -38,13 +38,13 @@ class CandleCalculator implements Calculator {
    private int _position = -1;
    private int _pass = -1;
 
-   private final StandardFeedforwardNeuralNetwork _network;
+   private final FeedforwardNetwork _network;
 
    CandleCalculator(Dna dna, Candle[][] normalizedCandles,
-      CandleCalculatorSettings settings) {
+         CandleCalculatorSettings settings) {
       if (dna == null) {
          throw new InvalidDnaException(
-            "Cannot instantiate SimpleCalculator with null DNA");
+               "Cannot instantiate SimpleCalculator with null DNA");
       }
       // Settings passed in constructor
       _candles = normalizedCandles;
@@ -55,23 +55,23 @@ class CandleCalculator implements Calculator {
 
       dna.resetReader();
       _inputCandleCount = dna.read(settings.getMinInputCandles(),
-         settings.getMaxInputCandles() + 1);
+            settings.getMaxInputCandles() + 1);
       _passesPerInput = dna.read(settings.getMinPassesPerInput(),
-         settings.getMaxPassesPerInput() + 1);
+            settings.getMaxPassesPerInput() + 1);
       final int hiddenLayerCount = dna.read(settings.getMinHiddenLayers(),
             settings.getMaxHiddenLayers() + 1);
 
       final int[] hiddenLayers = new int[hiddenLayerCount];
       for (int i = 0; i < hiddenLayerCount; i++) {
          hiddenLayers[i] = dna.read(settings.getMinHiddenSize(),
-            settings.getMaxHiddenSize() + 1);
+               settings.getMaxHiddenSize() + 1);
       }
 
-      _network = new StandardFeedforwardNeuralNetwork(
-         _inputCandleCount,
-         hiddenLayers,
-         _outputCandleCount,
-            new RpropFeedforwardNeuronFactory(new LogisticFunction()));
+      _network = new FeedforwardNetwork(
+            _inputCandleCount,
+            hiddenLayers,
+            _outputCandleCount,
+            new RpropNeuronFactory(new LogisticFunction()));
 
       _studyingComplexity = _network.getEdgeCount();
 
@@ -150,14 +150,14 @@ class CandleCalculator implements Calculator {
 
       _inputsAtPosition = getInputArrayAtIndex(_datasetIndex, _position);
       _expectedOutputAtPosition = getOutputArrayAtIndex(_datasetIndex,
-         _position);
+            _position);
    }
 
    private double[] getInputArrayAtIndex(int datasetIndex, int index) {
       final double[] result = new double[_inputCandleCount];
       for (int i = 0; i < _inputCandleCount; i++) {
          result[i] = getNormalizedPrice(datasetIndex,
-            index - _inputCandleCount + i + 1);
+               index - _inputCandleCount + i + 1);
          result[i] /= _datasetMaximums[datasetIndex];
       }
       return result;
@@ -167,7 +167,7 @@ class CandleCalculator implements Calculator {
       final double[] result = new double[_outputCandleCount];
       for (int i = 0; i < _outputCandleCount; i++) {
          result[i] = getNormalizedPrice(datasetIndex,
-            index + _outputCandleOffset + i + 1);
+               index + _outputCandleOffset + i + 1);
          result[i] -= getNormalizedPrice(datasetIndex, index);
          result[i] = (result[i] + 1.0) / 2;
       }

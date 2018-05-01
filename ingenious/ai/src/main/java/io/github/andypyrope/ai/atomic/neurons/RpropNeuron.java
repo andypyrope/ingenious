@@ -1,4 +1,4 @@
-package io.github.andypyrope.ai.feedforward.neurons;
+package io.github.andypyrope.ai.atomic.neurons;
 
 import io.github.andypyrope.ai.activation.ActivationFunction;
 
@@ -9,7 +9,7 @@ import io.github.andypyrope.ai.activation.ActivationFunction;
  * the gradient) instead of staying with the same value. One of the many benefits of this
  * algorithm is that it counteracts the vanishing gradient problem.
  */
-class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
+class RpropNeuron extends AtomicNeuronBase {
 
    private static final double LOWER_VOLATILITY_MULTIPLIER = 0.5;
    private static final double HIGHER_VOLATILITY_MULTIPLIER = 1.1;
@@ -21,7 +21,7 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
    private double _biasVolatility = INITIAL_VOLATILITY;
    private double _lastBiasGradient;
 
-   RpropFeedforwardNeuron(FeedforwardNeuron[] nextLayer, ActivationFunction function) {
+   RpropNeuron(AtomicNeuron[] nextLayer, ActivationFunction function) {
 
       super(nextLayer, function);
 
@@ -35,7 +35,7 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
    /**
     * (non-Javadoc)
     *
-    * @see FeedforwardNeuron#adjust()
+    * @see AtomicNeuron#adjust()
     */
    @Override
    public void adjust() {
@@ -55,7 +55,7 @@ class RpropFeedforwardNeuron extends FeedforwardNeuronBase {
    /**
     * (non-Javadoc)
     *
-    * @see FeedforwardNeuron#adjust(double)
+    * @see AtomicNeuron#adjust(double)
     */
    @Override
    public void adjust(final double targetOutput) {

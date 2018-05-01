@@ -1,14 +1,14 @@
-package io.github.andypyrope.ai.feedforward;
+package io.github.andypyrope.ai.atomic;
 
 import io.github.andypyrope.ai.activation.LeakyReLuFunction;
 import io.github.andypyrope.ai.activation.LogisticFunction;
 import io.github.andypyrope.ai.activation.ReLuFunction;
-import io.github.andypyrope.ai.feedforward.neurons.BackpropFeedforwardNeuronFactory;
-import io.github.andypyrope.ai.feedforward.neurons.RpropFeedforwardNeuronFactory;
+import io.github.andypyrope.ai.atomic.neurons.BackpropNeuronFactory;
+import io.github.andypyrope.ai.atomic.neurons.RpropNeuronFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class StandardFeedforwardNeuralNetworkIT {
+class FeedforwardNetworkIT {
 
    private static final double[] INPUT = new double[]{0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7,
          0.8, 0.9, 1.0, 0.15, 0.25, 0.35, 0.45, 0.55};
@@ -18,9 +18,9 @@ class StandardFeedforwardNeuralNetworkIT {
 
    @Test
    void testWithBackprop() {
-      final FeedforwardNeuralNetwork network = new StandardFeedforwardNeuralNetwork(
+      final AtomicNetwork network = new FeedforwardNetwork(
             INPUT.length, HIDDEN_SIZES, OUTPUT.length,
-            new BackpropFeedforwardNeuronFactory(new LogisticFunction(), 0.3));
+            new BackpropNeuronFactory(new LogisticFunction(), 0.3));
 
       trainNetwork(network);
       Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.0000000000000000001);
@@ -28,9 +28,9 @@ class StandardFeedforwardNeuralNetworkIT {
 
    @Test
    void testWithBackpropWithReLu() {
-      final FeedforwardNeuralNetwork network = new StandardFeedforwardNeuralNetwork(
+      final AtomicNetwork network = new FeedforwardNetwork(
             INPUT.length, HIDDEN_SIZES, OUTPUT.length,
-            new BackpropFeedforwardNeuronFactory(new ReLuFunction(), 0.3));
+            new BackpropNeuronFactory(new ReLuFunction(), 0.3));
 
       trainNetwork(network);
       Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.0000000002);
@@ -38,9 +38,9 @@ class StandardFeedforwardNeuralNetworkIT {
 
    @Test
    void testWithBackpropWithLeakyReLu() {
-      final FeedforwardNeuralNetwork network = new StandardFeedforwardNeuralNetwork(
+      final AtomicNetwork network = new FeedforwardNetwork(
             INPUT.length, HIDDEN_SIZES, OUTPUT.length,
-            new BackpropFeedforwardNeuronFactory(new LeakyReLuFunction(0.1), 0.3));
+            new BackpropNeuronFactory(new LeakyReLuFunction(0.1), 0.3));
 
       trainNetwork(network);
       Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.0000000002);
@@ -48,9 +48,9 @@ class StandardFeedforwardNeuralNetworkIT {
 
    @Test
    void testWithRprop() {
-      final FeedforwardNeuralNetwork network = new StandardFeedforwardNeuralNetwork(
+      final AtomicNetwork network = new FeedforwardNetwork(
             INPUT.length, HIDDEN_SIZES, OUTPUT.length,
-            new RpropFeedforwardNeuronFactory(new LogisticFunction()));
+            new RpropNeuronFactory(new LogisticFunction()));
 
       trainNetwork(network);
       Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.00004);
@@ -58,15 +58,15 @@ class StandardFeedforwardNeuralNetworkIT {
 
    @Test
    void testWithRpropWithReLu() {
-      final FeedforwardNeuralNetwork network = new StandardFeedforwardNeuralNetwork(
+      final AtomicNetwork network = new FeedforwardNetwork(
             INPUT.length, HIDDEN_SIZES, OUTPUT.length,
-            new RpropFeedforwardNeuronFactory(new LogisticFunction()));
+            new RpropNeuronFactory(new LogisticFunction()));
 
       trainNetwork(network);
       Assertions.assertTrue(network.getEuclideanDistance(OUTPUT) < 0.00004);
    }
 
-   private void trainNetwork(final FeedforwardNeuralNetwork network) {
+   private void trainNetwork(final AtomicNetwork network) {
       network.calculate(INPUT);
 
       for (int i = 0; i < 5; i++) {

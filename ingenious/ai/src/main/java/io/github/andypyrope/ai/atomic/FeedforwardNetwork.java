@@ -1,16 +1,16 @@
-package io.github.andypyrope.ai.feedforward;
+package io.github.andypyrope.ai.atomic;
 
-import io.github.andypyrope.ai.feedforward.neurons.FeedforwardNeuron;
-import io.github.andypyrope.ai.feedforward.neurons.FeedforwardNeuronFactory;
+import io.github.andypyrope.ai.atomic.neurons.AtomicNeuron;
+import io.github.andypyrope.ai.atomic.neurons.AtomicNeuronFactory;
 
-public class StandardFeedforwardNeuralNetwork implements FeedforwardNeuralNetwork {
+public class FeedforwardNetwork implements AtomicNetwork {
 
-   private final FeedforwardNeuron[][] _layers;
-   private final FeedforwardNeuron[] _outputLayer;
+   private final AtomicNeuron[][] _layers;
+   private final AtomicNeuron[] _outputLayer;
    private final int _edgeCount;
 
-   public StandardFeedforwardNeuralNetwork(int inputSize, int[] hidden,
-         int outputSize, FeedforwardNeuronFactory neuronFactory) {
+   public FeedforwardNetwork(int inputSize, int[] hidden,
+         int outputSize, AtomicNeuronFactory neuronFactory) {
 
       _layers = neuronFactory.makeAllNeurons(inputSize, hidden, outputSize);
       _outputLayer = _layers[_layers.length - 1];
@@ -33,8 +33,8 @@ public class StandardFeedforwardNeuralNetwork implements FeedforwardNeuralNetwor
          }
       }
 
-      for (final FeedforwardNeuron[] layer : _layers) {
-         for (final FeedforwardNeuron neuron : layer) {
+      for (final AtomicNeuron[] layer : _layers) {
+         for (final AtomicNeuron neuron : layer) {
             neuron.propagate();
          }
       }
@@ -46,7 +46,7 @@ public class StandardFeedforwardNeuralNetwork implements FeedforwardNeuralNetwor
       }
 
       for (int i = _layers.length - 2; i >= 0; i--) {
-         for (final FeedforwardNeuron neuron : _layers[i]) {
+         for (final AtomicNeuron neuron : _layers[i]) {
             neuron.adjust();
          }
       }

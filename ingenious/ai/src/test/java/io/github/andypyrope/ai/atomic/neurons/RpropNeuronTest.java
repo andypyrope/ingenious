@@ -1,14 +1,14 @@
-package io.github.andypyrope.ai.feedforward.neurons;
+package io.github.andypyrope.ai.atomic.neurons;
 
 import io.github.andypyrope.ai.activation.LogisticFunction;
-import io.github.andypyrope.ai.feedforward.FeedforwardNeuronTestUtil;
+import io.github.andypyrope.ai.atomic.FeedforwardNeuronTestUtil;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import org.junit.jupiter.api.Test;
 
-class RpropFeedforwardNeuronTest {
+class RpropNeuronTest {
 
-   private static final FeedforwardNeuronFactory NEURON_FACTORY =
-         new RpropFeedforwardNeuronFactory(new LogisticFunction());
+   private static final AtomicNeuronFactory NEURON_FACTORY =
+         new RpropNeuronFactory(new LogisticFunction());
 
    @Test
    void testLearningSpeed() {

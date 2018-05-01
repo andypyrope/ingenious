@@ -1,4 +1,4 @@
-package io.github.andypyrope.ai.feedforward.neurons;
+package io.github.andypyrope.ai.atomic.neurons;
 
 import io.github.andypyrope.ai.activation.ActivationFunction;
 
@@ -6,11 +6,11 @@ import io.github.andypyrope.ai.activation.ActivationFunction;
  * The neuron that operates in accordance with the standard back propagation algorithm in
  * its simplest form.
  */
-class BackpropFeedforwardNeuron extends FeedforwardNeuronBase {
+class BackpropNeuron extends AtomicNeuronBase {
 
    private final double _volatility;
 
-   BackpropFeedforwardNeuron(FeedforwardNeuron[] nextLayer,
+   BackpropNeuron(AtomicNeuron[] nextLayer,
          ActivationFunction function, double volatility) {
 
       super(nextLayer, function);
@@ -21,7 +21,7 @@ class BackpropFeedforwardNeuron extends FeedforwardNeuronBase {
    /**
     * (non-Javadoc)
     *
-    * @see FeedforwardNeuron#adjust()
+    * @see AtomicNeuron#adjust()
     */
    @Override
    public void adjust() {
