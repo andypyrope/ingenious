@@ -1,3 +1,4 @@
+
 # ingenious
 
 Travis build status: [![Build Status](https://travis-ci.org/andypyrope/ingenious.svg?branch=master)](https://travis-ci.org/andypyrope/ingenious)
@@ -55,3 +56,18 @@ pass their DNA to their personal calculator, which determines their fitness
                 - `Dna` [optional] - for the organism itself if it needs that (e.g. to determine its gender)
                 - `Calculator`
                     - `NeuralNetwork` [optional] - basically the brain of the organism
+
+## AI
+#### The brains of the organisms. The neural networks can also be used outside of the context of organisms.
+Currently there is only one type of neural networks in this project - atomic. The input of these networks is always of type `double[]` (i.e. numeric - one real value for each input neuron) and so is their output. The way they calculate the output and learn can vary greatly depending on what kind of a network it is and how it has been initialized. For now only a feedforward network class has been made, but there can be potentially even circular networks, for example a Hopfield network, or ones with an irregular shape.
+
+Atomic network: :hash::arrow_right::hash:
+
+Another 3 basic kinds of networks are planned:
+- :camera::arrow_right::hash: Convolutional network (image input -> numeric output)
+- :hash::arrow_right::camera: Deconvolutional network (numeric input -> image output)
+- :camera::arrow_right::camera: Convolutional autoencoder (image input -> image output)
+
+Image data will most probably be a `double[][][]` array - two dimensions for width and height, and one of depth in case the image has colours. The same kind of data can be used for audio (X is time, Y is pitch, and there is no depth) or even one-dimensional functions (X is, well, X, and there is no width or height).
+
+The filters used in the convolutional networks will be of image type as well and should have width, height and depth lower than or equal to that of the image data that goes through them.
