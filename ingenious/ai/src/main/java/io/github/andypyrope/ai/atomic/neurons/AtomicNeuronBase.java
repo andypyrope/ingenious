@@ -17,18 +17,19 @@ public abstract class AtomicNeuronBase implements AtomicNeuron {
    double _netInput;
    double _output;
 
-   AtomicNeuronBase(AtomicNeuron[] nextLayer, ActivationFunction function) {
+   AtomicNeuronBase(final AtomicNeuron[] nextLayer, final ActivationFunction function) {
       _bias = INITIAL_BIAS;
       _function = function;
       _nextLayer = nextLayer == null ? new AtomicNeuron[0] : nextLayer;
 
       _edgeCount = _nextLayer.length;
 
-      final double edgeWeight = 0.5 / _edgeCount;
+      double t = 1.0;
+      final double edgeWeightMultiplier = 0.5 / _edgeCount;
 
       _edges = new double[_edgeCount];
       for (int i = 0; i < _edgeCount; i++) {
-         _edges[i] = edgeWeight;
+         _edges[i] = Math.sin(t++) * edgeWeightMultiplier;
       }
    }
 
@@ -67,7 +68,7 @@ public abstract class AtomicNeuronBase implements AtomicNeuron {
    }
 
    @Override
-   public void addInto(double amount) {
+   public void addInto(final double amount) {
       _netInput += amount;
    }
 

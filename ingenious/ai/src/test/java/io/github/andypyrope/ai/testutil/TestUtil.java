@@ -23,11 +23,6 @@ public class TestUtil {
             Arrays.stream(actual).boxed().collect(Collectors.toList()));
    }
 
-   public static void compareDoubleArrays(Double[] expected, Double[] actual) {
-      compareDoubles(Arrays.stream(expected).collect(Collectors.toList()),
-            Arrays.stream(actual).collect(Collectors.toList()));
-   }
-
    private static void compareDoubles(List<Double> expected, List<Double> actual) {
       final String errorMessage = String.format(
             "Expected 'Double' array [%s] to be equal to [%s]",

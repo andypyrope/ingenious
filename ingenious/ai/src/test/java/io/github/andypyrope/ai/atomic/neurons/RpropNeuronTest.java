@@ -7,12 +7,10 @@ import org.junit.jupiter.api.Test;
 
 class RpropNeuronTest {
 
-   private static final AtomicNeuronFactory NEURON_FACTORY =
-         new RpropNeuronFactory(new LogisticFunction());
-
    @Test
    void testLearningSpeed() {
-      TestUtil.compareDoubleArrays(new double[]{0.1829, 0.0126, 8.0E-4, 1.0E-4},
-            FeedforwardNeuronTestUtil.getNeuronLearningSpeed(NEURON_FACTORY));
+      TestUtil.compareDoubleArrays(new double[]{0.1212, 0.0069, 0.0003, 0.0002},
+            FeedforwardNeuronTestUtil.getNeuronLearningSpeed(
+                  new RpropNeuronFactory(new LogisticFunction())));
    }
 }
