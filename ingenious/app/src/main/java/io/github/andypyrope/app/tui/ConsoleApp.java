@@ -36,7 +36,7 @@ class ConsoleApp {
       ui.configure(settings.getSettings());
 
       final World world = new SimpleWorld(
-            new SimpleWorldSettings(20, 0.50, 100000L),
+            new SimpleWorldSettings(20, 0.50, 10000000L),
             new CandleCalculatorProvider(datasets, settings));
 
       ui.launch(world);

@@ -3,7 +3,7 @@ package io.github.andypyrope.ai;
 public interface NeuralNetwork {
 
    /**
-    * @return The total number of edges in this neural network.
+    * @return The total complexity of this neural network.
     */
-   int getEdgeCount();
+   int getComplexity();
 }

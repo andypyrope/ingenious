@@ -27,7 +27,7 @@ public class CandleCalculatorSettings implements CalculatorSettings {
    private static final double DEFAULT_MAX_VOLATILITY = 100.0;
 
    private static final int DEFAULT_MIN_PASSES_PER_INPUT = 1;
-   private static final int DEFAULT_MAX_PASSES_PER_INPUT = 100;
+   private static final int DEFAULT_MAX_PASSES_PER_INPUT = 2;
 
    private static final int DEFAULT_PASSES_WHEN_GETTING_FITNESS = 1000;
 
@@ -51,8 +51,12 @@ public class CandleCalculatorSettings implements CalculatorSettings {
 
    private double _maxVolatility = DEFAULT_MAX_VOLATILITY;
 
-   private int _minPassesPerInput = DEFAULT_MIN_PASSES_PER_INPUT;
-   private int _maxPassesPerInput = DEFAULT_MAX_PASSES_PER_INPUT;
+   private final IntSetting _minPassesPerInput = new StandardIntSetting(
+         "Min passes per input", "min-passes-per-input",
+         1, DEFAULT_MIN_PASSES_PER_INPUT, 1000);
+   private final IntSetting _maxPassesPerInput = new StandardIntSetting(
+         "Max passes per input", "max-passes-per-input",
+         1, DEFAULT_MAX_PASSES_PER_INPUT, 1000);
 
    private int _passesWhenGettingFitness = DEFAULT_PASSES_WHEN_GETTING_FITNESS;
 
@@ -66,7 +70,7 @@ public class CandleCalculatorSettings implements CalculatorSettings {
 
    @Override
    public Setting[] getSettings() {
-      return new Setting[]{_outputCandleCount};
+      return new Setting[]{_outputCandleCount, _minPassesPerInput, _maxPassesPerInput};
    }
 
    /**
@@ -174,15 +178,7 @@ public class CandleCalculatorSettings implements CalculatorSettings {
     *       input-output pair
     */
    int getMinPassesPerInput() {
-      return _minPassesPerInput;
-   }
-
-   /**
-    * @param minPassesPerInput The minimum number of passes a calculator can make with the
-    *                          same input-output pair
-    */
-   public void setMinPassesPerInput(int minPassesPerInput) {
-      _minPassesPerInput = minPassesPerInput;
+      return _minPassesPerInput.getValue();
    }
 
    /**
@@ -190,15 +186,7 @@ public class CandleCalculatorSettings implements CalculatorSettings {
     *       input-output pair
     */
    int getMaxPassesPerInput() {
-      return _maxPassesPerInput;
-   }
-
-   /**
-    * @param maxPassesPerInput The maximum number of passes a calculator can make with the
-    *                          same input-output pair
-    */
-   public void setMaxPassesPerInput(int maxPassesPerInput) {
-      _maxPassesPerInput = maxPassesPerInput;
+      return _maxPassesPerInput.getValue();
    }
 
    /**

@@ -1,6 +1,7 @@
 package io.github.andypyrope.ai.atomic;
 
 import io.github.andypyrope.ai.NeuralNetwork;
+import io.github.andypyrope.ai.NoCalculationException;
 
 /**
  * A neural network which accepts an array of as many primitive real numbers as it has
@@ -23,17 +24,20 @@ public interface AtomicNetwork extends NeuralNetwork {
     * Runs an algorithm to improve the weights/biases.
     *
     * @param targetOutput The expected output
+    * @throws NoCalculationException If no calculation has been made yet.
     */
-   void adjust(double[] targetOutput);
+   void adjust(double[] targetOutput) throws NoCalculationException;
 
    /**
     * @return The output of this neural network.
+    * @throws NoCalculationException If no calculation has been made yet.
     */
-   double[] getOutput();
+   double[] getOutput() throws NoCalculationException;
 
    /**
     * @param targetOutput The expected output.
     * @return The euclidean distance between the actual output and an expected one.
+    * @throws NoCalculationException If no calculation has been made yet.
     */
-   double getEuclideanDistance(double[] targetOutput);
+   double getEuclideanDistance(double[] targetOutput) throws NoCalculationException;
 }

@@ -34,8 +34,6 @@ class CandleCalculatorSettingsTest {
       settings.setMinHiddenSize(3);
       settings.setMaxHiddenSize(5);
       settings.setMaxVolatility(0.3);
-      settings.setMinPassesPerInput(2);
-      settings.setMaxPassesPerInput(43);
 
       settings.setPassesWhenGettingFitness(35);
 
@@ -46,6 +44,6 @@ class CandleCalculatorSettingsTest {
    @Test
    void testGetSettings() {
       final CalculatorSettings settings = new CandleCalculatorSettings();
-      assertEquals(1, settings.getSettings().length);
+      assertEquals(3, settings.getSettings().length);
    }
 }

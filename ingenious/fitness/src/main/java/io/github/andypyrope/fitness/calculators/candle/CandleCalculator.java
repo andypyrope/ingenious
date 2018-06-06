@@ -1,13 +1,14 @@
 package io.github.andypyrope.fitness.calculators.candle;
 
-import io.github.andypyrope.ai.activation.LogisticFunction;
-import io.github.andypyrope.ai.atomic.FeedforwardNetwork;
-import io.github.andypyrope.ai.atomic.neurons.RpropNeuronFactory;
+import io.github.andypyrope.ai.activation.LeakyReLuFunction;
+import io.github.andypyrope.ai.atomic.networks.FeedforwardNetwork;
 import io.github.andypyrope.fitness.calculators.Calculator;
 import io.github.andypyrope.fitness.calculators.InvalidDnaException;
 import io.github.andypyrope.fitness.data.candle.Candle;
 import io.github.andypyrope.platform.dna.Dna;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 class CandleCalculator implements Calculator {
@@ -32,6 +33,7 @@ class CandleCalculator implements Calculator {
    private boolean _hasCachedFitness;
    private double _cachedFitness;
    private Candle[] _dataset;
+   private List<Integer> _indices;
    private double[] _inputsAtPosition;
    private double[] _expectedOutputAtPosition;
    private int _datasetIndex = -1;
@@ -67,13 +69,10 @@ class CandleCalculator implements Calculator {
                settings.getMaxHiddenSize() + 1);
       }
 
-      _network = new FeedforwardNetwork(
-            _inputCandleCount,
-            hiddenLayers,
-            _outputCandleCount,
-            new RpropNeuronFactory(new LogisticFunction()));
+      _network = new FeedforwardNetwork(_inputCandleCount, hiddenLayers,
+            _outputCandleCount, new LeakyReLuFunction(0.1), ThreadLocalRandom.current());
 
-      _studyingComplexity = _network.getEdgeCount();
+      _studyingComplexity = _network.getComplexity();
 
       _datasetMaximums = new double[_candles.length];
       int maxDatasetSize = 0;
@@ -141,14 +140,12 @@ class CandleCalculator implements Calculator {
 
    private void updatePositionInDataset() {
       _position++;
-      if (_dataset == null || _position + _outputCandleOffset +
-            _outputCandleCount >= _dataset.length) {
-
+      if (_dataset == null || _position == _indices.size()) {
          getNextDataset();
-         _position = _inputCandleCount - 1;
+         _position = 0;
       }
 
-      _inputsAtPosition = getInputArrayAtIndex(_datasetIndex, _position);
+      _inputsAtPosition = getInputArrayAtIndex(_datasetIndex, _indices.get(_position));
       _expectedOutputAtPosition = getOutputArrayAtIndex(_datasetIndex,
             _position);
    }
@@ -185,6 +182,18 @@ class CandleCalculator implements Calculator {
          _datasetIndex = 0;
       }
       _dataset = _candles[_datasetIndex];
+
+      _indices = new ArrayList<>();
+      final int limit = _dataset.length - _outputCandleCount - _outputCandleOffset;
+      for (int i = _inputCandleCount - 1; i < limit; i++) {
+         _indices.add(i);
+      }
+      for (int i = 1; i < _indices.size(); i++) {
+         final int index = ThreadLocalRandom.current().nextInt(i);
+         final int tmp = _indices.get(index);
+         _indices.set(index, _indices.get(i));
+         _indices.set(i, tmp);
+      }
    }
 
    @Override
