@@ -1,5 +1,6 @@
 package io.github.andypyrope.ai.testutil;
 
+import io.github.andypyrope.ai.data.RasterData;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.Arrays;
@@ -49,6 +50,86 @@ public class TestUtil {
          } catch (AssertionError e) {
             throw new AssertionError(errorMessage + " -- mismatch at index " + i, e);
          }
+      }
+   }
+
+   public static void compareRasterDataArrays(final RasterData[] expected,
+         final RasterData[] actual) {
+
+      if (expected.length != actual.length) {
+         throw new AssertionError("Expected array with size " + actual.length +
+               " to have size " + expected.length);
+      }
+
+      for (int i = 0; i < expected.length; i++) {
+         try {
+            compareRasterData(expected[i], actual[i]);
+         } catch (final AssertionError e) {
+            throw new AssertionError("Mismatch at index " + i, e);
+         }
+      }
+   }
+
+   private static void compareRasterData(final RasterData expected,
+         final RasterData actual) {
+      final String errorMessage = String.format(
+            "Expected  raster data '%s' to be equal to '%s'",
+            rasterDataToString(actual), rasterDataToString(expected));
+
+      actual.verifyDimensions(expected.getWidth(), expected.getHeight(),
+            expected.getDepth());
+
+      expected.forEach((x, y, z) -> {
+         try {
+            compareDoubles(expected.getCell(x, y, z), actual.getCell(x, y, z));
+         } catch (AssertionError e) {
+            throw new AssertionError(
+                  String.format(errorMessage + " -- mismatch at (%d,%d,%d)", x, y, z));
+         }
+      });
+   }
+
+   private static String rasterDataToString(final RasterData data) {
+      final StringBuilder result = new StringBuilder(data.getWidth() *
+            data.getHeight() * data.getDepth() * 5);
+      for (int z = 0; z < data.getDepth(); z++) {
+         result.append("[");
+         for (int y = 0; y < data.getHeight(); y++) {
+            result.append("(");
+            for (int x = 0; x < data.getWidth(); x++) {
+               result.append(data.getCell(x, y, z)).append(",");
+            }
+            result.append(")");
+         }
+         result.append("]");
+      }
+      return result.toString();
+   }
+
+   public static void expectException(final Class<? extends Exception> exceptionClass,
+         final Runnable runnable) {
+
+      Exception exception = null;
+      try {
+         runnable.run();
+      } catch (final Exception e) {
+         exception = e;
+      }
+      Assertions.assertNotNull(exception, "An exception has been thrown");
+      Assertions.assertSame(exceptionClass, exception.getClass(),
+            String.format("The caught exception is of type '%s'",
+                  exceptionClass.getSimpleName()));
+   }
+
+   public static <T> void assertArraySame(final T[] expected, final T[] actual) {
+      if (expected.length != actual.length) {
+         throw new AssertionError(String.format("Expected array to have a length " +
+                     "of %d but it has a length of %d instead",
+               expected.length, actual.length));
+      }
+
+      for (int i = 0; i < expected.length; i++) {
+         Assertions.assertSame(expected[i], actual[i]);
       }
    }
 }

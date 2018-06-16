@@ -4,8 +4,6 @@ import io.github.andypyrope.ai.testutil.TestUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.regex.Pattern;
-
 class AtomicRasterDataTest {
 
    private static final double SINGLE_DATA = 42.0;
@@ -47,14 +45,5 @@ class AtomicRasterDataTest {
    @Test
    void testGetDepth() {
       Assertions.assertEquals(1, new AtomicRasterData(SINGLE_DATA).getDepth());
-   }
-
-   @Test
-   void testGetId() {
-      final String id = new AtomicRasterData(SINGLE_DATA).getId();
-      final Pattern pattern = Pattern.compile("AtomicRasterData_\\d+");
-
-      Assertions.assertTrue(pattern.matcher(id).matches(), String.format(
-            "The ID '%s' matches the pattern '%s'", id, pattern.toString()));
    }
 }

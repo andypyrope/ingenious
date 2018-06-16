@@ -8,21 +8,21 @@ import org.junit.jupiter.api.Test;
 
 class FullyConnectedLayerTest {
 
-   private static final int INPUT_SIZE = 3;
-   private static final int OUTPUT_SIZE = 2;
+   private static final int INPUT_COUNT = 3;
+   private static final int OUTPUT_COUNT = 2;
    private static final double[] INPUT = new double[]{1, 2, 3};
    private static final double[] ACTUAL_OUTPUT = new double[]{2.0, 1.2};
    private static final double[] TARGET_OUTPUT = new double[]{2, -3};
 
    @Test
    void testGetCalculationComplexity() {
-      Assertions.assertEquals(INPUT_SIZE * OUTPUT_SIZE,
+      Assertions.assertEquals(INPUT_COUNT * OUTPUT_COUNT,
             makeLayer().getCalculationComplexity());
    }
 
    @Test
    void testGetAdjustmentComplexity() {
-      Assertions.assertEquals(INPUT_SIZE * OUTPUT_SIZE,
+      Assertions.assertEquals(INPUT_COUNT * OUTPUT_COUNT,
             makeLayer().getAdjustmentComplexity());
    }
 
@@ -56,6 +56,7 @@ class FullyConnectedLayerTest {
    }
 
    private AtomicLayer makeLayer() {
-      return new FullyConnectedLayer(INPUT_SIZE, OUTPUT_SIZE, new DeterministicRandom());
+      return new FullyConnectedLayer(INPUT_COUNT, OUTPUT_COUNT,
+            new DeterministicRandom());
    }
 }

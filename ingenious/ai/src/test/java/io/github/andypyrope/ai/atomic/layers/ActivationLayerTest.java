@@ -8,19 +8,19 @@ import org.junit.jupiter.api.Test;
 
 class ActivationLayerTest {
 
-   private static final int LAYER_SIZE = 3;
+   private static final int LAYER_COUNT = 3;
    private static final double[] INPUT = new double[]{1, 2, 3};
    private static final double[] ACTUAL_OUTPUT = new double[]{0.5, 1.0, 1.5};
    private static final double[] TARGET_OUTPUT = new double[]{2, -3, 4};
 
    @Test
    void testGetCalculationComplexity() {
-      Assertions.assertEquals(LAYER_SIZE, makeLayer().getCalculationComplexity());
+      Assertions.assertEquals(LAYER_COUNT, makeLayer().getCalculationComplexity());
    }
 
    @Test
    void testGetAdjustmentComplexity() {
-      Assertions.assertEquals(LAYER_SIZE, makeLayer().getAdjustmentComplexity());
+      Assertions.assertEquals(LAYER_COUNT, makeLayer().getAdjustmentComplexity());
    }
 
    @Test
@@ -54,7 +54,7 @@ class ActivationLayerTest {
    }
 
    private AtomicLayer makeLayer() {
-      return new ActivationLayer(LAYER_SIZE, new HalfFunction());
+      return new ActivationLayer(LAYER_COUNT, new HalfFunction());
    }
 
    private static class HalfFunction implements ActivationFunction {

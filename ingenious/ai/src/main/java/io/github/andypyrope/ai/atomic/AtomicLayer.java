@@ -1,16 +1,16 @@
 package io.github.andypyrope.ai.atomic;
 
-import io.github.andypyrope.ai.MismatchException;
 import io.github.andypyrope.ai.NetworkLayer;
 import io.github.andypyrope.ai.NoCalculationException;
+import io.github.andypyrope.ai.data.MismatchException;
 
 public interface AtomicLayer extends NetworkLayer {
 
    /**
-    * @param inputArray The input to calculate the output with.
+    * @param input The input to calculate the output with.
     * @throws MismatchException If the given input array is not with the expected size.
     */
-   void calculate(double[] inputArray) throws MismatchException;
+   void calculate(double[] input) throws MismatchException;
 
    /**
     * @param targetOutput The target output.

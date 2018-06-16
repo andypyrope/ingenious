@@ -17,15 +17,15 @@ public class FullyConnectedLayer extends AtomicLayerBase {
 
       super(inputSize, outputSize);
 
-      _edgeWeights = new double[_inputSize][_outputSize];
-      _edgeVolatility = new double[_inputSize][_outputSize];
-      _lastEdgeGradients = new double[_inputSize][_outputSize];
+      _edgeWeights = new double[_inputCount][_outputCount];
+      _edgeVolatility = new double[_inputCount][_outputCount];
+      _lastEdgeGradients = new double[_inputCount][_outputCount];
 
       // Multiply the edges by this constant in order to keep the output values as close
       // as possible to the input values.
-      final double edgeMultiplier = 1.0 / (_inputSize * AVERAGE_RANDOM_DOUBLE);
-      for (int i = 0; i < _inputSize; i++) {
-         for (int j = 0; j < _outputSize; j++) {
+      final double edgeMultiplier = 1.0 / (_inputCount * AVERAGE_RANDOM_DOUBLE);
+      for (int i = 0; i < _inputCount; i++) {
+         for (int j = 0; j < _outputCount; j++) {
             _edgeWeights[i][j] = random.nextDouble() * edgeMultiplier;
             _edgeVolatility[i][j] = RPROP_INITIAL_VOLATILITY;
          }
@@ -34,12 +34,12 @@ public class FullyConnectedLayer extends AtomicLayerBase {
 
    @Override
    protected void calculateWithInput(final double[] input) {
-      for (int i = 0; i < _outputSize; i++) {
+      for (int i = 0; i < _outputCount; i++) {
          _output[i] = 0.0;
       }
 
-      for (int i = 0; i < _inputSize; i++) {
-         for (int j = 0; j < _outputSize; j++) {
+      for (int i = 0; i < _inputCount; i++) {
+         for (int j = 0; j < _outputCount; j++) {
             _output[j] += input[i] * _edgeWeights[i][j];
          }
       }
@@ -47,9 +47,9 @@ public class FullyConnectedLayer extends AtomicLayerBase {
 
    @Override
    protected void adjustWithGradient(final double[] outputGradient) {
-      for (int i = 0; i < _inputSize; i++) {
+      for (int i = 0; i < _inputCount; i++) {
          _inputGradient[i] = 0.0;
-         for (int j = 0; j < _outputSize; j++) {
+         for (int j = 0; j < _outputCount; j++) {
             _inputGradient[i] += _edgeWeights[i][j] * outputGradient[j];
 
             final double gradient = _lastInput[i] * outputGradient[j];
@@ -73,11 +73,11 @@ public class FullyConnectedLayer extends AtomicLayerBase {
 
    @Override
    public int getCalculationComplexity() {
-      return _inputSize * _outputSize;
+      return _inputCount * _outputCount;
    }
 
    @Override
    public int getAdjustmentComplexity() {
-      return _inputSize * _outputSize;
+      return _inputCount * _outputCount;
    }
 }

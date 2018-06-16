@@ -1,7 +1,11 @@
 package io.github.andypyrope.ai.atomic.layers;
 
-import io.github.andypyrope.ai.*;
+import io.github.andypyrope.ai.InvalidOperationException;
+import io.github.andypyrope.ai.NetworkLayer;
+import io.github.andypyrope.ai.NoAdjustmentException;
+import io.github.andypyrope.ai.NoCalculationException;
 import io.github.andypyrope.ai.atomic.AtomicLayer;
+import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import org.easymock.EasyMock;
@@ -10,45 +14,52 @@ import org.junit.jupiter.api.Test;
 
 class AtomicLayerBaseTest {
 
-   private static int INPUT_SIZE = 2;
+   private static int INPUT_COUNT = 2;
    private static double[] INITIAL_INPUT_GRADIENT = new double[]{0.2, 0.4};
-   private static int OUTPUT_SIZE = 3;
+   private static int OUTPUT_COUNT = 3;
    private static double[] INITIAL_OUTPUT = new double[]{0.1, -4.0, 4.0};
 
    private double[] _input;
    private double[] _outputGradient;
 
    @Test
-   void testSetSurroundingLayersMismatchingPreviousLayer() {
-      final NetworkLayer previous = EasyMock.createMock(NetworkLayer.class);
-      EasyMock.expect(previous.getOutputSize()).andReturn(1).times(2);
-      final NetworkLayer next = EasyMock.createMock(NetworkLayer.class);
-      EasyMock.replay(previous, next);
-
-      expectMismatchException(() -> makeLayer().setSurroundingLayers(previous, next));
-      EasyMock.verify(previous, next);
+   void testGetInputCount() {
+      Assertions.assertEquals(INPUT_COUNT, makeLayer().getInputCount());
    }
 
    @Test
-   void testSetSurroundingLayersMismatchingNextLayer() {
-      final NetworkLayer previous = EasyMock.createMock(NetworkLayer.class);
-      EasyMock.expect(previous.getOutputSize()).andReturn(2);
-      final NetworkLayer next = EasyMock.createMock(NetworkLayer.class);
-      EasyMock.expect(next.getInputSize()).andReturn(2).times(2);
-      EasyMock.replay(previous, next);
-
-      expectMismatchException(() -> makeLayer().setSurroundingLayers(previous, next));
-      EasyMock.verify(previous, next);
+   void testGetInputWidth() {
+      Assertions.assertEquals(1, makeLayer().getInputWidth());
    }
 
    @Test
-   void testGetInputSize() {
-      Assertions.assertEquals(2, makeLayer().getInputSize());
+   void testGetInputHeight() {
+      Assertions.assertEquals(1, makeLayer().getInputHeight());
    }
 
    @Test
-   void testGetOutputSize() {
-      Assertions.assertEquals(3, makeLayer().getOutputSize());
+   void testGetInputDepth() {
+      Assertions.assertEquals(1, makeLayer().getInputDepth());
+   }
+
+   @Test
+   void testGetOutputCount() {
+      Assertions.assertEquals(OUTPUT_COUNT, makeLayer().getOutputCount());
+   }
+
+   @Test
+   void testGetOutputWidth() {
+      Assertions.assertEquals(1, makeLayer().getOutputWidth());
+   }
+
+   @Test
+   void testGetOutputHeight() {
+      Assertions.assertEquals(1, makeLayer().getOutputWidth());
+   }
+
+   @Test
+   void testGetOutputDepth() {
+      Assertions.assertEquals(1, makeLayer().getOutputWidth());
    }
 
    @Test
@@ -59,20 +70,21 @@ class AtomicLayerBaseTest {
    }
 
    @Test
-   void testCalculateWithMismatchingInput() {
+   void testCalculateWithInputWithInvalidCount() {
       expectMismatchException(() -> makeLayer().calculate(new double[3]));
    }
 
    @Test
    void testCalculateWithPreviousLayer() {
       final double[] input = new double[2];
+      final NetworkLayer layer = makeLayer();
 
       final NetworkLayer previous = EasyMock.createMock(NetworkLayer.class);
-      EasyMock.expect(previous.getOutputSize()).andReturn(input.length);
+      previous.validateSize(layer);
+      EasyMock.expectLastCall();
       EasyMock.expect(previous.getOutputAsAtomic()).andReturn(input);
       EasyMock.replay(previous);
 
-      final NetworkLayer layer = makeLayer();
       layer.setSurroundingLayers(previous, null);
       layer.calculate();
       Assertions.assertSame(input, _input);
@@ -88,14 +100,14 @@ class AtomicLayerBaseTest {
    @Test
    void testGetEuclideanDistance() {
       final AtomicLayer layer = new CustomAtomicLayer(2, 2);
-      layer.calculate(new double[INPUT_SIZE]);
+      layer.calculate(new double[INPUT_COUNT]);
       TestUtil.compareDoubles(5.0, layer.getEuclideanDistance(new double[]{3.0, 4.0}));
    }
 
    @Test
    void testGetEuclideanDistanceWithNoCalculation() {
       expectNoCalculationException(() ->
-            makeLayer().getEuclideanDistance(new double[OUTPUT_SIZE]));
+            makeLayer().getEuclideanDistance(new double[OUTPUT_COUNT]));
    }
 
    @Test
@@ -112,20 +124,24 @@ class AtomicLayerBaseTest {
 
    @Test
    void testAdjustWithMismatchingOutput() {
-      expectMismatchException(() -> makeLayerWithCalculation().adjust(new double[2]));
+      expectMismatchException(
+            () -> makeLayerWithCalculation().adjust(new double[OUTPUT_COUNT + 1]));
    }
 
    @Test
    void testAdjustWithNoCalculation() {
-      expectNoCalculationException(() -> makeLayer().adjust(new double[OUTPUT_SIZE]));
+      expectNoCalculationException(() -> makeLayer().adjust(new double[OUTPUT_COUNT]));
    }
 
    @Test
    void testAdjustWithNextLayer() {
-      final double[] outputGradient = new double[3];
+      final double[] outputGradient = new double[OUTPUT_COUNT];
 
       final NetworkLayer next = EasyMock.createMock(NetworkLayer.class);
-      EasyMock.expect(next.getInputSize()).andReturn(outputGradient.length);
+      EasyMock.expect(next.getInputCount()).andReturn(OUTPUT_COUNT);
+      EasyMock.expect(next.getInputWidth()).andReturn(1);
+      EasyMock.expect(next.getInputHeight()).andReturn(1);
+      EasyMock.expect(next.getInputDepth()).andReturn(1);
       EasyMock.expect(next.getInputGradientAsAtomic()).andReturn(outputGradient);
       EasyMock.replay(next);
 
@@ -144,16 +160,17 @@ class AtomicLayerBaseTest {
 
    @Test
    void testAdjustWithNextLayerWithNoCalculation() {
-      final double[] outputGradient = new double[3];
-
       final NetworkLayer next = EasyMock.createMock(NetworkLayer.class);
-      EasyMock.expect(next.getInputSize()).andReturn(outputGradient.length);
+      EasyMock.expect(next.getInputCount()).andReturn(OUTPUT_COUNT);
+      EasyMock.expect(next.getInputWidth()).andReturn(1);
+      EasyMock.expect(next.getInputHeight()).andReturn(1);
+      EasyMock.expect(next.getInputDepth()).andReturn(1);
       EasyMock.replay(next);
 
       final NetworkLayer layer = makeLayer();
       layer.setSurroundingLayers(null, next);
       expectNoCalculationException(layer::adjust);
-      Assertions.assertNotSame(outputGradient, _outputGradient);
+      Assertions.assertNull(_outputGradient);
 
       EasyMock.verify(next);
    }
@@ -204,13 +221,13 @@ class AtomicLayerBaseTest {
 
    private AtomicLayer makeAdjustedLayer() {
       final AtomicLayer layer = makeLayerWithCalculation();
-      layer.adjust(new double[OUTPUT_SIZE]);
+      layer.adjust(new double[OUTPUT_COUNT]);
       return layer;
    }
 
    private AtomicLayer makeLayerWithCalculation() {
       final AtomicLayer layer = makeLayer();
-      layer.calculate(new double[INPUT_SIZE]);
+      layer.calculate(new double[INPUT_COUNT]);
       return layer;
    }
 
@@ -219,46 +236,32 @@ class AtomicLayerBaseTest {
    }
 
    private void expectNoAdjustmentException(final Runnable runnable) {
-      expectException(NoAdjustmentException.class, runnable);
+      TestUtil.expectException(NoAdjustmentException.class, runnable);
    }
 
    private void expectInvalidOperationException(final Runnable runnable) {
-      expectException(InvalidOperationException.class, runnable);
+      TestUtil.expectException(InvalidOperationException.class, runnable);
    }
 
    private void expectNoCalculationException(final Runnable runnable) {
-      expectException(NoCalculationException.class, runnable);
+      TestUtil.expectException(NoCalculationException.class, runnable);
    }
 
    private void expectMismatchException(final Runnable runnable) {
-      expectException(MismatchException.class, runnable);
-   }
-
-   private void expectException(final Class<? extends Exception> exceptionClass,
-         final Runnable runnable) {
-      Exception exception = null;
-      try {
-         runnable.run();
-      } catch (final Exception e) {
-         exception = e;
-      }
-      Assertions.assertNotNull(exception, "An exception has been thrown");
-      Assertions.assertSame(exceptionClass, exception.getClass(),
-            String.format("The caught exception is of type '%s'",
-                  exceptionClass.getSimpleName()));
+      TestUtil.expectException(MismatchException.class, runnable);
    }
 
    private class CustomAtomicLayer extends AtomicLayerBase {
 
       CustomAtomicLayer() {
-         super(INPUT_SIZE, OUTPUT_SIZE);
+         super(INPUT_COUNT, OUTPUT_COUNT);
 
-         System.arraycopy(INITIAL_INPUT_GRADIENT, 0, _inputGradient, 0, INPUT_SIZE);
-         System.arraycopy(INITIAL_OUTPUT, 0, _output, 0, OUTPUT_SIZE);
+         System.arraycopy(INITIAL_INPUT_GRADIENT, 0, _inputGradient, 0, INPUT_COUNT);
+         System.arraycopy(INITIAL_OUTPUT, 0, _output, 0, OUTPUT_COUNT);
       }
 
-      CustomAtomicLayer(final int inputSize, final int outputSize) {
-         super(inputSize, outputSize);
+      CustomAtomicLayer(final int inputCount, final int outputCount) {
+         super(inputCount, outputCount);
       }
 
       @Override

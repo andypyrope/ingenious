@@ -1,42 +1,65 @@
 package io.github.andypyrope.ai.atomic.layers;
 
-import io.github.andypyrope.ai.*;
+import io.github.andypyrope.ai.InvalidOperationException;
+import io.github.andypyrope.ai.NetworkLayerBase;
+import io.github.andypyrope.ai.NoAdjustmentException;
+import io.github.andypyrope.ai.NoCalculationException;
 import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.data.AtomicRasterData;
+import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 
-abstract class AtomicLayerBase implements AtomicLayer {
+abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
 
    static final double AVERAGE_RANDOM_DOUBLE = 0.5;
-   static final double RPROP_LOWER_VOLATILITY_MULTIPLIER = 0.5;
-   static final double RPROP_HIGHER_VOLATILITY_MULTIPLIER = 1.1;
-   static final double RPROP_INITIAL_VOLATILITY = 0.1;
-   final int _inputSize;
-   final int _outputSize;
    final double[] _output;
    final double[] _inputGradient;
    double[] _lastInput;
-   private boolean _hasNoCalculation = true;
-   private boolean _hasNoAdjustment = true;
-   private NetworkLayer _nextLayer;
-   private NetworkLayer _previousLayer;
 
-   AtomicLayerBase(final int inputSize, final int outputSize) {
-      _inputSize = inputSize;
-      _outputSize = outputSize;
-
-      _output = new double[_outputSize];
-      _inputGradient = new double[_inputSize];
+   AtomicLayerBase(final int inputCount, final int outputCount) {
+      super(inputCount, outputCount);
+      _output = new double[_outputCount];
+      _inputGradient = new double[_inputCount];
    }
 
    @Override
-   public int getInputSize() {
-      return _inputSize;
+   public int getInputCount() {
+      return _inputCount;
    }
 
    @Override
-   public int getOutputSize() {
-      return _outputSize;
+   public int getOutputCount() {
+      return _outputCount;
+   }
+
+   @Override
+   public int getInputWidth() {
+      return 1;
+   }
+
+   @Override
+   public int getInputHeight() {
+      return 1;
+   }
+
+   @Override
+   public int getInputDepth() {
+      return 1;
+   }
+
+   @Override
+   public int getOutputWidth() {
+      return 1;
+   }
+
+   @Override
+   public int getOutputHeight() {
+      return 1;
+   }
+
+   @Override
+   public int getOutputDepth() {
+      return 1;
    }
 
    @Override
@@ -46,6 +69,19 @@ abstract class AtomicLayerBase implements AtomicLayer {
                "There is no previous layer to get the output of");
       }
       _lastInput = _previousLayer.getOutputAsAtomic();
+      calculateWithInput(_lastInput);
+      _hasNoCalculation = false;
+   }
+
+   @Override
+   public void calculate(final double[] input) throws MismatchException {
+      if (input.length != _inputCount) {
+         throw new MismatchException(String.format("Expected an input " +
+                     "array of size %d but got an array of size %d instead",
+               _inputCount, input.length));
+      }
+
+      _lastInput = input;
       calculateWithInput(_lastInput);
       _hasNoCalculation = false;
    }
@@ -65,22 +101,26 @@ abstract class AtomicLayerBase implements AtomicLayer {
    }
 
    @Override
-   public void setSurroundingLayers(final NetworkLayer previousLayer,
-         final NetworkLayer nextLayer) {
+   public double getEuclideanDistance(double[] targetOutput)
+         throws NoCalculationException, MismatchException {
 
-      if (previousLayer != null && previousLayer.getOutputSize() != _inputSize) {
-         throw new MismatchException(String.format(
-               "The previous layer should have an output size of %d, not %d", _inputSize,
-               previousLayer.getOutputSize()));
+      if (_hasNoCalculation) {
+         throw new NoCalculationException();
       }
-      _previousLayer = previousLayer;
 
-      if (nextLayer != null && nextLayer.getInputSize() != _outputSize) {
-         throw new MismatchException(String.format(
-               "The next layer should have an input size of %d, not %d", _outputSize,
-               nextLayer.getInputSize()));
+      if (targetOutput.length != _outputCount) {
+         throw new MismatchException(String.format("Expected a target " +
+                     "output array of size %d but got target output array of " +
+                     "size %d instead",
+               _outputCount, targetOutput.length));
       }
-      _nextLayer = nextLayer;
+
+      double totalError = 0.0;
+      for (int i = 0; i < _output.length; i++) {
+         final double delta = _output[i] - targetOutput[i];
+         totalError += delta * delta;
+      }
+      return Math.sqrt(totalError);
    }
 
    @Override
@@ -116,42 +156,6 @@ abstract class AtomicLayerBase implements AtomicLayer {
    }
 
    @Override
-   public void calculate(final double[] inputArray) throws MismatchException {
-      if (inputArray.length != _inputSize) {
-         throw new MismatchException(String.format("Expected an input " +
-                     "array of size %d but got an array of size %d instead",
-               _inputSize, inputArray.length));
-      }
-
-      _lastInput = inputArray;
-      calculateWithInput(_lastInput);
-      _hasNoCalculation = false;
-   }
-
-   @Override
-   public double getEuclideanDistance(double[] targetOutput)
-         throws NoCalculationException, MismatchException {
-
-      if (_hasNoCalculation) {
-         throw new NoCalculationException();
-      }
-
-      if (targetOutput.length != _outputSize) {
-         throw new MismatchException(String.format("Expected a target " +
-                     "output array of size %d but got target output array of " +
-                     "size %d instead",
-               _outputSize, targetOutput.length));
-      }
-
-      double totalError = 0.0;
-      for (int i = 0; i < _output.length; i++) {
-         final double delta = _output[i] - targetOutput[i];
-         totalError += delta * delta;
-      }
-      return Math.sqrt(totalError);
-   }
-
-   @Override
    public void adjust(final double[] targetOutput)
          throws NoCalculationException, MismatchException {
 
@@ -159,11 +163,11 @@ abstract class AtomicLayerBase implements AtomicLayer {
          throw new NoCalculationException();
       }
 
-      if (targetOutput.length != _outputSize) {
+      if (targetOutput.length != _outputCount) {
          throw new MismatchException(String.format("Expected a target " +
                      "output array of size %d but got target output array of " +
                      "size %d instead",
-               _outputSize, targetOutput.length));
+               _outputCount, targetOutput.length));
       }
 
       // Assuming the error function is:
@@ -173,8 +177,8 @@ abstract class AtomicLayerBase implements AtomicLayer {
       // dE/dy[i] = 1/2 * (2*y[i] - 2*1*t[i] + 0)
       // dE/dy[i] = y[i] - t[i]
 
-      final double[] outputGradient = new double[_outputSize];
-      for (int i = 0; i < _outputSize; i++) {
+      final double[] outputGradient = new double[_outputCount];
+      for (int i = 0; i < _outputCount; i++) {
          outputGradient[i] = _output[i] - targetOutput[i];
       }
       adjustWithGradient(outputGradient);
