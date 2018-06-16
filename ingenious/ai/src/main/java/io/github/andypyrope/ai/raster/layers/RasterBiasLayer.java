@@ -48,6 +48,18 @@ public class RasterBiasLayer extends RasterLayerBase {
    }
 
    @Override
+   public void calculateWithInput(final RasterData[] inputs) {
+      for (int i = 0; i < _count; i++) {
+         final RasterData input = inputs[i];
+         final RasterData output = _output[i];
+         final double bias = _biases[i];
+
+         output.forEach((x, y, z) ->
+               output.setCell(x, y, z, input.getCell(x, y, z) + bias));
+      }
+   }
+
+   @Override
    public void adjustWithGradient(final RasterData[] outputGradients) {
       for (int i = 0; i < _inputCount; i++) {
          _inputGradients[i] = outputGradients[i];
@@ -65,18 +77,6 @@ public class RasterBiasLayer extends RasterLayerBase {
          }
 
          _lastBiasGradients[i] = multipliedGradient < 0 ? 0 : biasGradient;
-      }
-   }
-
-   @Override
-   public void calculateWithInput(final RasterData[] inputs) {
-      for (int i = 0; i < _count; i++) {
-         final RasterData input = inputs[i];
-         final RasterData output = _output[i];
-         final double bias = _biases[i];
-
-         output.forEach((x, y, z) ->
-               output.setCell(x, y, z, input.getCell(x, y, z) + bias));
       }
    }
 
