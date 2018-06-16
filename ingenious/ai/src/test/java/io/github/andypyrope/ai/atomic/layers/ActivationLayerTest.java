@@ -1,7 +1,7 @@
 package io.github.andypyrope.ai.atomic.layers;
 
-import io.github.andypyrope.ai.activation.ActivationFunction;
 import io.github.andypyrope.ai.atomic.AtomicLayer;
+import io.github.andypyrope.ai.testutil.HalfFunction;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -55,17 +55,5 @@ class ActivationLayerTest {
 
    private AtomicLayer makeLayer() {
       return new ActivationLayer(LAYER_COUNT, new HalfFunction());
-   }
-
-   private static class HalfFunction implements ActivationFunction {
-      @Override
-      public double getOutput(final double input) {
-         return input * 0.5;
-      }
-
-      @Override
-      public double getSlope(final double input, final double output) {
-         return 0.5;
-      }
    }
 }
