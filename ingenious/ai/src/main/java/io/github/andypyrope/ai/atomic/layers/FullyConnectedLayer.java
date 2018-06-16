@@ -12,10 +12,10 @@ public class FullyConnectedLayer extends AtomicLayerBase {
 
    private final double[][] _edgeWeights;
 
-   public FullyConnectedLayer(final int inputSize, final int outputSize,
+   public FullyConnectedLayer(final int inputCount, final int outputCount,
          final Random random) {
 
-      super(inputSize, outputSize);
+      super(inputCount, outputCount);
 
       _edgeWeights = new double[_inputCount][_outputCount];
       _edgeVolatility = new double[_inputCount][_outputCount];

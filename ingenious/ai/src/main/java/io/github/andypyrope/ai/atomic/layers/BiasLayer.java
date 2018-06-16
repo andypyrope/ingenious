@@ -9,19 +9,19 @@ import java.util.Random;
  */
 public class BiasLayer extends AtomicLayerBase {
 
-   private final int _size;
+   private final int _count;
    private final double[] _biases;
    private final double[] _biasVolatility;
    private final double[] _lastBiasGradients;
 
-   public BiasLayer(final int size, final Random random) {
-      super(size, size);
-      _size = size;
+   public BiasLayer(final int count, final Random random) {
+      super(count, count);
+      _count = count;
 
-      _biases = new double[_size];
-      _biasVolatility = new double[_size];
-      _lastBiasGradients = new double[_size];
-      for (int i = 0; i < _size; i++) {
+      _biases = new double[_count];
+      _biasVolatility = new double[_count];
+      _lastBiasGradients = new double[_count];
+      for (int i = 0; i < _count; i++) {
          _biases[i] = random.nextDouble() - AVERAGE_RANDOM_DOUBLE;
          _biasVolatility[i] = RPROP_INITIAL_VOLATILITY;
       }
@@ -29,14 +29,14 @@ public class BiasLayer extends AtomicLayerBase {
 
    @Override
    protected void calculateWithInput(final double[] inputArray) {
-      for (int i = 0; i < _size; i++) {
+      for (int i = 0; i < _count; i++) {
          _output[i] = inputArray[i] + _biases[i];
       }
    }
 
    @Override
    protected void adjustWithGradient(final double[] outputGradient) {
-      for (int i = 0; i < _size; i++) {
+      for (int i = 0; i < _count; i++) {
          _inputGradients[i] = outputGradient[i];
 
          // RPROP
@@ -58,11 +58,11 @@ public class BiasLayer extends AtomicLayerBase {
 
    @Override
    public int getCalculationComplexity() {
-      return _size;
+      return _count;
    }
 
    @Override
    public int getAdjustmentComplexity() {
-      return _size;
+      return _count;
    }
 }
