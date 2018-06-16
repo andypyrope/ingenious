@@ -48,9 +48,9 @@ public class FullyConnectedLayer extends AtomicLayerBase {
    @Override
    protected void adjustWithGradient(final double[] outputGradient) {
       for (int i = 0; i < _inputCount; i++) {
-         _inputGradient[i] = 0.0;
+         _inputGradients[i] = 0.0;
          for (int j = 0; j < _outputCount; j++) {
-            _inputGradient[i] += _edgeWeights[i][j] * outputGradient[j];
+            _inputGradients[i] += _edgeWeights[i][j] * outputGradient[j];
 
             final double gradient = _lastInput[i] * outputGradient[j];
 

@@ -51,4 +51,17 @@ abstract class RasterDataBase implements RasterData {
          }
       }
    }
+
+   @Override
+   public double getSum() {
+      double sum = 0.0;
+      for (int z = 0; z < getDepth(); z++) {
+         for (int y = 0; y < getHeight(); y++) {
+            for (int x = 0; x < getWidth(); x++) {
+               sum += getCell(x, y, z);
+            }
+         }
+      }
+      return sum;
+   }
 }

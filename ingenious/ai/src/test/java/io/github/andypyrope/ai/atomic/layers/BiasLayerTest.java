@@ -10,7 +10,6 @@ class BiasLayerTest {
 
    private static final int LAYER_COUNT = 3;
    private static final double[] INPUT = new double[]{1, 2, 3};
-   private static final double[] ACTUAL_OUTPUT = new double[]{0.6, 1.8, 3.2};
    private static final double[] TARGET_OUTPUT = new double[]{2, -3, 4};
 
    @Test
@@ -24,25 +23,14 @@ class BiasLayerTest {
    }
 
    @Test
-   void testCalculation() {
-      final AtomicLayer layer = makeLayer();
-      layer.calculate(INPUT);
-      TestUtil.compareDoubleArrays(ACTUAL_OUTPUT, layer.getOutputAsAtomic());
-   }
-
-   @Test
    void testLearning() {
       final AtomicLayer layer = makeLayer();
       layer.calculate(INPUT);
       TestUtil.compareDoubles(5.05, layer.getEuclideanDistance(TARGET_OUTPUT));
       train(layer);
       TestUtil.compareDoubles(4.45, layer.getEuclideanDistance(TARGET_OUTPUT));
-      TestUtil.compareDoubleArrays(new double[]{-1.06, 4.46, -0.47},
-            layer.getInputGradientAsAtomic());
       train(layer);
       TestUtil.compareDoubles(3.44, layer.getEuclideanDistance(TARGET_OUTPUT));
-      TestUtil.compareDoubleArrays(new double[]{-0.26, 3.66, 0.046},
-            layer.getInputGradientAsAtomic());
    }
 
    private void train(final AtomicLayer layer) {

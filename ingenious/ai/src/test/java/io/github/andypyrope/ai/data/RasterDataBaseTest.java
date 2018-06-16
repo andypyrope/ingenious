@@ -86,10 +86,10 @@ class RasterDataBaseTest {
    void testRandomize() {
       final TestRasterData data = new TestRasterData(2, 2, 2);
       data.randomize(new DeterministicRandom());
-      TestUtil.compareDoubleArrays(new double[]{0.10, 0.52}, data._data[0][0]);
-      TestUtil.compareDoubleArrays(new double[]{0.30, 0.20}, data._data[1][0]);
-      TestUtil.compareDoubleArrays(new double[]{0.70, 0.24}, data._data[0][1]);
-      TestUtil.compareDoubleArrays(new double[]{0.44, 0.24}, data._data[1][1]);
+      TestUtil.compareDoubleArrays(new double[]{0.20, 0.81}, data._data[0][0]);
+      TestUtil.compareDoubleArrays(new double[]{0.46, 0.33}, data._data[1][0]);
+      TestUtil.compareDoubleArrays(new double[]{0.0086, 0.92}, data._data[0][1]);
+      TestUtil.compareDoubleArrays(new double[]{0.67, 0.73}, data._data[1][1]);
    }
 
    @Test

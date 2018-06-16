@@ -16,7 +16,7 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
    final int _inputWidth;
    final int _inputHeight;
    final int _inputDepth;
-   final RasterData[] _inputGradient;
+   RasterData[] _inputGradients;
    final int _outputWidth;
    final int _outputHeight;
    final int _outputDepth;
@@ -33,10 +33,7 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
       _inputWidth = inputWidth;
       _inputHeight = inputHeight;
       _inputDepth = inputDepth;
-      _inputGradient = new RasterData[_inputCount];
-      for (int i = 0; i < _inputCount; i++) {
-         _inputGradient[i] = new CustomRasterData(_inputWidth, _inputHeight, _inputDepth);
-      }
+      _inputGradients = new RasterData[_inputCount];
 
       _outputWidth = outputWidth;
       _outputHeight = outputHeight;
@@ -44,6 +41,13 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
       _output = new RasterData[_outputCount];
       for (int i = 0; i < _outputCount; i++) {
          _output[i] = new CustomRasterData(_outputWidth, _outputHeight, _outputDepth);
+      }
+   }
+
+   void initializeInputGradientData() {
+      for (int i = 0; i < _inputCount; i++) {
+         _inputGradients[i] = new CustomRasterData(_inputWidth, _inputHeight,
+               _inputDepth);
       }
    }
 
@@ -124,7 +128,7 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
       if (_inputWidth > 1 || _inputHeight > 1 || _inputDepth > 1) {
          throw new MismatchException(1, 1, 1, _inputWidth, _inputHeight, _inputDepth);
       }
-      return AtomicRasterData.castToAtomic(_inputGradient);
+      return AtomicRasterData.castToAtomic(_inputGradients);
    }
 
    @Override
@@ -140,7 +144,7 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
       if (_hasNoAdjustment) {
          throw new NoAdjustmentException();
       }
-      return _inputGradient;
+      return _inputGradients;
    }
 
    @Override

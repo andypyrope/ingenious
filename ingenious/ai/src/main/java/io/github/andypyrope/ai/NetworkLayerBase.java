@@ -4,6 +4,7 @@ import io.github.andypyrope.ai.data.MismatchException;
 
 public abstract class NetworkLayerBase implements NetworkLayer {
 
+   protected static final double AVERAGE_RANDOM_DOUBLE = 0.5;
    protected static final double RPROP_LOWER_VOLATILITY_MULTIPLIER = 0.5;
    protected static final double RPROP_HIGHER_VOLATILITY_MULTIPLIER = 1.1;
    protected static final double RPROP_INITIAL_VOLATILITY = 0.1;

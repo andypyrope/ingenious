@@ -1,9 +1,11 @@
 package io.github.andypyrope.ai.testutil;
 
 import io.github.andypyrope.ai.data.RasterData;
+import io.github.andypyrope.ai.raster.RasterLayer;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class TestUtil {
@@ -131,5 +133,23 @@ public class TestUtil {
       for (int i = 0; i < expected.length; i++) {
          Assertions.assertSame(expected[i], actual[i]);
       }
+   }
+
+   public static double getEuclideanDistance(final RasterLayer layer,
+         final RasterData[] targetOutput) {
+
+      final RasterData[] output = layer.getOutputAsRaster();
+      AtomicReference<Double> squaredDistance = new AtomicReference<>(0.0);
+      for (int i = 0; i < output.length; i++) {
+         final RasterData currentOutput = output[i];
+         final RasterData currentTargetOutput = targetOutput[i];
+
+         currentOutput.forEach((x, y, z) -> {
+            final double difference = currentOutput.getCell(x, y, z) -
+                  currentTargetOutput.getCell(x, y, z);
+            squaredDistance.set(squaredDistance.get() + difference * difference);
+         });
+      }
+      return Math.sqrt(squaredDistance.get());
    }
 }

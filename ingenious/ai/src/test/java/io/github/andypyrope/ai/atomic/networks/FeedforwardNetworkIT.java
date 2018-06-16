@@ -19,17 +19,17 @@ class FeedforwardNetworkIT {
 
    @Test
    void testWithLogistic() {
-      TestUtil.compareDoubles(0.00000000021, getDistance(new LogisticFunction()));
+      TestUtil.compareDoubles(0.00000000028, getDistance(new LogisticFunction()));
    }
 
    @Test
    void testWithLeakyReLu() {
-      TestUtil.compareDoubles(0.0000000039, getDistance(new LeakyReLuFunction(0.1)));
+      TestUtil.compareDoubles(0.0000000012, getDistance(new LeakyReLuFunction(0.1)));
    }
 
    @Test
    void testWithTanh() {
-      TestUtil.compareDoubles(0.0000000034, getDistance(new TanhFunction()));
+      TestUtil.compareDoubles(0.00000000096, getDistance(new TanhFunction()));
    }
 
    private double getDistance(final ActivationFunction function) {

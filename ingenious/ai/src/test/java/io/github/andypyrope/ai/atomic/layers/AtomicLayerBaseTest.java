@@ -256,7 +256,7 @@ class AtomicLayerBaseTest {
       CustomAtomicLayer() {
          super(INPUT_COUNT, OUTPUT_COUNT);
 
-         System.arraycopy(INITIAL_INPUT_GRADIENT, 0, _inputGradient, 0, INPUT_COUNT);
+         System.arraycopy(INITIAL_INPUT_GRADIENT, 0, _inputGradients, 0, INPUT_COUNT);
          System.arraycopy(INITIAL_OUTPUT, 0, _output, 0, OUTPUT_COUNT);
       }
 

@@ -9,8 +9,6 @@ import java.util.Random;
  */
 public class BiasLayer extends AtomicLayerBase {
 
-   private static final double INITIAL_BIAS_OFFSET = AVERAGE_RANDOM_DOUBLE * -1;
-
    private final int _size;
    private final double[] _biases;
    private final double[] _biasVolatility;
@@ -24,7 +22,7 @@ public class BiasLayer extends AtomicLayerBase {
       _biasVolatility = new double[_size];
       _lastBiasGradients = new double[_size];
       for (int i = 0; i < _size; i++) {
-         _biases[i] = random.nextDouble() + INITIAL_BIAS_OFFSET;
+         _biases[i] = random.nextDouble() - AVERAGE_RANDOM_DOUBLE;
          _biasVolatility[i] = RPROP_INITIAL_VOLATILITY;
       }
    }
@@ -39,10 +37,10 @@ public class BiasLayer extends AtomicLayerBase {
    @Override
    protected void adjustWithGradient(final double[] outputGradient) {
       for (int i = 0; i < _size; i++) {
-         _inputGradient[i] = outputGradient[i];
+         _inputGradients[i] = outputGradient[i];
 
          // RPROP
-         final double gradient = _inputGradient[i];
+         final double gradient = _inputGradients[i];
          final double multipliedGradient = gradient * _lastBiasGradients[i];
          final double delta = Math.copySign(_biasVolatility[i], gradient);
 

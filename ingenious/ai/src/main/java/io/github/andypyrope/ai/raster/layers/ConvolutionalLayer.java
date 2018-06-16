@@ -44,6 +44,7 @@ public class ConvolutionalLayer extends RasterLayerBase {
             Math.max(inputWidth - targetFilterWidth + 1, 1),
             Math.max(inputHeight - targetFilterHeight + 1, 1),
             Math.max(inputDepth - targetFilterDepth + 1, 1));
+      initializeInputGradientData();
 
       _filterCount = filterCount;
       final int filterWidth = _inputWidth - _outputWidth + 1;
@@ -94,13 +95,13 @@ public class ConvolutionalLayer extends RasterLayerBase {
 
    @Override
    public void adjustWithGradient(final RasterData[] outputGradient) {
-      Arrays.stream(_inputGradient).forEach(RasterData::clear);
+      Arrays.stream(_inputGradients).forEach(RasterData::clear);
       Arrays.stream(_filterGradients).forEach(RasterData::clear);
 
       int index = 0;
       for (int i = 0; i < _inputCount; i++) {
          for (int j = 0; j < _filterCount; j++) {
-            accumulateGradient(_lastInput[i], _inputGradient[i],
+            accumulateGradient(_lastInput[i], _inputGradients[i],
                   _filters[j], _filterGradients[j],
                   outputGradient[index]);
             index++;

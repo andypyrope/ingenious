@@ -11,15 +11,14 @@ import io.github.andypyrope.ai.data.RasterData;
 
 abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
 
-   static final double AVERAGE_RANDOM_DOUBLE = 0.5;
    final double[] _output;
-   final double[] _inputGradient;
+   final double[] _inputGradients;
    double[] _lastInput;
 
    AtomicLayerBase(final int inputCount, final int outputCount) {
       super(inputCount, outputCount);
       _output = new double[_outputCount];
-      _inputGradient = new double[_inputCount];
+      _inputGradients = new double[_inputCount];
    }
 
    @Override
@@ -136,7 +135,7 @@ abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
       if (_hasNoAdjustment) {
          throw new NoAdjustmentException();
       }
-      return _inputGradient;
+      return _inputGradients;
    }
 
    @Override
@@ -152,7 +151,7 @@ abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
       if (_hasNoAdjustment) {
          throw new NoAdjustmentException();
       }
-      return AtomicRasterData.castToRaster(_inputGradient);
+      return AtomicRasterData.castToRaster(_inputGradients);
    }
 
    @Override

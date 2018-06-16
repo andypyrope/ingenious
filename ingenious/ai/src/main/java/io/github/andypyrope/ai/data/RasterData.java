@@ -100,4 +100,9 @@ public interface RasterData {
     * @param consumer The consumer to use.
     */
    void forEach(TriCoordinateConsumer consumer);
+
+   /**
+    * @return The sum of all cells of the data.
+    */
+   double getSum();
 }

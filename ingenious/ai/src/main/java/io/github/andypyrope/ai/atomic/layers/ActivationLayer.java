@@ -28,7 +28,7 @@ public class ActivationLayer extends AtomicLayerBase {
    @Override
    protected void adjustWithGradient(final double[] outputGradient) {
       for (int i = 0; i < _size; i++) {
-         _inputGradient[i] = _function.getSlope(_lastInput[i], _output[i]) *
+         _inputGradients[i] = _function.getSlope(_lastInput[i], _output[i]) *
                outputGradient[i];
       }
    }
