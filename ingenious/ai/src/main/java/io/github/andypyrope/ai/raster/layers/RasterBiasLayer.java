@@ -17,9 +17,8 @@ public class RasterBiasLayer extends RasterLayerBase {
    private final int _adjustmentComplexity;
 
    /**
-    * Creates a convolutional layer with a set input and filter size. Its output size is
-    * deduced from the target filter size. If the filter size exceeds its maximum, it is
-    * shrunk down to a size that fits the layer.
+    * Creates a layer which adds a learnable bias to each of its inputs of type {@link
+    * RasterData} with specified dimensions and count.
     *
     * @param count  The number of inputs (and outputs).
     * @param width  The width of the input/output.
