@@ -12,7 +12,6 @@ import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.util.RasterSize;
 import io.github.andypyrope.ai.util.TriRasterSize;
 
-@SuppressWarnings("FeatureEnvy")
 abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
 
    private static final RasterSize ATOMIC_SIZE = new TriRasterSize(1, 1, 1);

@@ -4,8 +4,6 @@ import io.github.andypyrope.ai.activation.ActivationFunction;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.util.RasterSize;
 
-// Pure OOP does not seem to make sense for layers, which are 90% algorithm.
-@SuppressWarnings("FeatureEnvy")
 public class RasterActivationLayer extends RasterLayerBase {
 
    private final ActivationFunction _function;

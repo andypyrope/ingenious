@@ -5,8 +5,6 @@ import io.github.andypyrope.ai.util.RasterSize;
 
 import java.util.Random;
 
-// Pure OOP does not seem to make sense for layers, which are 90% algorithm.
-@SuppressWarnings("FeatureEnvy")
 public class RasterBiasLayer extends RasterLayerBase {
 
    private final double[] _biases;
