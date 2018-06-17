@@ -9,76 +9,34 @@ import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.raster.RasterLayer;
+import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.TriRasterSize;
 
 @SuppressWarnings("FeatureEnvy")
 abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
 
-   final int _inputWidth;
-   final int _inputHeight;
-   final int _inputDepth;
+   private static final RasterSize ATOMIC_SIZE = new TriRasterSize(1, 1, 1);
+
    RasterData[] _inputGradients;
-   final int _outputWidth;
-   final int _outputHeight;
-   final int _outputDepth;
    final RasterData[] _output;
    RasterData[] _lastInput;
 
+   RasterLayerBase(final int inputCount, final RasterSize inputSize,
+         final int outputCount, final RasterSize outputSize) {
 
-   RasterLayerBase(final int inputCount, final int inputWidth, final int inputHeight,
-         final int inputDepth, final int outputCount, final int outputWidth,
-         final int outputHeight, final int outputDepth) {
+      super(inputCount, inputSize, outputCount, outputSize);
 
-      super(inputCount, outputCount);
-
-      _inputWidth = inputWidth;
-      _inputHeight = inputHeight;
-      _inputDepth = inputDepth;
       _inputGradients = new RasterData[_inputCount];
-
-      _outputWidth = outputWidth;
-      _outputHeight = outputHeight;
-      _outputDepth = outputDepth;
       _output = new RasterData[_outputCount];
       for (int i = 0; i < _outputCount; i++) {
-         _output[i] = new CustomRasterData(_outputWidth, _outputHeight, _outputDepth);
+         _output[i] = new CustomRasterData(_outputSize);
       }
    }
 
    void initializeInputGradientData() {
       for (int i = 0; i < _inputCount; i++) {
-         _inputGradients[i] = new CustomRasterData(_inputWidth, _inputHeight,
-               _inputDepth);
+         _inputGradients[i] = new CustomRasterData(_inputSize);
       }
-   }
-
-   @Override
-   public int getInputWidth() {
-      return _inputWidth;
-   }
-
-   @Override
-   public int getInputHeight() {
-      return _inputHeight;
-   }
-
-   @Override
-   public int getInputDepth() {
-      return _inputDepth;
-   }
-
-   @Override
-   public int getOutputWidth() {
-      return _outputWidth;
-   }
-
-   @Override
-   public int getOutputHeight() {
-      return _outputHeight;
-   }
-
-   @Override
-   public int getOutputDepth() {
-      return _outputDepth;
    }
 
    @Override
@@ -112,8 +70,8 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
       if (_hasNoCalculation) {
          throw new NoCalculationException();
       }
-      if (_outputWidth > 1 || _outputHeight > 1 || _outputDepth > 1) {
-         throw new MismatchException(1, 1, 1, _outputWidth, _outputHeight, _outputDepth);
+      if (_outputSize.differsFrom(ATOMIC_SIZE)) {
+         throw new MismatchException(ATOMIC_SIZE, _outputSize);
       }
       return AtomicRasterData.castToAtomic(_output);
    }
@@ -125,8 +83,8 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
       if (_hasNoAdjustment) {
          throw new NoAdjustmentException();
       }
-      if (_inputWidth > 1 || _inputHeight > 1 || _inputDepth > 1) {
-         throw new MismatchException(1, 1, 1, _inputWidth, _inputHeight, _inputDepth);
+      if (_inputSize.differsFrom(ATOMIC_SIZE)) {
+         throw new MismatchException(ATOMIC_SIZE, _inputSize);
       }
       return AtomicRasterData.castToAtomic(_inputGradients);
    }
@@ -156,7 +114,7 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
       }
 
       for (final RasterData currentInput : input) {
-         currentInput.verifyDimensions(_inputWidth, _inputHeight, _inputDepth);
+         currentInput.verifyDimensions(_inputSize);
       }
 
       _lastInput = input;
@@ -195,8 +153,7 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
    }
 
    private RasterData getDifference(final RasterData first, final RasterData second) {
-      final RasterData result = new CustomRasterData(first.getWidth(), first.getHeight(),
-            first.getDepth());
+      final RasterData result = new CustomRasterData(first.getSize());
 
       result.forEach((x, y, z) -> result.setCell(x, y, z,
             first.getCell(x, y, z) - second.getCell(x, y, z)));

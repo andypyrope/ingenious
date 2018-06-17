@@ -1,18 +1,14 @@
 package io.github.andypyrope.ai.data;
 
-public class CustomRasterData extends RasterDataBase {
+import io.github.andypyrope.ai.util.RasterSize;
 
-   private final int _width;
-   private final int _height;
-   private final int _depth;
+public class CustomRasterData extends RasterDataBase {
 
    private final double[][][] _data;
 
-   public CustomRasterData(final int width, final int height, final int depth) {
-      _width = width;
-      _height = height;
-      _depth = depth;
-      _data = new double[height][width][depth];
+   public CustomRasterData(final RasterSize size) {
+      super(size);
+      _data = new double[size.getHeight()][size.getWidth()][size.getDepth()];
    }
 
    @Override
@@ -23,20 +19,5 @@ public class CustomRasterData extends RasterDataBase {
    @Override
    public void setCell(int x, int y, int z, double value) {
       _data[y][x][z] = value;
-   }
-
-   @Override
-   public int getWidth() {
-      return _width;
-   }
-
-   @Override
-   public int getHeight() {
-      return _height;
-   }
-
-   @Override
-   public int getDepth() {
-      return _depth;
    }
 }

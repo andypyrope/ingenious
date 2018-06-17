@@ -2,6 +2,7 @@ package io.github.andypyrope.ai;
 
 import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
+import io.github.andypyrope.ai.util.RasterSize;
 
 /**
  * A layer in a neural network.
@@ -26,19 +27,9 @@ public interface NetworkLayer {
    int getInputCount();
 
    /**
-    * @return The width of each raster instance this layer accepts.
+    * @return The dimensions of the input.
     */
-   int getInputWidth();
-
-   /**
-    * @return The height of each raster instance this layer accepts.
-    */
-   int getInputHeight();
-
-   /**
-    * @return The depth of each raster instance this layer accepts.
-    */
-   int getInputDepth();
+   RasterSize getInputSize();
 
    /**
     * @return The number of outputs of the layer
@@ -46,19 +37,9 @@ public interface NetworkLayer {
    int getOutputCount();
 
    /**
-    * @return The width of each raster instance this layer produces.
+    * @return The dimensions of the output.
     */
-   int getOutputWidth();
-
-   /**
-    * @return The height of each raster instance this layer produces.
-    */
-   int getOutputHeight();
-
-   /**
-    * @return The depth of each raster instance this layer produces.
-    */
-   int getOutputDepth();
+   RasterSize getOutputSize();
 
    /**
     * Based on the net input, update the net output of this layer.

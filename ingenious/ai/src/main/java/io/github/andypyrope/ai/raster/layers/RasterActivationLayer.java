@@ -2,12 +2,12 @@ package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.activation.ActivationFunction;
 import io.github.andypyrope.ai.data.RasterData;
+import io.github.andypyrope.ai.util.RasterSize;
 
 // Pure OOP does not seem to make sense for layers, which are 90% algorithm.
 @SuppressWarnings("FeatureEnvy")
 public class RasterActivationLayer extends RasterLayerBase {
 
-   private final int _count;
    private final ActivationFunction _function;
 
    private final int _calculationComplexity;
@@ -17,22 +17,18 @@ public class RasterActivationLayer extends RasterLayerBase {
     * Creates a layer which applies an activation function to each pixel in its input.
     *
     * @param count    The number of inputs (and outputs).
-    * @param width    The width of the input/output.
-    * @param height   The height of the input/output.
-    * @param depth    The depth of the input/output.
+    * @param size     The size (width, height, depth) of the input/output.
     * @param function The activation function of the layer.
     */
-   RasterActivationLayer(final int count, final int width,
-         final int height, final int depth, final ActivationFunction function) {
+   RasterActivationLayer(final int count, final RasterSize size,
+         final ActivationFunction function) {
 
-      super(count, width, height, depth,
-            count, width, height, depth);
+      super(count, size, count, size);
       initializeInputGradientData();
 
-      _count = count;
       _function = function;
 
-      _calculationComplexity = count * width * height * depth;
+      _calculationComplexity = count * size.getPixelCount();
       _adjustmentComplexity = _calculationComplexity;
    }
 
@@ -55,7 +51,7 @@ public class RasterActivationLayer extends RasterLayerBase {
 
    @Override
    public void calculateWithInput(final RasterData[] inputs) {
-      for (int i = 0; i < _count; i++) {
+      for (int i = 0; i < _inputCount; i++) {
          final RasterData input = inputs[i];
          final RasterData output = _output[i];
 

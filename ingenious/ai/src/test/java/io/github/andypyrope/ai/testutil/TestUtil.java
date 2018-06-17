@@ -78,9 +78,7 @@ public class TestUtil {
             "Expected  raster data '%s' to be equal to '%s'",
             rasterDataToString(actual), rasterDataToString(expected));
 
-      actual.verifyDimensions(expected.getWidth(), expected.getHeight(),
-            expected.getDepth());
-
+      actual.verifyDimensions(expected.getSize());
       expected.forEach((x, y, z) -> {
          try {
             compareDoubles(expected.getCell(x, y, z), actual.getCell(x, y, z));
@@ -92,13 +90,12 @@ public class TestUtil {
    }
 
    private static String rasterDataToString(final RasterData data) {
-      final StringBuilder result = new StringBuilder(data.getWidth() *
-            data.getHeight() * data.getDepth() * 5);
-      for (int z = 0; z < data.getDepth(); z++) {
+      final StringBuilder result = new StringBuilder(data.getSize().getPixelCount() * 5);
+      for (int z = 0; z < data.getSize().getDepth(); z++) {
          result.append("[");
-         for (int y = 0; y < data.getHeight(); y++) {
+         for (int y = 0; y < data.getSize().getHeight(); y++) {
             result.append("(");
-            for (int x = 0; x < data.getWidth(); x++) {
+            for (int x = 0; x < data.getSize().getWidth(); x++) {
                result.append(data.getCell(x, y, z)).append(",");
             }
             result.append(")");

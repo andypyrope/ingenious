@@ -1,5 +1,6 @@
 package io.github.andypyrope.ai.data;
 
+import io.github.andypyrope.ai.util.RasterSize;
 import io.github.andypyrope.ai.util.TriCoordinateConsumer;
 
 import java.util.Random;
@@ -58,29 +59,17 @@ public interface RasterData {
    void multiply(int x, int y, int z, double multiplier);
 
    /**
-    * @return The width of the data (2nd dimension in the raw array).
+    * @return The width, height and depth of this data.
     */
-   int getWidth();
-
-   /**
-    * @return The height of the data (1st dimension in the raw array).
-    */
-   int getHeight();
-
-   /**
-    * @return The depth of the data (3rd dimension in the raw array).
-    */
-   int getDepth();
+   RasterSize getSize();
 
    /**
     * Makes sure the dimensions of the raster data are correct.
     *
-    * @param width  The expected width.
-    * @param height The expected height.
-    * @param depth  The expected depth.
+    * @param size The expected size
     * @throws MismatchException If any of the dimensions are incorrect.
     */
-   void verifyDimensions(int width, int height, int depth) throws MismatchException;
+   void verifyDimensions(RasterSize size) throws MismatchException;
 
    /**
     * Sets the data to random values from 0 (inclusive) to 1 (exclusive).

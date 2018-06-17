@@ -8,15 +8,19 @@ import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.data.AtomicRasterData;
 import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
+import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.TriRasterSize;
 
 abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
+
+   private static final RasterSize ATOMIC_SIZE = new TriRasterSize(1, 1, 1);
 
    final double[] _output;
    final double[] _inputGradients;
    double[] _lastInput;
 
    AtomicLayerBase(final int inputCount, final int outputCount) {
-      super(inputCount, outputCount);
+      super(inputCount, ATOMIC_SIZE, outputCount, ATOMIC_SIZE);
       _output = new double[_outputCount];
       _inputGradients = new double[_inputCount];
    }
@@ -29,36 +33,6 @@ abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
    @Override
    public int getOutputCount() {
       return _outputCount;
-   }
-
-   @Override
-   public int getInputWidth() {
-      return 1;
-   }
-
-   @Override
-   public int getInputHeight() {
-      return 1;
-   }
-
-   @Override
-   public int getInputDepth() {
-      return 1;
-   }
-
-   @Override
-   public int getOutputWidth() {
-      return 1;
-   }
-
-   @Override
-   public int getOutputHeight() {
-      return 1;
-   }
-
-   @Override
-   public int getOutputDepth() {
-      return 1;
    }
 
    @Override

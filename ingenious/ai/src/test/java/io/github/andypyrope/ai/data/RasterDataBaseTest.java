@@ -2,6 +2,8 @@ package io.github.andypyrope.ai.data;
 
 import io.github.andypyrope.ai.testutil.DeterministicRandom;
 import io.github.andypyrope.ai.testutil.TestUtil;
+import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.TriRasterSize;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,9 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 class RasterDataBaseTest {
 
-   private static final int WIDTH = 2;
-   private static final int HEIGHT = 1;
-   private static final int DEPTH = 3;
+   private static final RasterSize SIZE = new TriRasterSize(2, 1, 3);
 
    private static final double[][][] INITIAL_DATA = new double[][][]{
          new double[][]{new double[]{Math.PI, 2}},
@@ -23,9 +23,9 @@ class RasterDataBaseTest {
    void testSetAll() {
       final RasterData data = makeData();
       data.setAll(420);
-      for (int x = 0; x < WIDTH; x++) {
-         for (int y = 0; y < HEIGHT; y++) {
-            for (int z = 0; z < DEPTH; z++) {
+      for (int x = 0; x < SIZE.getWidth(); x++) {
+         for (int y = 0; y < SIZE.getHeight(); y++) {
+            for (int z = 0; z < SIZE.getDepth(); z++) {
                TestUtil.compareDoubles(420, ((TestRasterData) data)._data[x][y][z]);
             }
          }
@@ -50,13 +50,8 @@ class RasterDataBaseTest {
 
    @Test
    void testVerifyDimensions() {
-      expectMismatchException(
-            () -> makeData().verifyDimensions(WIDTH + 1, HEIGHT, DEPTH));
-      expectMismatchException(
-            () -> makeData().verifyDimensions(WIDTH, HEIGHT + 1, DEPTH));
-      expectMismatchException(
-            () -> makeData().verifyDimensions(WIDTH, HEIGHT, DEPTH + 1));
-      makeData().verifyDimensions(WIDTH, HEIGHT, DEPTH);
+      expectMismatchException(() -> makeData().verifyDimensions(SIZE.plus(1)));
+      makeData().verifyDimensions(SIZE);
    }
 
    @Test
@@ -110,25 +105,18 @@ class RasterDataBaseTest {
 
    private class TestRasterData extends RasterDataBase {
       private final double[][][] _data;
-      private final int _width;
-      private final int _height;
-      private final int _depth;
 
       TestRasterData(final int width, final int height, final int depth) {
-         _width = width;
-         _height = height;
-         _depth = depth;
-         _data = new double[_width][_height][_depth];
+         super(new TriRasterSize(width, height, depth));
+         _data = new double[width][height][depth];
       }
 
       TestRasterData() {
-         _width = WIDTH;
-         _height = HEIGHT;
-         _depth = DEPTH;
-         _data = new double[WIDTH][HEIGHT][DEPTH];
-         for (int x = 0; x < WIDTH; x++) {
-            for (int y = 0; y < HEIGHT; y++) {
-               for (int z = 0; z < DEPTH; z++) {
+         super(SIZE);
+         _data = new double[SIZE.getWidth()][SIZE.getHeight()][SIZE.getDepth()];
+         for (int x = 0; x < SIZE.getWidth(); x++) {
+            for (int y = 0; y < SIZE.getHeight(); y++) {
+               for (int z = 0; z < SIZE.getDepth(); z++) {
                   _data[x][y][z] = INITIAL_DATA[z][y][x];
                }
             }
@@ -143,21 +131,6 @@ class RasterDataBaseTest {
       @Override
       public void setCell(final int x, final int y, final int z, final double value) {
          _data[x][y][z] = value;
-      }
-
-      @Override
-      public int getWidth() {
-         return _width;
-      }
-
-      @Override
-      public int getHeight() {
-         return _height;
-      }
-
-      @Override
-      public int getDepth() {
-         return _depth;
       }
    }
 }

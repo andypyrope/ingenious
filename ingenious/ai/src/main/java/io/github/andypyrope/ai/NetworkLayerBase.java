@@ -1,6 +1,7 @@
 package io.github.andypyrope.ai;
 
 import io.github.andypyrope.ai.data.MismatchException;
+import io.github.andypyrope.ai.util.RasterSize;
 
 public abstract class NetworkLayerBase implements NetworkLayer {
 
@@ -10,15 +11,21 @@ public abstract class NetworkLayerBase implements NetworkLayer {
    protected static final double RPROP_INITIAL_VOLATILITY = 0.1;
 
    protected final int _inputCount;
+   protected final RasterSize _inputSize;
    protected final int _outputCount;
+   protected final RasterSize _outputSize;
    protected NetworkLayer _nextLayer;
    protected NetworkLayer _previousLayer;
    protected boolean _hasNoCalculation = true;
    protected boolean _hasNoAdjustment = true;
 
-   public NetworkLayerBase(final int inputCount, final int outputCount) {
+   public NetworkLayerBase(final int inputCount, final RasterSize inputSize,
+         final int outputCount, final RasterSize outputSize) {
+
       _inputCount = inputCount;
+      _inputSize = inputSize;
       _outputCount = outputCount;
+      _outputSize = outputSize;
    }
 
    @Override
@@ -27,10 +34,19 @@ public abstract class NetworkLayerBase implements NetworkLayer {
    }
 
    @Override
+   public RasterSize getInputSize() {
+      return _inputSize;
+   }
+
+   @Override
    public int getOutputCount() {
       return _outputCount;
    }
 
+   @Override
+   public RasterSize getOutputSize() {
+      return _outputSize;
+   }
 
    @Override
    public void setSurroundingLayers(final NetworkLayer previousLayer,
@@ -57,13 +73,8 @@ public abstract class NetworkLayerBase implements NetworkLayer {
                nextLayer.getInputCount()));
       }
 
-      if (getOutputWidth() != nextLayer.getInputWidth()
-            || getOutputHeight() != nextLayer.getInputHeight()
-            || getOutputDepth() != nextLayer.getInputDepth()) {
-
-         throw new MismatchException(nextLayer.getInputWidth(),
-               nextLayer.getInputHeight(), nextLayer.getInputDepth(),
-               getOutputWidth(), getOutputHeight(), getOutputDepth());
+      if (getOutputSize().differsFrom(nextLayer.getInputSize())) {
+         throw new MismatchException(getOutputSize(), nextLayer.getInputSize());
       }
    }
 }

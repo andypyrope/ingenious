@@ -3,6 +3,8 @@ package io.github.andypyrope.ai;
 import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.testutil.TestUtil;
+import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.TriRasterSize;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -15,14 +17,9 @@ import java.util.List;
 class NetworkLayerBaseTest {
 
    private static final int INPUT_COUNT = 2;
-   private static final int INPUT_WIDTH = 3;
-   private static final int INPUT_HEIGHT = 4;
-   private static final int INPUT_DEPTH = 2;
-
+   private static final RasterSize INPUT_SIZE = new TriRasterSize(3, 4, 2);
    private static final int OUTPUT_COUNT = 3;
-   private static final int OUTPUT_WIDTH = 1;
-   private static final int OUTPUT_HEIGHT = 2;
-   private static final int OUTPUT_DEPTH = 1;
+   private static final RasterSize OUTPUT_SIZE = new TriRasterSize(1, 2, 1);
 
    private List<Object> _objectsToVerify;
 
@@ -59,13 +56,9 @@ class NetworkLayerBaseTest {
    void testSetSurroundingLayersInvalidNextLayer() {
       final NetworkLayer layer = new CustomLayer();
       expectMismatchException(() -> layer.setSurroundingLayers(makePreviousLayer(layer),
-            makeNextLayer(false, false, false, false)));
+            makeNextLayer(false, false)));
       expectMismatchException(() -> layer.setSurroundingLayers(makePreviousLayer(layer),
-            makeNextLayer(true, false, false, false)));
-      expectMismatchException(() -> layer.setSurroundingLayers(makePreviousLayer(layer),
-            makeNextLayer(true, true, false, false)));
-      expectMismatchException(() -> layer.setSurroundingLayers(makePreviousLayer(layer),
-            makeNextLayer(true, true, true, false)));
+            makeNextLayer(true, false)));
 
       Assertions.assertNull(((CustomLayer) layer)._previousLayer);
       Assertions.assertNull(((CustomLayer) layer)._nextLayer);
@@ -75,7 +68,7 @@ class NetworkLayerBaseTest {
    void testSetSurroundingLayersValidNextLayer() {
       final NetworkLayer layer = new CustomLayer();
       layer.setSurroundingLayers(makePreviousLayer(layer),
-            makeNextLayer(true, true, true, true));
+            makeNextLayer(true, true));
 
       Assertions.assertNotNull(((CustomLayer) layer)._previousLayer);
       Assertions.assertNotNull(((CustomLayer) layer)._nextLayer);
@@ -84,20 +77,15 @@ class NetworkLayerBaseTest {
    @Test
    void validateSize() {
       expectMismatchException(() ->
-            new CustomLayer().validateSize(makeNextLayer(false, false, false, false)));
+            new CustomLayer().validateSize(makeNextLayer(false, false)));
       expectMismatchException(() ->
-            new CustomLayer().validateSize(makeNextLayer(true, false, false, false)));
-      expectMismatchException(() ->
-            new CustomLayer().validateSize(makeNextLayer(true, true, false, false)));
-      expectMismatchException(() ->
-            new CustomLayer().validateSize(makeNextLayer(true, true, true, false)));
+            new CustomLayer().validateSize(makeNextLayer(true, false)));
 
-      new CustomLayer().validateSize(makeNextLayer(true, true, true, true));
+      new CustomLayer().validateSize(makeNextLayer(true, true));
    }
 
    private NetworkLayer makeNextLayer(final boolean hasValidCount,
-         final boolean hasValidWidth, final boolean hasValidHeight,
-         final boolean hasValidDepth) {
+         final boolean hasValidSize) {
 
       final NetworkLayer nextLayer = EasyMock.createMock(NetworkLayer.class);
       _objectsToVerify.add(nextLayer);
@@ -109,12 +97,9 @@ class NetworkLayerBaseTest {
          return nextLayer;
       }
 
-      EasyMock.expect(nextLayer.getInputWidth()).andReturn(OUTPUT_WIDTH +
-            (hasValidWidth ? 0 : 1)).atLeastOnce();
-      EasyMock.expect(nextLayer.getInputHeight()).andReturn(OUTPUT_HEIGHT +
-            (hasValidHeight ? 0 : 1)).atLeastOnce();
-      EasyMock.expect(nextLayer.getInputDepth()).andReturn(OUTPUT_DEPTH +
-            (hasValidDepth ? 0 : 1)).atLeastOnce();
+      EasyMock.expect(nextLayer.getInputSize())
+            .andReturn(hasValidSize ? OUTPUT_SIZE : OUTPUT_SIZE.plus(1))
+            .atLeastOnce();
 
       EasyMock.replay(nextLayer);
       return nextLayer;
@@ -134,36 +119,17 @@ class NetworkLayerBaseTest {
 
    private class CustomLayer extends NetworkLayerBase {
 
-      final int _inputWidth;
-      final int _inputHeight;
-      final int _inputDepth;
-
-      final int _outputWidth;
-      final int _outputHeight;
-      final int _outputDepth;
-
       CustomLayer() {
          this(INPUT_COUNT, OUTPUT_COUNT);
       }
 
       CustomLayer(final int inputCount, final int outputCount) {
-         this(inputCount, INPUT_WIDTH, INPUT_HEIGHT, INPUT_DEPTH,
-               outputCount, OUTPUT_WIDTH, OUTPUT_HEIGHT, OUTPUT_DEPTH);
+         this(inputCount, INPUT_SIZE, outputCount, OUTPUT_SIZE);
       }
 
-      CustomLayer(final int inputCount, final int inputWidth, final int inputHeight,
-            final int inputDepth,
-            final int outputCount, final int outputWidth, final int outputHeight,
-            final int outputDepth) {
-         super(inputCount, outputCount);
-
-         _inputWidth = inputWidth;
-         _inputHeight = inputHeight;
-         _inputDepth = inputDepth;
-
-         _outputWidth = outputWidth;
-         _outputHeight = outputHeight;
-         _outputDepth = outputDepth;
+      CustomLayer(final int inputCount, final RasterSize inputSize,
+            final int outputCount, final RasterSize outputSize) {
+         super(inputCount, inputSize, outputCount, outputSize);
       }
 
       @Override
@@ -174,36 +140,6 @@ class NetworkLayerBaseTest {
       @Override
       public int getAdjustmentComplexity() {
          return 0;
-      }
-
-      @Override
-      public int getInputWidth() {
-         return _inputWidth;
-      }
-
-      @Override
-      public int getInputHeight() {
-         return _inputHeight;
-      }
-
-      @Override
-      public int getInputDepth() {
-         return _inputDepth;
-      }
-
-      @Override
-      public int getOutputWidth() {
-         return _outputWidth;
-      }
-
-      @Override
-      public int getOutputHeight() {
-         return _outputHeight;
-      }
-
-      @Override
-      public int getOutputDepth() {
-         return _outputDepth;
       }
 
       @Override

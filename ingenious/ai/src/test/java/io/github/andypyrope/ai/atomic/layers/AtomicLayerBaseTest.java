@@ -8,11 +8,15 @@ import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.testutil.TestUtil;
+import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.TriRasterSize;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class AtomicLayerBaseTest {
+
+   private static final RasterSize ATOMIC_SIZE = new TriRasterSize(1, 1, 1);
 
    private static int INPUT_COUNT = 2;
    private static double[] INITIAL_INPUT_GRADIENT = new double[]{0.2, 0.4};
@@ -28,18 +32,11 @@ class AtomicLayerBaseTest {
    }
 
    @Test
-   void testGetInputWidth() {
-      Assertions.assertEquals(1, makeLayer().getInputWidth());
-   }
-
-   @Test
-   void testGetInputHeight() {
-      Assertions.assertEquals(1, makeLayer().getInputHeight());
-   }
-
-   @Test
-   void testGetInputDepth() {
-      Assertions.assertEquals(1, makeLayer().getInputDepth());
+   void testGetInputSize() {
+      final RasterSize actualSize = makeLayer().getInputSize();
+      if (ATOMIC_SIZE.differsFrom(actualSize)) {
+         throw new MismatchException(ATOMIC_SIZE, actualSize);
+      }
    }
 
    @Test
@@ -48,18 +45,11 @@ class AtomicLayerBaseTest {
    }
 
    @Test
-   void testGetOutputWidth() {
-      Assertions.assertEquals(1, makeLayer().getOutputWidth());
-   }
-
-   @Test
-   void testGetOutputHeight() {
-      Assertions.assertEquals(1, makeLayer().getOutputWidth());
-   }
-
-   @Test
-   void testGetOutputDepth() {
-      Assertions.assertEquals(1, makeLayer().getOutputWidth());
+   void testGetOutputSize() {
+      final RasterSize actualSize = makeLayer().getOutputSize();
+      if (ATOMIC_SIZE.differsFrom(actualSize)) {
+         throw new MismatchException(ATOMIC_SIZE, actualSize);
+      }
    }
 
    @Test
@@ -139,9 +129,7 @@ class AtomicLayerBaseTest {
 
       final NetworkLayer next = EasyMock.createMock(NetworkLayer.class);
       EasyMock.expect(next.getInputCount()).andReturn(OUTPUT_COUNT);
-      EasyMock.expect(next.getInputWidth()).andReturn(1);
-      EasyMock.expect(next.getInputHeight()).andReturn(1);
-      EasyMock.expect(next.getInputDepth()).andReturn(1);
+      EasyMock.expect(next.getInputSize()).andReturn(ATOMIC_SIZE);
       EasyMock.expect(next.getInputGradientAsAtomic()).andReturn(outputGradient);
       EasyMock.replay(next);
 
@@ -162,9 +150,7 @@ class AtomicLayerBaseTest {
    void testAdjustWithNextLayerWithNoCalculation() {
       final NetworkLayer next = EasyMock.createMock(NetworkLayer.class);
       EasyMock.expect(next.getInputCount()).andReturn(OUTPUT_COUNT);
-      EasyMock.expect(next.getInputWidth()).andReturn(1);
-      EasyMock.expect(next.getInputHeight()).andReturn(1);
-      EasyMock.expect(next.getInputDepth()).andReturn(1);
+      EasyMock.expect(next.getInputSize()).andReturn(ATOMIC_SIZE);
       EasyMock.replay(next);
 
       final NetworkLayer layer = makeLayer();

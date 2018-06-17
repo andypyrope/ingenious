@@ -9,6 +9,8 @@ import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.testutil.TestUtil;
+import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.TriRasterSize;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,16 +19,14 @@ import org.junit.jupiter.api.Test;
 class RasterLayerBaseTest {
 
    private static final int INPUT_COUNT = 2;
-   private static final int INPUT_WIDTH = 3;
-   private static final int INPUT_HEIGHT = 4;
-   private static final int INPUT_DEPTH = 2;
+   private static final RasterSize INPUT_SIZE = new TriRasterSize(3, 4, 2);
    private static final RasterData[] INITIAL_INPUT_GRADIENT = new RasterData[INPUT_COUNT];
 
    private static final int OUTPUT_COUNT = 3;
-   private static final int OUTPUT_WIDTH = 1;
-   private static final int OUTPUT_HEIGHT = 2;
-   private static final int OUTPUT_DEPTH = 1;
+   private static final RasterSize OUTPUT_SIZE = new TriRasterSize(1, 2, 1);
    private static final RasterData[] INITIAL_OUTPUT = new RasterData[OUTPUT_COUNT];
+
+   private static final RasterSize ATOMIC_SIZE = new TriRasterSize(1, 1, 1);
 
    private RasterData[] _input;
    private RasterData[] _outputGradient;
@@ -44,33 +44,19 @@ class RasterLayerBaseTest {
    }
 
    @Test
-   void testGetInputWidth() {
-      Assertions.assertEquals(INPUT_WIDTH, makeLayer().getInputWidth());
+   void testGetInputSize() {
+      final RasterSize actualSize = makeLayer().getInputSize();
+      if (INPUT_SIZE.differsFrom(actualSize)) {
+         throw new MismatchException(INPUT_SIZE, actualSize);
+      }
    }
 
    @Test
-   void testGetInputHeight() {
-      Assertions.assertEquals(INPUT_HEIGHT, makeLayer().getInputHeight());
-   }
-
-   @Test
-   void testGetInputDepth() {
-      Assertions.assertEquals(INPUT_DEPTH, makeLayer().getInputDepth());
-   }
-
-   @Test
-   void testGetOutputWidth() {
-      Assertions.assertEquals(OUTPUT_WIDTH, makeLayer().getOutputWidth());
-   }
-
-   @Test
-   void testGetOutputHeight() {
-      Assertions.assertEquals(OUTPUT_HEIGHT, makeLayer().getOutputHeight());
-   }
-
-   @Test
-   void testGetOutputDepth() {
-      Assertions.assertEquals(OUTPUT_DEPTH, makeLayer().getOutputDepth());
+   void testGetOutputSize() {
+      final RasterSize actualSize = makeLayer().getOutputSize();
+      if (OUTPUT_SIZE.differsFrom(actualSize)) {
+         throw new MismatchException(OUTPUT_SIZE, actualSize);
+      }
    }
 
    @Test
@@ -117,17 +103,16 @@ class RasterLayerBaseTest {
    @Test
    void testAdjustWithOutput() {
       final RasterData[] targetOutput = new RasterData[]{
-            new CustomRasterData(OUTPUT_WIDTH, OUTPUT_HEIGHT, OUTPUT_DEPTH),
-            new CustomRasterData(OUTPUT_WIDTH, OUTPUT_HEIGHT, OUTPUT_DEPTH),
-            new CustomRasterData(OUTPUT_WIDTH, OUTPUT_HEIGHT, OUTPUT_DEPTH),
+            new CustomRasterData(OUTPUT_SIZE),
+            new CustomRasterData(OUTPUT_SIZE),
+            new CustomRasterData(OUTPUT_SIZE),
       };
       targetOutput[0].setAll(0.0);
       targetOutput[1].setAll(1.0);
       targetOutput[2].setAll(2.0);
 
       for (int i = 0; i < OUTPUT_COUNT; i++) {
-         INITIAL_OUTPUT[i] = new CustomRasterData(OUTPUT_WIDTH, OUTPUT_HEIGHT,
-               OUTPUT_DEPTH);
+         INITIAL_OUTPUT[i] = new CustomRasterData(OUTPUT_SIZE);
          INITIAL_OUTPUT[i].setAll(1.0);
       }
 
@@ -191,12 +176,12 @@ class RasterLayerBaseTest {
 
    @Test
    void testGetOutputAsAtomic() {
-      expectMismatchException(() -> calculate(new CustomRasterLayer(1, 1, 1, 2, 1, 1))
-            .getOutputAsAtomic());
-      expectMismatchException(() -> calculate(new CustomRasterLayer(1, 1, 1, 1, 2, 1))
-            .getOutputAsAtomic());
-      expectMismatchException(() -> calculate(new CustomRasterLayer(1, 1, 1, 1, 1, 2))
-            .getOutputAsAtomic());
+      expectMismatchException(() -> calculate(new CustomRasterLayer(
+            ATOMIC_SIZE, new TriRasterSize(2, 1, 1))).getOutputAsAtomic());
+      expectMismatchException(() -> calculate(new CustomRasterLayer(
+            ATOMIC_SIZE, new TriRasterSize(1, 2, 1))).getOutputAsAtomic());
+      expectMismatchException(() -> calculate(new CustomRasterLayer(
+            ATOMIC_SIZE, new TriRasterSize(1, 1, 2))).getOutputAsAtomic());
 
       final double[] output = new double[OUTPUT_COUNT];
       for (int i = 0; i < OUTPUT_COUNT; i++) {
@@ -211,12 +196,12 @@ class RasterLayerBaseTest {
 
    @Test
    void testGetInputGradientAsAtomic() {
-      expectMismatchException(() -> adjust(new CustomRasterLayer(2, 1, 1, 1, 1, 1))
-            .getInputGradientAsAtomic());
-      expectMismatchException(() -> adjust(new CustomRasterLayer(1, 2, 1, 1, 1, 1))
-            .getInputGradientAsAtomic());
-      expectMismatchException(() -> adjust(new CustomRasterLayer(1, 1, 2, 1, 1, 1))
-            .getInputGradientAsAtomic());
+      expectMismatchException(() -> adjust(new CustomRasterLayer(
+            new TriRasterSize(2, 1, 1), ATOMIC_SIZE)).getInputGradientAsAtomic());
+      expectMismatchException(() -> adjust(new CustomRasterLayer(
+            new TriRasterSize(1, 2, 1), ATOMIC_SIZE)).getInputGradientAsAtomic());
+      expectMismatchException(() -> adjust(new CustomRasterLayer(
+            new TriRasterSize(1, 1, 2), ATOMIC_SIZE)).getInputGradientAsAtomic());
 
       final double[] inputGradient = new double[INPUT_COUNT];
       for (int i = 0; i < INPUT_COUNT; i++) {
@@ -257,9 +242,7 @@ class RasterLayerBaseTest {
    private NetworkLayer makeNextLayer() {
       final NetworkLayer next = EasyMock.createMock(NetworkLayer.class);
       EasyMock.expect(next.getInputCount()).andReturn(OUTPUT_COUNT);
-      EasyMock.expect(next.getInputWidth()).andReturn(OUTPUT_WIDTH);
-      EasyMock.expect(next.getInputHeight()).andReturn(OUTPUT_HEIGHT);
-      EasyMock.expect(next.getInputDepth()).andReturn(OUTPUT_DEPTH);
+      EasyMock.expect(next.getInputSize()).andReturn(OUTPUT_SIZE);
       return next;
    }
 
@@ -278,7 +261,7 @@ class RasterLayerBaseTest {
    }
 
    private RasterLayer makeAtomicLayer() {
-      return new CustomRasterLayer(1, 1, 1, 1, 1, 1);
+      return new CustomRasterLayer(ATOMIC_SIZE, ATOMIC_SIZE);
    }
 
    private void expectNoAdjustmentException(final Runnable runnable) {
@@ -299,7 +282,7 @@ class RasterLayerBaseTest {
 
    private RasterData makeDataWithValidDimensions() {
       final RasterData result = EasyMock.createMock(RasterData.class);
-      result.verifyDimensions(INPUT_WIDTH, INPUT_HEIGHT, INPUT_DEPTH);
+      result.verifyDimensions(INPUT_SIZE);
       EasyMock.expectLastCall().once();
       EasyMock.replay(result);
       return result;
@@ -308,15 +291,11 @@ class RasterLayerBaseTest {
    private class CustomRasterLayer extends RasterLayerBase {
 
       CustomRasterLayer() {
-         this(INPUT_WIDTH, INPUT_HEIGHT, INPUT_DEPTH,
-               OUTPUT_WIDTH, OUTPUT_HEIGHT, OUTPUT_DEPTH);
+         this(INPUT_SIZE, OUTPUT_SIZE);
       }
 
-      CustomRasterLayer(final int inputWidth, final int inputHeight, final int inputDepth,
-            final int outputWidth, final int outputHeight, final int outputDepth) {
-         super(INPUT_COUNT, inputWidth, inputHeight, inputDepth,
-               OUTPUT_COUNT, outputWidth, outputHeight, outputDepth);
-
+      CustomRasterLayer(final RasterSize inputSize, final RasterSize outputSize) {
+         super(INPUT_COUNT, inputSize, OUTPUT_COUNT, outputSize);
          System.arraycopy(INITIAL_INPUT_GRADIENT, 0, _inputGradients, 0, INPUT_COUNT);
          System.arraycopy(INITIAL_OUTPUT, 0, _output, 0, OUTPUT_COUNT);
       }

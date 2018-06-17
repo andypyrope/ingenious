@@ -1,6 +1,7 @@
 package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.data.RasterData;
+import io.github.andypyrope.ai.util.RasterSize;
 
 import java.util.Random;
 
@@ -8,7 +9,6 @@ import java.util.Random;
 @SuppressWarnings("FeatureEnvy")
 public class RasterBiasLayer extends RasterLayerBase {
 
-   private final int _count;
    private final double[] _biases;
    private final double[] _biasVolatility;
    private final double[] _lastBiasGradients;
@@ -21,34 +21,27 @@ public class RasterBiasLayer extends RasterLayerBase {
     * RasterData} with specified dimensions and count.
     *
     * @param count  The number of inputs (and outputs).
-    * @param width  The width of the input/output.
-    * @param height The height of the input/output.
-    * @param depth  The depth of the input/output.
+    * @param size   The size (width, height, depth) of the input/output.
     * @param random The random number generator to use.
     */
-   RasterBiasLayer(final int count, final int width,
-         final int height, final int depth, final Random random) {
+   RasterBiasLayer(final int count, final RasterSize size, final Random random) {
+      super(count, size, count, size);
 
-      super(count, width, height, depth,
-            count, width, height, depth);
-
-      _count = count;
-
-      _biases = new double[_count];
-      _lastBiasGradients = new double[_count];
-      _biasVolatility = new double[_count];
-      for (int i = 0; i < _count; i++) {
+      _biases = new double[_inputCount];
+      _lastBiasGradients = new double[_inputCount];
+      _biasVolatility = new double[_inputCount];
+      for (int i = 0; i < _inputCount; i++) {
          _biases[i] = random.nextDouble() - AVERAGE_RANDOM_DOUBLE;
          _biasVolatility[i] = RPROP_INITIAL_VOLATILITY;
       }
 
-      _calculationComplexity = count * width * height * depth;
+      _calculationComplexity = count * size.getPixelCount();
       _adjustmentComplexity = _calculationComplexity;
    }
 
    @Override
    public void calculateWithInput(final RasterData[] inputs) {
-      for (int i = 0; i < _count; i++) {
+      for (int i = 0; i < _inputCount; i++) {
          final RasterData input = inputs[i];
          final RasterData output = _output[i];
          final double bias = _biases[i];

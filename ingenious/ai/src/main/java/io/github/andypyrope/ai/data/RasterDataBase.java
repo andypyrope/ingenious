@@ -1,10 +1,22 @@
 package io.github.andypyrope.ai.data;
 
+import io.github.andypyrope.ai.util.RasterSize;
 import io.github.andypyrope.ai.util.TriCoordinateConsumer;
 
 import java.util.Random;
 
 abstract class RasterDataBase implements RasterData {
+
+   private final RasterSize _size;
+
+   RasterDataBase(final RasterSize size) {
+      _size = size;
+   }
+
+   @Override
+   public RasterSize getSize() {
+      return _size;
+   }
 
    @Override
    public void setAll(final double value) {
@@ -22,12 +34,9 @@ abstract class RasterDataBase implements RasterData {
    }
 
    @Override
-   public void verifyDimensions(final int width, final int height, final int depth)
-         throws MismatchException {
-
-      if (getWidth() != width || getHeight() != height || getDepth() != depth) {
-         throw new MismatchException(width, height, depth, getWidth(),
-               getHeight(), getDepth());
+   public void verifyDimensions(final RasterSize size) throws MismatchException {
+      if (getSize().differsFrom(size)) {
+         throw new MismatchException(size, getSize());
       }
    }
 
@@ -43,9 +52,9 @@ abstract class RasterDataBase implements RasterData {
 
    @Override
    public void forEach(final TriCoordinateConsumer consumer) {
-      for (int z = 0; z < getDepth(); z++) {
-         for (int y = 0; y < getHeight(); y++) {
-            for (int x = 0; x < getWidth(); x++) {
+      for (int z = 0; z < _size.getDepth(); z++) {
+         for (int y = 0; y < _size.getHeight(); y++) {
+            for (int x = 0; x < _size.getWidth(); x++) {
                consumer.accept(x, y, z);
             }
          }
@@ -55,9 +64,9 @@ abstract class RasterDataBase implements RasterData {
    @Override
    public double getSum() {
       double sum = 0.0;
-      for (int z = 0; z < getDepth(); z++) {
-         for (int y = 0; y < getHeight(); y++) {
-            for (int x = 0; x < getWidth(); x++) {
+      for (int z = 0; z < _size.getDepth(); z++) {
+         for (int y = 0; y < _size.getHeight(); y++) {
+            for (int x = 0; x < _size.getWidth(); x++) {
                sum += getCell(x, y, z);
             }
          }

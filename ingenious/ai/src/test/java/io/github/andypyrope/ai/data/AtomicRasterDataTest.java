@@ -1,6 +1,8 @@
 package io.github.andypyrope.ai.data;
 
 import io.github.andypyrope.ai.testutil.TestUtil;
+import io.github.andypyrope.ai.util.TriRasterSize;
+import org.easymock.EasyMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,31 +21,46 @@ class AtomicRasterDataTest {
    }
 
    @Test
+   void testCastToAtomic() {
+      final RasterData[] rasterData = new RasterData[DATA.length];
+      for (int i = 0; i < DATA.length; i++) {
+         rasterData[i] = EasyMock.createMock(RasterData.class);
+         EasyMock.expect(rasterData[i].getCell(0, 0, 0)).andReturn(DATA[i]);
+         EasyMock.replay(rasterData[i]);
+      }
+      TestUtil.compareDoubleArrays(DATA, AtomicRasterData.castToAtomic(rasterData));
+      EasyMock.verify((Object[]) rasterData);
+   }
+
+   @Test
    void testGetCell() {
       final RasterData data = new AtomicRasterData(SINGLE_DATA);
+      expectMismatchException(() -> data.getCell(1, 0, 0));
+      expectMismatchException(() -> data.getCell(0, 1, 0));
+      expectMismatchException(() -> data.getCell(0, 0, 1));
+
       TestUtil.compareDoubles(SINGLE_DATA, data.getCell(0, 0, 0));
    }
 
    @Test
    void testSetCell() {
       final RasterData data = new AtomicRasterData(SINGLE_DATA);
+      expectMismatchException(() -> data.setCell(1, 0, 0, NEW_DATA));
+      expectMismatchException(() -> data.setCell(0, 1, 0, NEW_DATA));
+      expectMismatchException(() -> data.setCell(0, 0, 1, NEW_DATA));
+
       TestUtil.compareDoubles(SINGLE_DATA, data.getCell(0, 0, 0));
       data.setCell(0, 0, 0, NEW_DATA);
       TestUtil.compareDoubles(NEW_DATA, data.getCell(0, 0, 0));
    }
 
    @Test
-   void testGetWidth() {
-      Assertions.assertEquals(1, new AtomicRasterData(SINGLE_DATA).getWidth());
+   void testGetSize() {
+      Assertions.assertFalse(new AtomicRasterData(SINGLE_DATA).getSize()
+            .differsFrom(new TriRasterSize(1, 1, 1)));
    }
 
-   @Test
-   void testGetHeight() {
-      Assertions.assertEquals(1, new AtomicRasterData(SINGLE_DATA).getHeight());
-   }
-
-   @Test
-   void testGetDepth() {
-      Assertions.assertEquals(1, new AtomicRasterData(SINGLE_DATA).getDepth());
+   private void expectMismatchException(final Runnable runnable) {
+      TestUtil.expectException(MismatchException.class, runnable);
    }
 }

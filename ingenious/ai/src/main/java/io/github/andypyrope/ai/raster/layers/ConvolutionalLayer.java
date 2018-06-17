@@ -2,6 +2,7 @@ package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.RasterData;
+import io.github.andypyrope.ai.util.RasterSize;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -24,53 +25,39 @@ public class ConvolutionalLayer extends RasterLayerBase {
     * deduced from the target filter size. If the filter size exceeds its maximum, it is
     * shrunk down to a size that fits the layer.
     *
-    * @param inputCount         The number of inputs.
-    * @param inputWidth         The width of each input.
-    * @param inputHeight        The height of each input.
-    * @param inputDepth         The depth of each input.
-    * @param filterCount        The number of filters.
-    * @param targetFilterWidth  The width of each filter.
-    * @param targetFilterHeight The height of each filter.
-    * @param targetFilterDepth  The depth of each filter.
-    * @param random             The random number generator to use.
+    * @param inputCount       The number of inputs.
+    * @param inputSize        The size (width, height, depth) of the input.
+    * @param filterCount      The number of filters.
+    * @param targetFilterSize The size of each filter. May be cut down if the resulting
+    *                         output size is below 1.
+    * @param random           The random number generator to use.
     */
-   ConvolutionalLayer(final int inputCount, final int inputWidth,
-         final int inputHeight, final int inputDepth, final int filterCount,
-         final int targetFilterWidth, final int targetFilterHeight,
-         final int targetFilterDepth, final Random random) {
+   ConvolutionalLayer(final int inputCount, final RasterSize inputSize,
+         final int filterCount, final RasterSize targetFilterSize, final Random random) {
 
-      super(inputCount, inputWidth, inputHeight, inputDepth,
+      super(inputCount, inputSize,
             inputCount * filterCount,
-            Math.max(inputWidth - targetFilterWidth + 1, 1),
-            Math.max(inputHeight - targetFilterHeight + 1, 1),
-            Math.max(inputDepth - targetFilterDepth + 1, 1));
+            inputSize.minus(targetFilterSize).plus(1).atLeast(1));
       initializeInputGradientData();
 
       _filterCount = filterCount;
-      final int filterWidth = _inputWidth - _outputWidth + 1;
-      final int filterHeight = _inputHeight - _outputHeight + 1;
-      final int filterDepth = _inputDepth - _outputDepth + 1;
+      final RasterSize filterSize = inputSize.minus(getOutputSize()).plus(1);
 
       _filters = new RasterData[_filterCount];
       _filterGradients = new RasterData[_filterCount];
       _lastFilterGradients = new RasterData[_filterCount];
       _filterVolatility = new RasterData[_filterCount];
       for (int i = 0; i < _filterCount; i++) {
-         _filters[i] = new CustomRasterData(filterWidth, filterHeight, filterDepth);
+         _filters[i] = new CustomRasterData(filterSize);
          _filters[i].randomize(random);
-         _filterGradients[i] = new CustomRasterData(filterWidth, filterHeight,
-               filterDepth);
-         _lastFilterGradients[i] = new CustomRasterData(filterWidth, filterHeight,
-               filterDepth);
-         _filterVolatility[i] = new CustomRasterData(filterWidth, filterHeight,
-               filterDepth);
+         _filterGradients[i] = new CustomRasterData(filterSize);
+         _lastFilterGradients[i] = new CustomRasterData(filterSize);
+         _filterVolatility[i] = new CustomRasterData(filterSize);
          _filterVolatility[i].setAll(RPROP_INITIAL_VOLATILITY);
       }
 
-      _calculationComplexity = _outputCount *
-            _outputWidth * filterWidth *
-            _outputHeight * filterHeight *
-            _outputDepth * filterDepth;
+      _calculationComplexity = _outputCount * getOutputSize().getPixelCount() *
+            filterSize.getPixelCount();
       _adjustmentComplexity = _calculationComplexity * 2;
    }
 

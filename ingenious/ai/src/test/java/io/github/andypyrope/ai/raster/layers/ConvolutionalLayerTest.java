@@ -5,6 +5,8 @@ import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.testutil.DeterministicRandom;
 import io.github.andypyrope.ai.testutil.TestUtil;
+import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.TriRasterSize;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,20 +16,14 @@ import java.util.Random;
 class ConvolutionalLayerTest {
 
    private static final int INPUT_COUNT = 3;
-   private static final int INPUT_WIDTH = 2;
-   private static final int INPUT_HEIGHT = 3;
-   private static final int INPUT_DEPTH = 3;
+   private static final RasterSize INPUT_SIZE = new TriRasterSize(2, 3, 3);
    private static final RasterData[] INPUT = new RasterData[INPUT_COUNT];
 
    private static final int FILTER_COUNT = 2;
-   private static final int FILTER_WIDTH = 1;
-   private static final int FILTER_HEIGHT = 2;
-   private static final int FILTER_DEPTH = 3;
+   private static final RasterSize FILTER_SIZE = new TriRasterSize(1, 2, 3);
 
    private static final int OUTPUT_COUNT = 6;
-   private static final int OUTPUT_WIDTH = 2;
-   private static final int OUTPUT_HEIGHT = 2;
-   private static final int OUTPUT_DEPTH = 1;
+   private static final RasterSize OUTPUT_SIZE = new TriRasterSize(2, 2, 1);
    private static final RasterData[] TARGET_OUTPUT = new RasterData[OUTPUT_COUNT];
 
    private static final Random STATIC_RANDOM = new DeterministicRandom();
@@ -35,21 +31,20 @@ class ConvolutionalLayerTest {
    @BeforeAll
    static void setUpAll() {
       for (int i = 0; i < INPUT_COUNT; i++) {
-         INPUT[i] = makeDummyData(INPUT_WIDTH, INPUT_HEIGHT, INPUT_DEPTH);
+         INPUT[i] = makeDummyData(INPUT_SIZE);
       }
 
       for (int i = 0; i < OUTPUT_COUNT; i++) {
-         TARGET_OUTPUT[i] = makeDummyData(OUTPUT_WIDTH, OUTPUT_HEIGHT, OUTPUT_DEPTH);
+         TARGET_OUTPUT[i] = makeDummyData(OUTPUT_SIZE);
       }
    }
 
-   private static RasterData makeDummyData(final int width, final int height,
-         final int depth) {
+   private static RasterData makeDummyData(final RasterSize size) {
 
-      final RasterData result = new CustomRasterData(width, height, depth);
-      for (int x = 0; x < width; x++) {
-         for (int y = 0; y < height; y++) {
-            for (int z = 0; z < depth; z++) {
+      final RasterData result = new CustomRasterData(size);
+      for (int x = 0; x < size.getWidth(); x++) {
+         for (int y = 0; y < size.getHeight(); y++) {
+            for (int z = 0; z < size.getDepth(); z++) {
                result.setCell(x, y, z, STATIC_RANDOM.nextDouble());
             }
          }
@@ -86,9 +81,7 @@ class ConvolutionalLayerTest {
    }
 
    private RasterLayer makeLayer() {
-      return new ConvolutionalLayer(
-            INPUT_COUNT, INPUT_WIDTH, INPUT_HEIGHT, INPUT_DEPTH,
-            FILTER_COUNT, FILTER_WIDTH, FILTER_HEIGHT, FILTER_DEPTH,
+      return new ConvolutionalLayer(INPUT_COUNT, INPUT_SIZE, FILTER_COUNT, FILTER_SIZE,
             new DeterministicRandom());
    }
 }

@@ -5,6 +5,8 @@ import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.testutil.DeterministicRandom;
 import io.github.andypyrope.ai.testutil.TestUtil;
+import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.TriRasterSize;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,9 +15,7 @@ import java.util.Random;
 
 class RasterBiasLayerTest {
    private static final int COUNT = 2;
-   private static final int WIDTH = 2;
-   private static final int HEIGHT = 2;
-   private static final int DEPTH = 2;
+   private static final RasterSize SIZE = new TriRasterSize(2, 2, 2);
    private static final RasterData[] INPUT = new RasterData[COUNT];
    private static final RasterData[] TARGET_OUTPUT = new RasterData[COUNT];
 
@@ -30,10 +30,10 @@ class RasterBiasLayerTest {
    }
 
    private static RasterData makeDummyData() {
-      final RasterData result = new CustomRasterData(WIDTH, HEIGHT, DEPTH);
-      for (int x = 0; x < WIDTH; x++) {
-         for (int y = 0; y < HEIGHT; y++) {
-            for (int z = 0; z < DEPTH; z++) {
+      final RasterData result = new CustomRasterData(SIZE);
+      for (int x = 0; x < SIZE.getWidth(); x++) {
+         for (int y = 0; y < SIZE.getHeight(); y++) {
+            for (int z = 0; z < SIZE.getDepth(); z++) {
                result.setCell(x, y, z, STATIC_RANDOM.nextDouble());
             }
          }
@@ -82,6 +82,6 @@ class RasterBiasLayerTest {
    }
 
    private RasterLayer makeLayer() {
-      return new RasterBiasLayer(COUNT, WIDTH, HEIGHT, DEPTH, new DeterministicRandom());
+      return new RasterBiasLayer(COUNT, SIZE, new DeterministicRandom());
    }
 }
