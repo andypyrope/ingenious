@@ -1,5 +1,6 @@
 package io.github.andypyrope.ai.data;
 
+import io.github.andypyrope.ai.InvalidSizeException;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import io.github.andypyrope.ai.util.TriRasterSize;
 import org.easymock.EasyMock;
@@ -35,9 +36,9 @@ class AtomicRasterDataTest {
    @Test
    void testGetCell() {
       final RasterData data = new AtomicRasterData(SINGLE_DATA);
-      expectMismatchException(() -> data.getCell(1, 0, 0));
-      expectMismatchException(() -> data.getCell(0, 1, 0));
-      expectMismatchException(() -> data.getCell(0, 0, 1));
+      expectInvalidSizeException(() -> data.getCell(1, 0, 0));
+      expectInvalidSizeException(() -> data.getCell(0, 1, 0));
+      expectInvalidSizeException(() -> data.getCell(0, 0, 1));
 
       TestUtil.compareDoubles(SINGLE_DATA, data.getCell(0, 0, 0));
    }
@@ -45,9 +46,9 @@ class AtomicRasterDataTest {
    @Test
    void testSetCell() {
       final RasterData data = new AtomicRasterData(SINGLE_DATA);
-      expectMismatchException(() -> data.setCell(1, 0, 0, NEW_DATA));
-      expectMismatchException(() -> data.setCell(0, 1, 0, NEW_DATA));
-      expectMismatchException(() -> data.setCell(0, 0, 1, NEW_DATA));
+      expectInvalidSizeException(() -> data.setCell(1, 0, 0, NEW_DATA));
+      expectInvalidSizeException(() -> data.setCell(0, 1, 0, NEW_DATA));
+      expectInvalidSizeException(() -> data.setCell(0, 0, 1, NEW_DATA));
 
       TestUtil.compareDoubles(SINGLE_DATA, data.getCell(0, 0, 0));
       data.setCell(0, 0, 0, NEW_DATA);
@@ -60,7 +61,7 @@ class AtomicRasterDataTest {
             .differsFrom(new TriRasterSize(1, 1, 1)));
    }
 
-   private void expectMismatchException(final Runnable runnable) {
-      TestUtil.expectException(MismatchException.class, runnable);
+   private void expectInvalidSizeException(final Runnable runnable) {
+      TestUtil.expectException(InvalidSizeException.class, runnable);
    }
 }

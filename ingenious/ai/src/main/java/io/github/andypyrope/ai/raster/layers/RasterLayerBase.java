@@ -1,12 +1,8 @@
 package io.github.andypyrope.ai.raster.layers;
 
-import io.github.andypyrope.ai.InvalidOperationException;
-import io.github.andypyrope.ai.NetworkLayerBase;
-import io.github.andypyrope.ai.NoAdjustmentException;
-import io.github.andypyrope.ai.NoCalculationException;
+import io.github.andypyrope.ai.*;
 import io.github.andypyrope.ai.data.AtomicRasterData;
 import io.github.andypyrope.ai.data.CustomRasterData;
-import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.util.RasterSize;
@@ -65,25 +61,26 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
    }
 
    @Override
-   public double[] getOutputAsAtomic() throws NoCalculationException, MismatchException {
+   public double[] getOutputAsAtomic() throws NoCalculationException,
+         InvalidSizeException {
       if (_hasNoCalculation) {
          throw new NoCalculationException();
       }
       if (_outputSize.differsFrom(ATOMIC_SIZE)) {
-         throw new MismatchException(ATOMIC_SIZE, _outputSize);
+         throw new InvalidSizeException(ATOMIC_SIZE, _outputSize);
       }
       return AtomicRasterData.castToAtomic(_output);
    }
 
    @Override
    public double[] getInputGradientAsAtomic()
-         throws NoAdjustmentException, MismatchException {
+         throws NoAdjustmentException, InvalidSizeException {
 
       if (_hasNoAdjustment) {
          throw new NoAdjustmentException();
       }
       if (_inputSize.differsFrom(ATOMIC_SIZE)) {
-         throw new MismatchException(ATOMIC_SIZE, _inputSize);
+         throw new InvalidSizeException(ATOMIC_SIZE, _inputSize);
       }
       return AtomicRasterData.castToAtomic(_inputGradients);
    }
@@ -105,9 +102,9 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
    }
 
    @Override
-   public void calculate(RasterData[] input) throws MismatchException {
+   public void calculate(RasterData[] input) throws InvalidSizeException {
       if (input.length != _inputCount) {
-         throw new MismatchException(String.format("Expected an input " +
+         throw new InvalidSizeException(String.format("Expected an input " +
                      "array of size %d but got an array of size %d instead",
                _inputCount, input.length));
       }
@@ -123,14 +120,14 @@ abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
 
    @Override
    public void adjust(RasterData[] targetOutput)
-         throws NoCalculationException, MismatchException {
+         throws NoCalculationException, InvalidSizeException {
 
       if (_hasNoCalculation) {
          throw new NoCalculationException();
       }
 
       if (targetOutput.length != _outputCount) {
-         throw new MismatchException(String.format("Expected a target " +
+         throw new InvalidSizeException(String.format("Expected a target " +
                      "output array of size %d but got target output array of " +
                      "size %d instead",
                _outputCount, targetOutput.length));

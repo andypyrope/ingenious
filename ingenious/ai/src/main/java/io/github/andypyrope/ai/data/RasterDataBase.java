@@ -1,5 +1,6 @@
 package io.github.andypyrope.ai.data;
 
+import io.github.andypyrope.ai.InvalidSizeException;
 import io.github.andypyrope.ai.util.RasterSize;
 import io.github.andypyrope.ai.util.TriCoordinateConsumer;
 
@@ -34,9 +35,9 @@ abstract class RasterDataBase implements RasterData {
    }
 
    @Override
-   public void verifyDimensions(final RasterSize size) throws MismatchException {
+   public void verifyDimensions(final RasterSize size) throws InvalidSizeException {
       if (getSize().differsFrom(size)) {
-         throw new MismatchException(size, getSize());
+         throw new InvalidSizeException(size, getSize());
       }
    }
 

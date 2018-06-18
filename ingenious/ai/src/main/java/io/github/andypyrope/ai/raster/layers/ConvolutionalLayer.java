@@ -23,24 +23,22 @@ public class ConvolutionalLayer extends RasterLayerBase {
     * deduced from the target filter size. If the filter size exceeds its maximum, it is
     * shrunk down to a size that fits the layer.
     *
-    * @param inputCount       The number of inputs.
-    * @param inputSize        The size (width, height, depth) of the input.
-    * @param filterCount      The number of filters.
-    * @param targetFilterSize The size of each filter. May be cut down if the resulting
-    *                         output size is below 1.
-    * @param random           The random number generator to use.
+    * @param inputCount  The number of inputs.
+    * @param inputSize   The size (width, height, depth) of the input.
+    * @param filterCount The number of filters.
+    * @param filterSize  The size of each filter. May be cut down if the resulting output
+    *                    size is below 1.
+    * @param random      The random number generator to use.
     */
    ConvolutionalLayer(final int inputCount, final RasterSize inputSize,
-         final int filterCount, final RasterSize targetFilterSize, final Random random) {
+         final int filterCount, final RasterSize filterSize, final Random random) {
 
       super(inputCount, inputSize,
             inputCount * filterCount,
-            inputSize.minus(targetFilterSize).plus(1).atLeast(1));
+            inputSize.minus(filterSize).plus(1));
       initializeInputGradientData();
 
       _filterCount = filterCount;
-      final RasterSize filterSize = inputSize.minus(getOutputSize()).plus(1);
-
       _filters = new RasterData[_filterCount];
       _filterGradients = new RasterData[_filterCount];
       _lastFilterGradients = new RasterData[_filterCount];

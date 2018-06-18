@@ -1,5 +1,6 @@
 package io.github.andypyrope.ai.data;
 
+import io.github.andypyrope.ai.InvalidSizeException;
 import io.github.andypyrope.ai.util.RasterSize;
 import io.github.andypyrope.ai.util.TriCoordinateConsumer;
 
@@ -67,9 +68,9 @@ public interface RasterData {
     * Makes sure the dimensions of the raster data are correct.
     *
     * @param size The expected size
-    * @throws MismatchException If any of the dimensions are incorrect.
+    * @throws InvalidSizeException If any of the dimensions are incorrect.
     */
-   void verifyDimensions(RasterSize size) throws MismatchException;
+   void verifyDimensions(RasterSize size) throws InvalidSizeException;
 
    /**
     * Sets the data to random values from 0 (inclusive) to 1 (exclusive).

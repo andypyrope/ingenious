@@ -1,11 +1,7 @@
 package io.github.andypyrope.ai.atomic.layers;
 
-import io.github.andypyrope.ai.InvalidOperationException;
-import io.github.andypyrope.ai.NetworkLayer;
-import io.github.andypyrope.ai.NoAdjustmentException;
-import io.github.andypyrope.ai.NoCalculationException;
+import io.github.andypyrope.ai.*;
 import io.github.andypyrope.ai.atomic.AtomicLayer;
-import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import io.github.andypyrope.ai.util.RasterSize;
@@ -35,7 +31,7 @@ class AtomicLayerBaseTest {
    void testGetInputSize() {
       final RasterSize actualSize = makeLayer().getInputSize();
       if (ATOMIC_SIZE.differsFrom(actualSize)) {
-         throw new MismatchException(ATOMIC_SIZE, actualSize);
+         throw new InvalidSizeException(ATOMIC_SIZE, actualSize);
       }
    }
 
@@ -48,7 +44,7 @@ class AtomicLayerBaseTest {
    void testGetOutputSize() {
       final RasterSize actualSize = makeLayer().getOutputSize();
       if (ATOMIC_SIZE.differsFrom(actualSize)) {
-         throw new MismatchException(ATOMIC_SIZE, actualSize);
+         throw new InvalidSizeException(ATOMIC_SIZE, actualSize);
       }
    }
 
@@ -61,7 +57,7 @@ class AtomicLayerBaseTest {
 
    @Test
    void testCalculateWithInputWithInvalidCount() {
-      expectMismatchException(() -> makeLayer().calculate(new double[3]));
+      expectInvalidSizeException(() -> makeLayer().calculate(new double[3]));
    }
 
    @Test
@@ -102,7 +98,7 @@ class AtomicLayerBaseTest {
 
    @Test
    void testGetEuclideanDistanceWithMismatchingOutput() {
-      expectMismatchException(() ->
+      expectInvalidSizeException(() ->
             makeLayerWithCalculation().getEuclideanDistance(new double[2]));
    }
 
@@ -114,7 +110,7 @@ class AtomicLayerBaseTest {
 
    @Test
    void testAdjustWithMismatchingOutput() {
-      expectMismatchException(
+      expectInvalidSizeException(
             () -> makeLayerWithCalculation().adjust(new double[OUTPUT_COUNT + 1]));
    }
 
@@ -233,8 +229,8 @@ class AtomicLayerBaseTest {
       TestUtil.expectException(NoCalculationException.class, runnable);
    }
 
-   private void expectMismatchException(final Runnable runnable) {
-      TestUtil.expectException(MismatchException.class, runnable);
+   private void expectInvalidSizeException(final Runnable runnable) {
+      TestUtil.expectException(InvalidSizeException.class, runnable);
    }
 
    private class CustomAtomicLayer extends AtomicLayerBase {

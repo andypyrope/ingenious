@@ -1,5 +1,6 @@
 package io.github.andypyrope.ai.data;
 
+import io.github.andypyrope.ai.InvalidSizeException;
 import io.github.andypyrope.ai.testutil.DeterministicRandom;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import io.github.andypyrope.ai.util.RasterSize;
@@ -50,7 +51,7 @@ class RasterDataBaseTest {
 
    @Test
    void testVerifyDimensions() {
-      expectMismatchException(() -> makeData().verifyDimensions(SIZE.plus(1)));
+      expectInvalidSizeException(() -> makeData().verifyDimensions(SIZE.plus(1)));
       makeData().verifyDimensions(SIZE);
    }
 
@@ -95,8 +96,8 @@ class RasterDataBaseTest {
       data.forEach((x, y, z) -> TestUtil.compareDoubles(0.0, data.getCell(x, y, z)));
    }
 
-   private void expectMismatchException(final Runnable runnable) {
-      TestUtil.expectException(MismatchException.class, runnable);
+   private void expectInvalidSizeException(final Runnable runnable) {
+      TestUtil.expectException(InvalidSizeException.class, runnable);
    }
 
    private RasterData makeData() {

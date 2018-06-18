@@ -63,6 +63,14 @@ class TriRasterSizeTest {
             .differsFrom(new TriRasterSize(WIDTH, HEIGHT, DEPTH)));
    }
 
+   @Test
+   void testIsInvalid() {
+      Assertions.assertTrue(new TriRasterSize(0, 1, 1).isInvalid());
+      Assertions.assertTrue(new TriRasterSize(1, 0, 1).isInvalid());
+      Assertions.assertTrue(new TriRasterSize(1, 1, 0).isInvalid());
+      Assertions.assertFalse(new TriRasterSize(1, 1, 1).isInvalid());
+   }
+
    private RasterSize makeSize() {
       return new TriRasterSize(WIDTH, HEIGHT, DEPTH);
    }

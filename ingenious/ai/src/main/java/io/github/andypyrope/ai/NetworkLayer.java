@@ -1,6 +1,5 @@
 package io.github.andypyrope.ai;
 
-import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.util.RasterSize;
 
@@ -59,11 +58,11 @@ public interface NetworkLayer {
     * @param previousLayer The layer before this one, from which the output is received.
     * @param nextLayer     The layer after this one, from which the input slope is
     *                      received.
-    * @throws MismatchException If the surrounding layers have input/output sizes that do
+    * @throws InvalidSizeException If the surrounding layers have input/output sizes that do
     *                           not match of this layer.
     */
    void setSurroundingLayers(NetworkLayer previousLayer, NetworkLayer nextLayer)
-         throws MismatchException;
+         throws InvalidSizeException;
 
    /**
     * @return The output of this layer as atomic data.
@@ -93,11 +92,11 @@ public interface NetworkLayer {
    RasterData[] getInputGradientAsRaster() throws NoAdjustmentException;
 
    /**
-    * Throws a {@link MismatchException} if the output count/dimensions of this layer do
+    * Throws a {@link InvalidSizeException} if the output count/dimensions of this layer do
     * not match the input count and dimensions of the next layer.
     *
     * @param nextLayer The next layer.
-    * @throws MismatchException If any of the dimensions do not match.
+    * @throws InvalidSizeException If any of the dimensions do not match.
     */
-   void validateSize(NetworkLayer nextLayer) throws MismatchException;
+   void validateSize(NetworkLayer nextLayer) throws InvalidSizeException;
 }

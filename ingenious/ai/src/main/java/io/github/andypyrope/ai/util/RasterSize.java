@@ -45,4 +45,10 @@ public interface RasterSize {
     * @return Whether any of the dimensions are different.
     */
    boolean differsFrom(RasterSize other);
+
+   /**
+    * @return Whether the size is invalid. An invalid size is one with any dimension that
+    *       is equal to 0 or less.
+    */
+   boolean isInvalid();
 }

@@ -1,6 +1,5 @@
 package io.github.andypyrope.ai;
 
-import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.util.RasterSize;
 
 public abstract class NetworkLayerBase implements NetworkLayer {
@@ -21,6 +20,14 @@ public abstract class NetworkLayerBase implements NetworkLayer {
 
    public NetworkLayerBase(final int inputCount, final RasterSize inputSize,
          final int outputCount, final RasterSize outputSize) {
+
+      if (inputSize.isInvalid()) {
+         throw new InvalidSizeException(inputSize);
+      }
+
+      if (outputSize.isInvalid()) {
+         throw new InvalidSizeException(outputSize);
+      }
 
       _inputCount = inputCount;
       _inputSize = inputSize;
@@ -50,7 +57,7 @@ public abstract class NetworkLayerBase implements NetworkLayer {
 
    @Override
    public void setSurroundingLayers(final NetworkLayer previousLayer,
-         final NetworkLayer nextLayer) throws MismatchException {
+         final NetworkLayer nextLayer) throws InvalidSizeException {
 
       if (previousLayer != null) {
          previousLayer.validateSize(this);
@@ -65,16 +72,16 @@ public abstract class NetworkLayerBase implements NetworkLayer {
    }
 
    @Override
-   public void validateSize(final NetworkLayer nextLayer) throws MismatchException {
+   public void validateSize(final NetworkLayer nextLayer) throws InvalidSizeException {
       if (getOutputCount() != nextLayer.getInputCount()) {
-         throw new MismatchException(String.format(
+         throw new InvalidSizeException(String.format(
                "The next layer should have an input count of %d but it has one of %d",
                getInputCount(),
                nextLayer.getInputCount()));
       }
 
       if (getOutputSize().differsFrom(nextLayer.getInputSize())) {
-         throw new MismatchException(getOutputSize(), nextLayer.getInputSize());
+         throw new InvalidSizeException(getOutputSize(), nextLayer.getInputSize());
       }
    }
 }

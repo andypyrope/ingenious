@@ -1,5 +1,6 @@
 package io.github.andypyrope.ai.data;
 
+import io.github.andypyrope.ai.InvalidSizeException;
 import io.github.andypyrope.ai.util.TriRasterSize;
 
 /**
@@ -50,7 +51,8 @@ public class AtomicRasterData extends RasterDataBase {
    @Override
    public double getCell(final int x, final int y, final int z) {
       if (x != 0 || y != 0 || z != 0) {
-         throw new MismatchException("Pixel out of bounds: " + x + ", " + y + ", " + z);
+         throw new InvalidSizeException(
+               "Pixel out of bounds: " + x + ", " + y + ", " + z);
       }
       return _data;
    }
@@ -58,7 +60,8 @@ public class AtomicRasterData extends RasterDataBase {
    @Override
    public void setCell(final int x, final int y, final int z, final double value) {
       if (x != 0 || y != 0 || z != 0) {
-         throw new MismatchException("Pixel out of bounds: " + x + ", " + y + ", " + z);
+         throw new InvalidSizeException(
+               "Pixel out of bounds: " + x + ", " + y + ", " + z);
       }
       _data = value;
    }

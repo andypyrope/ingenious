@@ -1,6 +1,5 @@
 package io.github.andypyrope.ai;
 
-import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import io.github.andypyrope.ai.util.RasterSize;
@@ -34,6 +33,27 @@ class NetworkLayerBaseTest {
    }
 
    @Test
+   void testInvalidInputSize() {
+      final RasterSize inputSize = EasyMock.createMock(RasterSize.class);
+      EasyMock.expect(inputSize.isInvalid()).andReturn(true);
+      final RasterSize outputSize = EasyMock.createMock(RasterSize.class);
+      EasyMock.replay(inputSize, outputSize);
+      expectInvalidSizeException(() -> new CustomLayer(1, inputSize, 1, outputSize));
+      EasyMock.verify(inputSize, outputSize);
+   }
+
+   @Test
+   void testInvalidOutputSize() {
+      final RasterSize inputSize = EasyMock.createMock(RasterSize.class);
+      EasyMock.expect(inputSize.isInvalid()).andReturn(false);
+      final RasterSize outputSize = EasyMock.createMock(RasterSize.class);
+      EasyMock.expect(outputSize.isInvalid()).andReturn(true);
+      EasyMock.replay(inputSize, outputSize);
+      expectInvalidSizeException(() -> new CustomLayer(1, inputSize, 1, outputSize));
+      EasyMock.verify(inputSize, outputSize);
+   }
+
+   @Test
    void testGetInputCount() {
       Assertions.assertEquals(INPUT_COUNT, new CustomLayer().getInputCount());
    }
@@ -55,9 +75,11 @@ class NetworkLayerBaseTest {
    @Test
    void testSetSurroundingLayersInvalidNextLayer() {
       final NetworkLayer layer = new CustomLayer();
-      expectMismatchException(() -> layer.setSurroundingLayers(makePreviousLayer(layer),
+      expectInvalidSizeException(
+            () -> layer.setSurroundingLayers(makePreviousLayer(layer),
             makeNextLayer(false, false)));
-      expectMismatchException(() -> layer.setSurroundingLayers(makePreviousLayer(layer),
+      expectInvalidSizeException(
+            () -> layer.setSurroundingLayers(makePreviousLayer(layer),
             makeNextLayer(true, false)));
 
       Assertions.assertNull(((CustomLayer) layer)._previousLayer);
@@ -75,10 +97,10 @@ class NetworkLayerBaseTest {
    }
 
    @Test
-   void validateSize() {
-      expectMismatchException(() ->
+   void testValidateSize() {
+      expectInvalidSizeException(() ->
             new CustomLayer().validateSize(makeNextLayer(false, false)));
-      expectMismatchException(() ->
+      expectInvalidSizeException(() ->
             new CustomLayer().validateSize(makeNextLayer(true, false)));
 
       new CustomLayer().validateSize(makeNextLayer(true, true));
@@ -113,8 +135,8 @@ class NetworkLayerBaseTest {
       return previous;
    }
 
-   private void expectMismatchException(final Runnable runnable) {
-      TestUtil.expectException(MismatchException.class, runnable);
+   private void expectInvalidSizeException(final Runnable runnable) {
+      TestUtil.expectException(InvalidSizeException.class, runnable);
    }
 
    private class CustomLayer extends NetworkLayerBase {

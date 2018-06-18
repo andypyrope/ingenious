@@ -1,12 +1,8 @@
 package io.github.andypyrope.ai.atomic.layers;
 
-import io.github.andypyrope.ai.InvalidOperationException;
-import io.github.andypyrope.ai.NetworkLayerBase;
-import io.github.andypyrope.ai.NoAdjustmentException;
-import io.github.andypyrope.ai.NoCalculationException;
+import io.github.andypyrope.ai.*;
 import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.data.AtomicRasterData;
-import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.util.RasterSize;
 import io.github.andypyrope.ai.util.TriRasterSize;
@@ -47,9 +43,9 @@ abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
    }
 
    @Override
-   public void calculate(final double[] input) throws MismatchException {
+   public void calculate(final double[] input) throws InvalidSizeException {
       if (input.length != _inputCount) {
-         throw new MismatchException(String.format("Expected an input " +
+         throw new InvalidSizeException(String.format("Expected an input " +
                      "array of size %d but got an array of size %d instead",
                _inputCount, input.length));
       }
@@ -75,14 +71,14 @@ abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
 
    @Override
    public double getEuclideanDistance(double[] targetOutput)
-         throws NoCalculationException, MismatchException {
+         throws NoCalculationException, InvalidSizeException {
 
       if (_hasNoCalculation) {
          throw new NoCalculationException();
       }
 
       if (targetOutput.length != _outputCount) {
-         throw new MismatchException(String.format("Expected a target " +
+         throw new InvalidSizeException(String.format("Expected a target " +
                      "output array of size %d but got target output array of " +
                      "size %d instead",
                _outputCount, targetOutput.length));
@@ -130,14 +126,14 @@ abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
 
    @Override
    public void adjust(final double[] targetOutput)
-         throws NoCalculationException, MismatchException {
+         throws NoCalculationException, InvalidSizeException {
 
       if (_hasNoCalculation) {
          throw new NoCalculationException();
       }
 
       if (targetOutput.length != _outputCount) {
-         throw new MismatchException(String.format("Expected a target " +
+         throw new InvalidSizeException(String.format("Expected a target " +
                      "output array of size %d but got target output array of " +
                      "size %d instead",
                _outputCount, targetOutput.length));

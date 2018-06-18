@@ -1,11 +1,7 @@
 package io.github.andypyrope.ai.raster.layers;
 
-import io.github.andypyrope.ai.InvalidOperationException;
-import io.github.andypyrope.ai.NetworkLayer;
-import io.github.andypyrope.ai.NoAdjustmentException;
-import io.github.andypyrope.ai.NoCalculationException;
+import io.github.andypyrope.ai.*;
 import io.github.andypyrope.ai.data.CustomRasterData;
-import io.github.andypyrope.ai.data.MismatchException;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.testutil.TestUtil;
@@ -47,7 +43,7 @@ class RasterLayerBaseTest {
    void testGetInputSize() {
       final RasterSize actualSize = makeLayer().getInputSize();
       if (INPUT_SIZE.differsFrom(actualSize)) {
-         throw new MismatchException(INPUT_SIZE, actualSize);
+         throw new InvalidSizeException(INPUT_SIZE, actualSize);
       }
    }
 
@@ -55,7 +51,7 @@ class RasterLayerBaseTest {
    void testGetOutputSize() {
       final RasterSize actualSize = makeLayer().getOutputSize();
       if (OUTPUT_SIZE.differsFrom(actualSize)) {
-         throw new MismatchException(OUTPUT_SIZE, actualSize);
+         throw new InvalidSizeException(OUTPUT_SIZE, actualSize);
       }
    }
 
@@ -74,7 +70,7 @@ class RasterLayerBaseTest {
    @Test
    void testCalculateWithInputWithInvalidCount() {
       final RasterData[] input = new RasterData[INPUT_COUNT + 1];
-      expectMismatchException(() -> makeLayer().calculate(input));
+      expectInvalidSizeException(() -> makeLayer().calculate(input));
    }
 
    @Test
@@ -130,7 +126,7 @@ class RasterLayerBaseTest {
 
    @Test
    void testAdjustWithMismatchingOutput() {
-      expectMismatchException(
+      expectInvalidSizeException(
             () -> calculate(makeLayer()).adjust(new RasterData[OUTPUT_COUNT + 1]));
    }
 
@@ -176,11 +172,11 @@ class RasterLayerBaseTest {
 
    @Test
    void testGetOutputAsAtomic() {
-      expectMismatchException(() -> calculate(new CustomRasterLayer(
+      expectInvalidSizeException(() -> calculate(new CustomRasterLayer(
             ATOMIC_SIZE, new TriRasterSize(2, 1, 1))).getOutputAsAtomic());
-      expectMismatchException(() -> calculate(new CustomRasterLayer(
+      expectInvalidSizeException(() -> calculate(new CustomRasterLayer(
             ATOMIC_SIZE, new TriRasterSize(1, 2, 1))).getOutputAsAtomic());
-      expectMismatchException(() -> calculate(new CustomRasterLayer(
+      expectInvalidSizeException(() -> calculate(new CustomRasterLayer(
             ATOMIC_SIZE, new TriRasterSize(1, 1, 2))).getOutputAsAtomic());
 
       final double[] output = new double[OUTPUT_COUNT];
@@ -196,11 +192,11 @@ class RasterLayerBaseTest {
 
    @Test
    void testGetInputGradientAsAtomic() {
-      expectMismatchException(() -> adjust(new CustomRasterLayer(
+      expectInvalidSizeException(() -> adjust(new CustomRasterLayer(
             new TriRasterSize(2, 1, 1), ATOMIC_SIZE)).getInputGradientAsAtomic());
-      expectMismatchException(() -> adjust(new CustomRasterLayer(
+      expectInvalidSizeException(() -> adjust(new CustomRasterLayer(
             new TriRasterSize(1, 2, 1), ATOMIC_SIZE)).getInputGradientAsAtomic());
-      expectMismatchException(() -> adjust(new CustomRasterLayer(
+      expectInvalidSizeException(() -> adjust(new CustomRasterLayer(
             new TriRasterSize(1, 1, 2), ATOMIC_SIZE)).getInputGradientAsAtomic());
 
       final double[] inputGradient = new double[INPUT_COUNT];
@@ -276,8 +272,8 @@ class RasterLayerBaseTest {
       TestUtil.expectException(NoCalculationException.class, runnable);
    }
 
-   private void expectMismatchException(final Runnable runnable) {
-      TestUtil.expectException(MismatchException.class, runnable);
+   private void expectInvalidSizeException(final Runnable runnable) {
+      TestUtil.expectException(InvalidSizeException.class, runnable);
    }
 
    private RasterData makeDataWithValidDimensions() {

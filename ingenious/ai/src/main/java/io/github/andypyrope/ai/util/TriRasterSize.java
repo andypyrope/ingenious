@@ -67,6 +67,11 @@ public class TriRasterSize implements RasterSize {
    }
 
    @Override
+   public boolean isInvalid() {
+      return _width <= 0 || _height <= 0 || _depth <= 0;
+   }
+
+   @Override
    public String toString() {
       return _width + "x" + _height + "x" + _depth;
    }
