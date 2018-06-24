@@ -57,7 +57,7 @@ class FeedforwardNetworkTest {
    void getEuclideanDistance() {
       final AtomicNetwork network = makeNetwork();
       network.calculate(new double[]{3, 4});
-      TestUtil.compareDoubles(3.87,
+      TestUtil.compareDoublesLoose(3.87,
             network.getEuclideanDistance(new double[]{1, 2, 3, 4, 5}));
    }
 

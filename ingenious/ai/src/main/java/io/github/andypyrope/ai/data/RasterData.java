@@ -1,8 +1,8 @@
 package io.github.andypyrope.ai.data;
 
 import io.github.andypyrope.ai.InvalidSizeException;
-import io.github.andypyrope.ai.util.RasterSize;
-import io.github.andypyrope.ai.util.TriCoordinateConsumer;
+import io.github.andypyrope.ai.util.CoordinateConsumer;
+import io.github.andypyrope.ai.util.Vector;
 
 import java.util.Random;
 
@@ -13,6 +13,11 @@ import java.util.Random;
 public interface RasterData {
 
    /**
+    * @return The width, height and depth of this data.
+    */
+   Vector getSize();
+
+   /**
     * Gets the value at a specific cell.
     *
     * @param x The horizontal position of the cell. 0 <= x < width.
@@ -21,6 +26,18 @@ public interface RasterData {
     * @return the value at the (x, y, k) cell.
     */
    double getCell(int x, int y, int z);
+
+   /**
+    * Gets the value at a specific position. The surrounding 2^dimensions cells are taken
+    * with the ratios that correspond to their
+    *
+    * @param position A vector that specifies the coordinates of the cell. If the
+    *                 coordinates are not whole numbers, parts of cells are taken with
+    *                 their respective ratios. All cells with coordinates outside of the
+    *                 domain of this data are assumed to have data 0.
+    * @return the value at the specified position.
+    */
+   double getCell(Vector position);
 
    /**
     * Sets the value of a specific cell.
@@ -45,12 +62,22 @@ public interface RasterData {
     * @param x     The horizontal position of the cell. 0 <= x < width.
     * @param y     The vertical position of the cell. 0 <= y < height.
     * @param z     The depth of the cell. 0 <= k < depth.
-    * @param delta The value to add to the (x, y, k) cell.
+    * @param value The value to add to the (x, y, z) cell.
     */
-   void addTo(int x, int y, int z, double delta);
+   void addTo(int x, int y, int z, double value);
 
    /**
-    * Multiplies the value of a specific cell by a number.
+    * Adds to the value of a specific cell.
+    *
+    * @param position The position where to add the value. If it is not an integer
+    *                 position, the surrounding cells are updated with ratios depending on
+    *                 how close they are to this position.
+    * @param value    The value to add to the cell(s) at the specified position.
+    */
+   void addTo(Vector position, double value);
+
+   /**
+    * Multiplies the value of a specific cell by a number(scalar).
     *
     * @param x          The horizontal position of the cell. 0 <= x < width.
     * @param y          The vertical position of the cell. 0 <= y < height.
@@ -60,17 +87,12 @@ public interface RasterData {
    void multiply(int x, int y, int z, double multiplier);
 
    /**
-    * @return The width, height and depth of this data.
-    */
-   RasterSize getSize();
-
-   /**
     * Makes sure the dimensions of the raster data are correct.
     *
     * @param size The expected size
     * @throws InvalidSizeException If any of the dimensions are incorrect.
     */
-   void verifyDimensions(RasterSize size) throws InvalidSizeException;
+   void verifyDimensions(Vector size) throws InvalidSizeException;
 
    /**
     * Sets the data to random values from 0 (inclusive) to 1 (exclusive).
@@ -89,7 +111,7 @@ public interface RasterData {
     *
     * @param consumer The consumer to use.
     */
-   void forEach(TriCoordinateConsumer consumer);
+   void forEach(CoordinateConsumer consumer);
 
    /**
     * @return The sum of all cells of the data.

@@ -5,19 +5,19 @@ import io.github.andypyrope.ai.data.AtomicRasterData;
 import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.raster.RasterLayer;
-import io.github.andypyrope.ai.util.RasterSize;
-import io.github.andypyrope.ai.util.TriRasterSize;
+import io.github.andypyrope.ai.util.StandardVector;
+import io.github.andypyrope.ai.util.Vector;
 
 abstract class RasterLayerBase extends NetworkLayerBase implements RasterLayer {
 
-   private static final RasterSize ATOMIC_SIZE = new TriRasterSize(1, 1, 1);
+   private static final Vector ATOMIC_SIZE = StandardVector.UNIT;
 
    RasterData[] _inputGradients;
    final RasterData[] _output;
    RasterData[] _lastInput;
 
-   RasterLayerBase(final int inputCount, final RasterSize inputSize,
-         final int outputCount, final RasterSize outputSize) {
+   RasterLayerBase(final int inputCount, final Vector inputSize,
+         final int outputCount, final Vector outputSize) {
 
       super(inputCount, inputSize, outputCount, outputSize);
 

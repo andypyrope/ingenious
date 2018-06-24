@@ -1,7 +1,7 @@
 package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.data.RasterData;
-import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.Vector;
 
 import java.util.Random;
 
@@ -22,7 +22,7 @@ public class RasterBiasLayer extends RasterLayerBase {
     * @param size   The size (width, height, depth) of the input/output.
     * @param random The random number generator to use.
     */
-   RasterBiasLayer(final int count, final RasterSize size, final Random random) {
+   RasterBiasLayer(final int count, final Vector size, final Random random) {
       super(count, size, count, size);
 
       _biases = new double[_inputCount];

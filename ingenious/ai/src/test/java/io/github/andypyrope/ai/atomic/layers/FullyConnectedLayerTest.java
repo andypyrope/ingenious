@@ -29,11 +29,11 @@ class FullyConnectedLayerTest {
    void testLearning() {
       final AtomicLayer layer = makeLayer();
       layer.calculate(INPUT);
-      TestUtil.compareDoubles(4.87, layer.getEuclideanDistance(TARGET_OUTPUT));
+      TestUtil.compareDoublesLoose(4.87, layer.getEuclideanDistance(TARGET_OUTPUT));
       train(layer);
-      TestUtil.compareDoubles(2.10, layer.getEuclideanDistance(TARGET_OUTPUT));
+      TestUtil.compareDoublesLoose(2.10, layer.getEuclideanDistance(TARGET_OUTPUT));
       train(layer);
-      TestUtil.compareDoubles(0.24, layer.getEuclideanDistance(TARGET_OUTPUT));
+      TestUtil.compareDoublesLoose(0.24, layer.getEuclideanDistance(TARGET_OUTPUT));
    }
 
    private void train(final AtomicLayer layer) {

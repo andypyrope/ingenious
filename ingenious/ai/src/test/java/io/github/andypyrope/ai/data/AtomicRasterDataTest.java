@@ -2,7 +2,7 @@ package io.github.andypyrope.ai.data;
 
 import io.github.andypyrope.ai.InvalidSizeException;
 import io.github.andypyrope.ai.testutil.TestUtil;
-import io.github.andypyrope.ai.util.TriRasterSize;
+import io.github.andypyrope.ai.util.StandardVector;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ class AtomicRasterDataTest {
    @Test
    void testGetSize() {
       Assertions.assertFalse(new AtomicRasterData(SINGLE_DATA).getSize()
-            .differsFrom(new TriRasterSize(1, 1, 1)));
+            .differsFrom(StandardVector.UNIT));
    }
 
    private void expectInvalidSizeException(final Runnable runnable) {

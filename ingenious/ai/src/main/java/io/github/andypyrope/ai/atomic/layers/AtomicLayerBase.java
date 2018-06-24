@@ -4,12 +4,12 @@ import io.github.andypyrope.ai.*;
 import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.data.AtomicRasterData;
 import io.github.andypyrope.ai.data.RasterData;
-import io.github.andypyrope.ai.util.RasterSize;
-import io.github.andypyrope.ai.util.TriRasterSize;
+import io.github.andypyrope.ai.util.StandardVector;
+import io.github.andypyrope.ai.util.Vector;
 
 abstract class AtomicLayerBase extends NetworkLayerBase implements AtomicLayer {
 
-   private static final RasterSize ATOMIC_SIZE = new TriRasterSize(1, 1, 1);
+   private static final Vector ATOMIC_SIZE = StandardVector.UNIT;
 
    final double[] _output;
    final double[] _inputGradients;

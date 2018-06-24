@@ -4,7 +4,6 @@ import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.testutil.DeterministicRandom;
-import io.github.andypyrope.ai.testutil.HalfFunction;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import io.github.andypyrope.ai.util.StandardVector;
 import io.github.andypyrope.ai.util.Vector;
@@ -15,9 +14,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-class RasterActivationLayerTest {
+class MaxPoolingLayerTest {
    private static final int COUNT = 2;
-   private static final Vector SIZE = new StandardVector(2, 2, 2);
+   private static final Vector INPUT_SIZE = new StandardVector(3, 3, 3);
+   private static final Vector WINDOW_SIZE = new StandardVector(1, 2, 3);
+   private static final Vector OUTPUT_SIZE = new StandardVector(3, 2, 1);
    private static final RasterData[] INPUT = new RasterData[COUNT];
    private static final RasterData[] TARGET_OUTPUT = new RasterData[COUNT];
 
@@ -27,20 +28,14 @@ class RasterActivationLayerTest {
    static void setUpAll() {
       _random = new DeterministicRandom();
       for (int i = 0; i < COUNT; i++) {
-         INPUT[i] = makeDummyData();
-         TARGET_OUTPUT[i] = makeDummyData();
+         INPUT[i] = makeDummyData(INPUT_SIZE);
+         TARGET_OUTPUT[i] = makeDummyData(OUTPUT_SIZE);
       }
    }
 
-   private static RasterData makeDummyData() {
-      final RasterData result = new CustomRasterData(SIZE);
-      for (int x = 0; x < SIZE.getX(); x++) {
-         for (int y = 0; y < SIZE.getY(); y++) {
-            for (int z = 0; z < SIZE.getZ(); z++) {
-               result.setCell(x, y, z, _random.nextDouble());
-            }
-         }
-      }
+   private static RasterData makeDummyData(final Vector size) {
+      final RasterData result = new CustomRasterData(size);
+      result.forEach((x, y, z) -> result.setCell(x, y, z, _random.nextDouble()));
       return result;
    }
 
@@ -51,12 +46,12 @@ class RasterActivationLayerTest {
 
    @Test
    void testGetCalculationComplexity() {
-      Assertions.assertEquals(16, makeLayer().getCalculationComplexity());
+      Assertions.assertEquals(72, makeLayer().getCalculationComplexity());
    }
 
    @Test
    void testGetAdjustmentComplexity() {
-      Assertions.assertEquals(16, makeLayer().getAdjustmentComplexity());
+      Assertions.assertEquals(39, makeLayer().getAdjustmentComplexity());
    }
 
    @Test
@@ -67,10 +62,19 @@ class RasterActivationLayerTest {
       for (int i = 0; i < COUNT; i++) {
          final RasterData currentInput = INPUT[i];
          final RasterData currentOutput = output[i];
-         currentOutput.verifyDimensions(currentInput.getSize());
-         currentInput.forEach((x, y, z) -> TestUtil.compareDoubles(
-               currentInput.getCell(x, y, z) / 2.0,
-               currentOutput.getCell(x, y, z)));
+         currentOutput.verifyDimensions(OUTPUT_SIZE);
+         currentOutput.forEach((yX, yY, yZ) -> {
+            final double outputValue = currentOutput.getCell(yX, yY, yZ);
+            WINDOW_SIZE.forEach((wX, wY, wZ) -> {
+               final double inputValue = currentInput.getCell(yX + wX, yY + wY, yZ + wZ);
+               Assertions.assertTrue(
+                     inputValue < outputValue + 0.00000000000001,
+                     String.format("The input value at (%d,%d,%d) - %.2f - should be " +
+                                 "at most the output value at (%d,%d,%d) - %.2f",
+                           yX + wX, yY + wY, yZ + wZ, inputValue,
+                           yX, yY, yZ, outputValue));
+            });
+         });
       }
    }
 
@@ -78,7 +82,7 @@ class RasterActivationLayerTest {
    void testLearning() {
       final RasterLayer layer = makeLayer();
       layer.calculate(INPUT);
-      final double distance = 1.81;
+      final double distance = 1.484;
       TestUtil.compareDoublesLoose(distance,
             TestUtil.getEuclideanDistance(layer, TARGET_OUTPUT));
 
@@ -95,6 +99,6 @@ class RasterActivationLayerTest {
    }
 
    private RasterLayer makeLayer() {
-      return new RasterActivationLayer(COUNT, SIZE, new HalfFunction());
+      return new MaxPoolingLayer(COUNT, INPUT_SIZE, WINDOW_SIZE);
    }
 }

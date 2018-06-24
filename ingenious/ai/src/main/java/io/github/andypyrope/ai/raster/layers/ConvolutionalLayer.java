@@ -2,7 +2,7 @@ package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.RasterData;
-import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.Vector;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -30,8 +30,8 @@ public class ConvolutionalLayer extends RasterLayerBase {
     *                    size is below 1.
     * @param random      The random number generator to use.
     */
-   ConvolutionalLayer(final int inputCount, final RasterSize inputSize,
-         final int filterCount, final RasterSize filterSize, final Random random) {
+   ConvolutionalLayer(final int inputCount, final Vector inputSize, final int filterCount,
+         final Vector filterSize, final Random random) {
 
       super(inputCount, inputSize,
             inputCount * filterCount,

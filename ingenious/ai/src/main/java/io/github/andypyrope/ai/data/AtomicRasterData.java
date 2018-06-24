@@ -1,7 +1,7 @@
 package io.github.andypyrope.ai.data;
 
 import io.github.andypyrope.ai.InvalidSizeException;
-import io.github.andypyrope.ai.util.TriRasterSize;
+import io.github.andypyrope.ai.util.StandardVector;
 
 /**
  * Raster data that has a width, depth and height of 1.
@@ -14,7 +14,7 @@ public class AtomicRasterData extends RasterDataBase {
     * @param value The atomic value corresponding to the raster data.
     */
    AtomicRasterData(final double value) {
-      super(new TriRasterSize(1, 1, 1));
+      super(StandardVector.UNIT);
       _data = value;
    }
 

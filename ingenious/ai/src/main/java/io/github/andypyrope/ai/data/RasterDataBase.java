@@ -1,22 +1,39 @@
 package io.github.andypyrope.ai.data;
 
 import io.github.andypyrope.ai.InvalidSizeException;
-import io.github.andypyrope.ai.util.RasterSize;
-import io.github.andypyrope.ai.util.TriCoordinateConsumer;
+import io.github.andypyrope.ai.util.CoordinateConsumer;
+import io.github.andypyrope.ai.util.Vector;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 abstract class RasterDataBase implements RasterData {
 
-   private final RasterSize _size;
+   final int _width;
+   final int _height;
+   final int _depth;
+   private final Vector _size;
 
-   RasterDataBase(final RasterSize size) {
+   RasterDataBase(final Vector size) {
+      size.validateAsSize();
       _size = size;
+      _width = (int) _size.getX();
+      _height = (int) _size.getY();
+      _depth = (int) _size.getZ();
    }
 
    @Override
-   public RasterSize getSize() {
+   public Vector getSize() {
       return _size;
+   }
+
+   @Override
+   public double getCell(final Vector position) {
+      final AtomicReference<Double> sum = new AtomicReference<>(0.0);
+      position.traverseAround((x, y, z, coefficient) ->
+            sum.set(sum.get() + getCell(x, y, z) * coefficient));
+
+      return sum.get();
    }
 
    @Override
@@ -25,8 +42,14 @@ abstract class RasterDataBase implements RasterData {
    }
 
    @Override
-   public void addTo(final int x, final int y, final int z, final double delta) {
-      setCell(x, y, z, getCell(x, y, z) + delta);
+   public void addTo(final int x, final int y, final int z, final double value) {
+      setCell(x, y, z, getCell(x, y, z) + value);
+   }
+
+   @Override
+   public void addTo(final Vector position, final double value) {
+      position.traverseAround((x, y, z, coefficient) ->
+            addTo(x, y, z, value * coefficient));
    }
 
    @Override
@@ -35,9 +58,9 @@ abstract class RasterDataBase implements RasterData {
    }
 
    @Override
-   public void verifyDimensions(final RasterSize size) throws InvalidSizeException {
-      if (getSize().differsFrom(size)) {
-         throw new InvalidSizeException(size, getSize());
+   public void verifyDimensions(final Vector size) throws InvalidSizeException {
+      if (_size.differsFrom(size)) {
+         throw new InvalidSizeException(size, _size);
       }
    }
 
@@ -52,22 +75,16 @@ abstract class RasterDataBase implements RasterData {
    }
 
    @Override
-   public void forEach(final TriCoordinateConsumer consumer) {
-      for (int z = 0; z < _size.getDepth(); z++) {
-         for (int y = 0; y < _size.getHeight(); y++) {
-            for (int x = 0; x < _size.getWidth(); x++) {
-               consumer.accept(x, y, z);
-            }
-         }
-      }
+   public void forEach(final CoordinateConsumer consumer) {
+      _size.forEach(consumer);
    }
 
    @Override
    public double getSum() {
       double sum = 0.0;
-      for (int z = 0; z < _size.getDepth(); z++) {
-         for (int y = 0; y < _size.getHeight(); y++) {
-            for (int x = 0; x < _size.getWidth(); x++) {
+      for (int z = 0; z < _depth; z++) {
+         for (int y = 0; y < _height; y++) {
+            for (int x = 0; x < _width; x++) {
                sum += getCell(x, y, z);
             }
          }

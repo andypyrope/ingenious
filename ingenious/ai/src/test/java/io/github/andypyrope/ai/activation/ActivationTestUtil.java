@@ -7,7 +7,7 @@ class ActivationTestUtil {
 
    static void testSlope(final ActivationFunction function, final double maxSlope) {
 
-      final double resolution = 1000;
+      final double resolution = 100;
       final double from = -10.0;
       final double to = 10.0;
       final double step = (to - from) / resolution;
@@ -25,7 +25,7 @@ class ActivationTestUtil {
 
          Assertions.assertTrue(actualSlope > 0.0 - Double.MIN_NORMAL,
                "The slope is at least 0.0 (the function is non-decreasing)");
-         TestUtil.compareDoubles(expectedSlope, actualSlope);
+         TestUtil.compareDoublesLoose(expectedSlope, actualSlope);
 
          if (actualSlope > maxActualSlope) {
             maxActualSlope = actualSlope;

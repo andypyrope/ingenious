@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 public class TestUtil {
 
-   private static final double LOW_END_MULTIPLIER = 0.9;
-   private static final double HIGH_END_MULTIPLIER = 1.1;
+   private static final double LOOSE_MULTIPLIER = 0.01;
+   private static final double STRICT_MULTIPLIER = 0.000001;
 
    private static void compareDoubles(final double minValue, final double maxValue,
          final double actual) {
@@ -22,18 +22,31 @@ public class TestUtil {
             "The actual value - %.28f - should be at least %.28f", actual, minValue));
    }
 
-   public static void compareDoubles(final double expected, final double actual) {
+   private static void compareDoublesWithMultiplier(final double expected,
+         final double actual, final double multiplier) {
+
+      final double lowEndMultiplier = 1.0 - multiplier;
+      final double highEndMultiplier = 1.0 + multiplier;
       if (expected > 0) {
-         compareDoubles(expected * LOW_END_MULTIPLIER - Double.MIN_NORMAL,
-               expected * HIGH_END_MULTIPLIER + Double.MIN_NORMAL, actual);
+         compareDoubles(expected * lowEndMultiplier - Double.MIN_NORMAL,
+               expected * highEndMultiplier + Double.MIN_NORMAL, actual);
       } else {
-         compareDoubles(expected * HIGH_END_MULTIPLIER - Double.MIN_NORMAL,
-               expected * LOW_END_MULTIPLIER + Double.MIN_NORMAL, actual);
+         compareDoubles(expected * highEndMultiplier - Double.MIN_NORMAL,
+               expected * lowEndMultiplier + Double.MIN_NORMAL, actual);
       }
    }
 
-   public static void compareDoubleArrays(final double[] expected,
-         final double[] actual) {
+   public static void compareDoublesLoose(final double expected, final double actual) {
+      compareDoublesWithMultiplier(expected, actual, LOOSE_MULTIPLIER);
+   }
+
+   public static void compareDoubles(final double expected, final double actual) {
+      compareDoublesWithMultiplier(expected, actual, STRICT_MULTIPLIER);
+   }
+
+   private static void compareDoubleArrays(final double[] expected,
+         final double[] actual, final double multiplier) {
+
       final String errorMessage = String.format(
             "Expected 'double' array [%s] to be equal to [%s]",
             Arrays.stream(actual).boxed().map(String::valueOf)
@@ -48,11 +61,23 @@ public class TestUtil {
 
       for (int i = 0; i < expected.length; i++) {
          try {
-            compareDoubles(expected[i], actual[i]);
+            compareDoublesWithMultiplier(expected[i], actual[i], multiplier);
          } catch (AssertionError e) {
             throw new AssertionError(errorMessage + " -- mismatch at index " + i, e);
          }
       }
+   }
+
+   public static void compareDoubleArrays(final double[] expected,
+         final double[] actual) {
+
+      compareDoubleArrays(expected, actual, STRICT_MULTIPLIER);
+   }
+
+   public static void compareDoubleArraysLoose(final double[] expected,
+         final double[] actual) {
+
+      compareDoubleArrays(expected, actual, LOOSE_MULTIPLIER);
    }
 
    public static void compareRasterDataArrays(final RasterData[] expected,
@@ -91,11 +116,11 @@ public class TestUtil {
 
    private static String rasterDataToString(final RasterData data) {
       final StringBuilder result = new StringBuilder(data.getSize().getPixelCount() * 5);
-      for (int z = 0; z < data.getSize().getDepth(); z++) {
+      for (int z = 0; z < data.getSize().getZ(); z++) {
          result.append("[");
-         for (int y = 0; y < data.getSize().getHeight(); y++) {
+         for (int y = 0; y < data.getSize().getY(); y++) {
             result.append("(");
-            for (int x = 0; x < data.getSize().getWidth(); x++) {
+            for (int x = 0; x < data.getSize().getX(); x++) {
                result.append(data.getCell(x, y, z)).append(",");
             }
             result.append(")");

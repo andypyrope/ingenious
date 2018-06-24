@@ -1,7 +1,7 @@
 package io.github.andypyrope.ai;
 
 import io.github.andypyrope.ai.data.RasterData;
-import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.Vector;
 
 /**
  * A layer in a neural network.
@@ -28,7 +28,7 @@ public interface NetworkLayer {
    /**
     * @return The dimensions of the input.
     */
-   RasterSize getInputSize();
+   Vector getInputSize();
 
    /**
     * @return The number of outputs of the layer
@@ -38,7 +38,7 @@ public interface NetworkLayer {
    /**
     * @return The dimensions of the output.
     */
-   RasterSize getOutputSize();
+   Vector getOutputSize();
 
    /**
     * Based on the net input, update the net output of this layer.

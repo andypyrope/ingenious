@@ -5,8 +5,8 @@ import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.testutil.TestUtil;
-import io.github.andypyrope.ai.util.RasterSize;
-import io.github.andypyrope.ai.util.TriRasterSize;
+import io.github.andypyrope.ai.util.StandardVector;
+import io.github.andypyrope.ai.util.Vector;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,14 +15,14 @@ import org.junit.jupiter.api.Test;
 class RasterLayerBaseTest {
 
    private static final int INPUT_COUNT = 2;
-   private static final RasterSize INPUT_SIZE = new TriRasterSize(3, 4, 2);
+   private static final Vector INPUT_SIZE = new StandardVector(3, 4, 2);
    private static final RasterData[] INITIAL_INPUT_GRADIENT = new RasterData[INPUT_COUNT];
 
    private static final int OUTPUT_COUNT = 3;
-   private static final RasterSize OUTPUT_SIZE = new TriRasterSize(1, 2, 1);
+   private static final Vector OUTPUT_SIZE = new StandardVector(1, 2, 1);
    private static final RasterData[] INITIAL_OUTPUT = new RasterData[OUTPUT_COUNT];
 
-   private static final RasterSize ATOMIC_SIZE = new TriRasterSize(1, 1, 1);
+   private static final Vector ATOMIC_SIZE = new StandardVector(1, 1, 1);
 
    private RasterData[] _input;
    private RasterData[] _outputGradient;
@@ -41,7 +41,7 @@ class RasterLayerBaseTest {
 
    @Test
    void testGetInputSize() {
-      final RasterSize actualSize = makeLayer().getInputSize();
+      final Vector actualSize = makeLayer().getInputSize();
       if (INPUT_SIZE.differsFrom(actualSize)) {
          throw new InvalidSizeException(INPUT_SIZE, actualSize);
       }
@@ -49,7 +49,7 @@ class RasterLayerBaseTest {
 
    @Test
    void testGetOutputSize() {
-      final RasterSize actualSize = makeLayer().getOutputSize();
+      final Vector actualSize = makeLayer().getOutputSize();
       if (OUTPUT_SIZE.differsFrom(actualSize)) {
          throw new InvalidSizeException(OUTPUT_SIZE, actualSize);
       }
@@ -173,11 +173,11 @@ class RasterLayerBaseTest {
    @Test
    void testGetOutputAsAtomic() {
       expectInvalidSizeException(() -> calculate(new CustomRasterLayer(
-            ATOMIC_SIZE, new TriRasterSize(2, 1, 1))).getOutputAsAtomic());
+            ATOMIC_SIZE, new StandardVector(2, 1, 1))).getOutputAsAtomic());
       expectInvalidSizeException(() -> calculate(new CustomRasterLayer(
-            ATOMIC_SIZE, new TriRasterSize(1, 2, 1))).getOutputAsAtomic());
+            ATOMIC_SIZE, new StandardVector(1, 2, 1))).getOutputAsAtomic());
       expectInvalidSizeException(() -> calculate(new CustomRasterLayer(
-            ATOMIC_SIZE, new TriRasterSize(1, 1, 2))).getOutputAsAtomic());
+            ATOMIC_SIZE, new StandardVector(1, 1, 2))).getOutputAsAtomic());
 
       final double[] output = new double[OUTPUT_COUNT];
       for (int i = 0; i < OUTPUT_COUNT; i++) {
@@ -193,11 +193,11 @@ class RasterLayerBaseTest {
    @Test
    void testGetInputGradientAsAtomic() {
       expectInvalidSizeException(() -> adjust(new CustomRasterLayer(
-            new TriRasterSize(2, 1, 1), ATOMIC_SIZE)).getInputGradientAsAtomic());
+            new StandardVector(2, 1, 1), ATOMIC_SIZE)).getInputGradientAsAtomic());
       expectInvalidSizeException(() -> adjust(new CustomRasterLayer(
-            new TriRasterSize(1, 2, 1), ATOMIC_SIZE)).getInputGradientAsAtomic());
+            new StandardVector(1, 2, 1), ATOMIC_SIZE)).getInputGradientAsAtomic());
       expectInvalidSizeException(() -> adjust(new CustomRasterLayer(
-            new TriRasterSize(1, 1, 2), ATOMIC_SIZE)).getInputGradientAsAtomic());
+            new StandardVector(1, 1, 2), ATOMIC_SIZE)).getInputGradientAsAtomic());
 
       final double[] inputGradient = new double[INPUT_COUNT];
       for (int i = 0; i < INPUT_COUNT; i++) {
@@ -290,7 +290,7 @@ class RasterLayerBaseTest {
          this(INPUT_SIZE, OUTPUT_SIZE);
       }
 
-      CustomRasterLayer(final RasterSize inputSize, final RasterSize outputSize) {
+      CustomRasterLayer(final Vector inputSize, final Vector outputSize) {
          super(INPUT_COUNT, inputSize, OUTPUT_COUNT, outputSize);
          System.arraycopy(INITIAL_INPUT_GRADIENT, 0, _inputGradients, 0, INPUT_COUNT);
          System.arraycopy(INITIAL_OUTPUT, 0, _output, 0, OUTPUT_COUNT);

@@ -4,15 +4,15 @@ import io.github.andypyrope.ai.*;
 import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.testutil.TestUtil;
-import io.github.andypyrope.ai.util.RasterSize;
-import io.github.andypyrope.ai.util.TriRasterSize;
+import io.github.andypyrope.ai.util.StandardVector;
+import io.github.andypyrope.ai.util.Vector;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class AtomicLayerBaseTest {
 
-   private static final RasterSize ATOMIC_SIZE = new TriRasterSize(1, 1, 1);
+   private static final Vector ATOMIC_SIZE = StandardVector.UNIT;
 
    private static int INPUT_COUNT = 2;
    private static double[] INITIAL_INPUT_GRADIENT = new double[]{0.2, 0.4};
@@ -29,7 +29,7 @@ class AtomicLayerBaseTest {
 
    @Test
    void testGetInputSize() {
-      final RasterSize actualSize = makeLayer().getInputSize();
+      final Vector actualSize = makeLayer().getInputSize();
       if (ATOMIC_SIZE.differsFrom(actualSize)) {
          throw new InvalidSizeException(ATOMIC_SIZE, actualSize);
       }
@@ -42,7 +42,7 @@ class AtomicLayerBaseTest {
 
    @Test
    void testGetOutputSize() {
-      final RasterSize actualSize = makeLayer().getOutputSize();
+      final Vector actualSize = makeLayer().getOutputSize();
       if (ATOMIC_SIZE.differsFrom(actualSize)) {
          throw new InvalidSizeException(ATOMIC_SIZE, actualSize);
       }

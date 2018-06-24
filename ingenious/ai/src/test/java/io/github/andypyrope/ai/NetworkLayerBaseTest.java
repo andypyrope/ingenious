@@ -2,8 +2,8 @@ package io.github.andypyrope.ai;
 
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.testutil.TestUtil;
-import io.github.andypyrope.ai.util.RasterSize;
-import io.github.andypyrope.ai.util.TriRasterSize;
+import io.github.andypyrope.ai.util.StandardVector;
+import io.github.andypyrope.ai.util.Vector;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -16,9 +16,9 @@ import java.util.List;
 class NetworkLayerBaseTest {
 
    private static final int INPUT_COUNT = 2;
-   private static final RasterSize INPUT_SIZE = new TriRasterSize(3, 4, 2);
+   private static final Vector INPUT_SIZE = new StandardVector(3, 4, 2);
    private static final int OUTPUT_COUNT = 3;
-   private static final RasterSize OUTPUT_SIZE = new TriRasterSize(1, 2, 1);
+   private static final Vector OUTPUT_SIZE = new StandardVector(1, 2, 1);
 
    private List<Object> _objectsToVerify;
 
@@ -33,23 +33,17 @@ class NetworkLayerBaseTest {
    }
 
    @Test
-   void testInvalidInputSize() {
-      final RasterSize inputSize = EasyMock.createMock(RasterSize.class);
-      EasyMock.expect(inputSize.isInvalid()).andReturn(true);
-      final RasterSize outputSize = EasyMock.createMock(RasterSize.class);
-      EasyMock.replay(inputSize, outputSize);
-      expectInvalidSizeException(() -> new CustomLayer(1, inputSize, 1, outputSize));
-      EasyMock.verify(inputSize, outputSize);
-   }
+   void testCreation() {
+      final Vector inputSize = EasyMock.createMock(Vector.class);
+      inputSize.validateAsSize();
+      EasyMock.expectLastCall();
 
-   @Test
-   void testInvalidOutputSize() {
-      final RasterSize inputSize = EasyMock.createMock(RasterSize.class);
-      EasyMock.expect(inputSize.isInvalid()).andReturn(false);
-      final RasterSize outputSize = EasyMock.createMock(RasterSize.class);
-      EasyMock.expect(outputSize.isInvalid()).andReturn(true);
+      final Vector outputSize = EasyMock.createMock(Vector.class);
+      outputSize.validateAsSize();
+      EasyMock.expectLastCall();
+
       EasyMock.replay(inputSize, outputSize);
-      expectInvalidSizeException(() -> new CustomLayer(1, inputSize, 1, outputSize));
+      new CustomLayer(1, inputSize, 1, outputSize);
       EasyMock.verify(inputSize, outputSize);
    }
 
@@ -149,8 +143,9 @@ class NetworkLayerBaseTest {
          this(inputCount, INPUT_SIZE, outputCount, OUTPUT_SIZE);
       }
 
-      CustomLayer(final int inputCount, final RasterSize inputSize,
-            final int outputCount, final RasterSize outputSize) {
+      CustomLayer(final int inputCount, final Vector inputSize,
+            final int outputCount, final Vector outputSize) {
+
          super(inputCount, inputSize, outputCount, outputSize);
       }
 

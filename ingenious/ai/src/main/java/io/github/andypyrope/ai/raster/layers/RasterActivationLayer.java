@@ -2,7 +2,7 @@ package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.activation.ActivationFunction;
 import io.github.andypyrope.ai.data.RasterData;
-import io.github.andypyrope.ai.util.RasterSize;
+import io.github.andypyrope.ai.util.Vector;
 
 public class RasterActivationLayer extends RasterLayerBase {
 
@@ -18,7 +18,7 @@ public class RasterActivationLayer extends RasterLayerBase {
     * @param size     The size (width, height, depth) of the input/output.
     * @param function The activation function of the layer.
     */
-   RasterActivationLayer(final int count, final RasterSize size,
+   RasterActivationLayer(final int count, final Vector size,
          final ActivationFunction function) {
 
       super(count, size, count, size);
