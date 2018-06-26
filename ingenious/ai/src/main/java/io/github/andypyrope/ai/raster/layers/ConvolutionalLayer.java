@@ -2,6 +2,7 @@ package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.RasterData;
+import io.github.andypyrope.ai.util.StandardVector;
 import io.github.andypyrope.ai.util.Vector;
 
 import java.util.Arrays;
@@ -9,7 +10,11 @@ import java.util.Random;
 
 public class ConvolutionalLayer extends RasterLayerBase {
 
+   private static final Vector PADDING = StandardVector.ZERO;
+   private static final Vector STRIDE = StandardVector.UNIT;
+
    private final int _filterCount;
+   private final Vector _filterSize;
    private final RasterData[] _filters;
    private final RasterData[] _filterGradients;
    private final RasterData[] _filterVolatility;
@@ -35,10 +40,11 @@ public class ConvolutionalLayer extends RasterLayerBase {
 
       super(inputCount, inputSize,
             inputCount * filterCount,
-            inputSize.minus(filterSize).plus(1));
+            inputSize.getScanSize(filterSize, PADDING, STRIDE));
       initializeInputGradientData();
 
       _filterCount = filterCount;
+      _filterSize = filterSize;
       _filters = new RasterData[_filterCount];
       _filterGradients = new RasterData[_filterCount];
       _lastFilterGradients = new RasterData[_filterCount];
@@ -70,10 +76,12 @@ public class ConvolutionalLayer extends RasterLayerBase {
    private void calculateSingle(final RasterData input, final RasterData filter,
          final RasterData output) {
 
-      output.forEach((yX, yY, yZ) -> filter.forEach((fX, fY, fZ) ->
+      _inputSize.slideWindow(_filterSize, PADDING, STRIDE, (inPos, yX, yY, yZ) -> {
+         filter.forEach((fX, fY, fZ) -> {
             output.setCell(yX, yY, yZ,
-                  input.getCell(yX + fX, yY + fY, yZ + fZ) * filter.getCell(fX, fY, fZ))
-      ));
+                  input.getCell(inPos.plus(fX, fY, fZ)) * filter.getCell(fX, fY, fZ));
+         });
+      });
    }
 
    @Override
@@ -101,14 +109,13 @@ public class ConvolutionalLayer extends RasterLayerBase {
          final RasterData filter, final RasterData filterGradient,
          final RasterData outputGradient) {
 
-      outputGradient.forEach((yX, yY, yZ) -> {
+      _inputSize.slideWindow(_filterSize, PADDING, STRIDE, (inPos, yX, yY, yZ) -> {
          final double outputGradientAtCell = outputGradient.getCell(yX, yY, yZ);
 
          filter.forEach((fX, fY, fZ) -> {
-            inputGradient.addTo(yX + fX, yY + fY, yZ + fZ,
-                  outputGradientAtCell * filter.getCell(fX, fY, fZ));
+            inputGradient.addTo(inPos, outputGradientAtCell * filter.getCell(fX, fY, fZ));
             filterGradient.addTo(fX, fY, fZ,
-                  outputGradientAtCell * input.getCell(yX + fX, yY + fY, yZ + fZ));
+                  outputGradientAtCell * input.getCell(inPos.plus(fX, fY, fZ)));
          });
       });
    }
