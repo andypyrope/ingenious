@@ -6,7 +6,6 @@ import io.github.andypyrope.ai.activation.ActivationFunction;
 import io.github.andypyrope.ai.atomic.AtomicNetwork;
 import io.github.andypyrope.ai.atomic.layers.ActivationLayer;
 import io.github.andypyrope.ai.atomic.layers.AtomicLayer;
-import io.github.andypyrope.ai.atomic.layers.BiasLayer;
 import io.github.andypyrope.ai.atomic.layers.FullyConnectedLayer;
 
 import java.util.ArrayList;
@@ -28,15 +27,13 @@ public class FeedforwardNetwork implements AtomicNetwork {
       int currentInputSize = inputSize;
       for (final int layerSize : hidden) {
          _layers.add(new FullyConnectedLayer(currentInputSize, layerSize, random));
-         _layers.add(new BiasLayer(layerSize, random));
-         _layers.add(new ActivationLayer(layerSize, function));
+         _layers.add(new ActivationLayer(layerSize, function, random));
 
          currentInputSize = layerSize;
       }
 
       _layers.add(new FullyConnectedLayer(currentInputSize, outputSize, random));
-      _layers.add(new BiasLayer(outputSize, random));
-      _layers.add(new ActivationLayer(outputSize, function));
+      _layers.add(new ActivationLayer(outputSize, function, random));
 
       _complexity = getTotalComplexity();
 

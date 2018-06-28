@@ -1,5 +1,6 @@
 package io.github.andypyrope.ai.atomic.layers;
 
+import io.github.andypyrope.ai.testutil.DeterministicRandom;
 import io.github.andypyrope.ai.testutil.HalfFunction;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import org.junit.jupiter.api.Assertions;
@@ -9,40 +10,27 @@ class ActivationLayerTest {
 
    private static final int LAYER_COUNT = 3;
    private static final double[] INPUT = new double[]{1, 2, 3};
-   private static final double[] ACTUAL_OUTPUT = new double[]{0.5, 1.0, 1.5};
    private static final double[] TARGET_OUTPUT = new double[]{2, -3, 4};
 
    @Test
    void testGetCalculationComplexity() {
-      Assertions.assertEquals(LAYER_COUNT, makeLayer().getCalculationComplexity());
+      Assertions.assertEquals(LAYER_COUNT * 2, makeLayer().getCalculationComplexity());
    }
 
    @Test
    void testGetAdjustmentComplexity() {
-      Assertions.assertEquals(LAYER_COUNT, makeLayer().getAdjustmentComplexity());
-   }
-
-   @Test
-   void testCalculation() {
-      final AtomicLayer layer = makeLayer();
-      layer.calculate(INPUT);
-      TestUtil.compareDoubleArrays(ACTUAL_OUTPUT, layer.getOutputAsAtomic());
+      Assertions.assertEquals(LAYER_COUNT * 6, makeLayer().getAdjustmentComplexity());
    }
 
    @Test
    void testLearning() {
       final AtomicLayer layer = makeLayer();
       layer.calculate(INPUT);
-
-      // NOTE: This layer does not adjust itself, it only calculates its input gradient
-      final double distance = 4.95;
-      TestUtil.compareDoublesLoose(distance, layer.getEuclideanDistance(TARGET_OUTPUT));
+      TestUtil.compareDoublesLoose(5.11, layer.getEuclideanDistance(TARGET_OUTPUT));
       train(layer);
-      TestUtil.compareDoublesLoose(distance, layer.getEuclideanDistance(TARGET_OUTPUT));
+      TestUtil.compareDoublesLoose(4.69, layer.getEuclideanDistance(TARGET_OUTPUT));
       train(layer);
-      TestUtil.compareDoublesLoose(distance, layer.getEuclideanDistance(TARGET_OUTPUT));
-      TestUtil.compareDoubleArrays(new double[]{-0.75, 2.0, -1.25},
-            layer.getInputGradientAsAtomic());
+      TestUtil.compareDoublesLoose(4.01, layer.getEuclideanDistance(TARGET_OUTPUT));
    }
 
    private void train(final AtomicLayer layer) {
@@ -53,6 +41,7 @@ class ActivationLayerTest {
    }
 
    private AtomicLayer makeLayer() {
-      return new ActivationLayer(LAYER_COUNT, new HalfFunction());
+      return new ActivationLayer(LAYER_COUNT, new HalfFunction(),
+            new DeterministicRandom());
    }
 }

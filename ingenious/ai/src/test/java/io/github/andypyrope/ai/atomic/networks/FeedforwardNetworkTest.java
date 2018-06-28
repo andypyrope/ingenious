@@ -30,7 +30,7 @@ class FeedforwardNetworkTest {
 
    @Test
    void getComplexity() {
-      assertEquals(124, makeNetwork().getComplexity());
+      assertEquals(172, makeNetwork().getComplexity());
    }
 
    @Test
