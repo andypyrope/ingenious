@@ -1,6 +1,5 @@
 package io.github.andypyrope.ai.atomic.layers;
 
-import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.testutil.HalfFunction;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import org.junit.jupiter.api.Assertions;

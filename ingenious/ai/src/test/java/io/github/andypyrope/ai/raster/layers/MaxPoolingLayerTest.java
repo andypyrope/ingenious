@@ -2,7 +2,6 @@ package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.RasterData;
-import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.testutil.DeterministicRandom;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import io.github.andypyrope.ai.util.StandardVector;

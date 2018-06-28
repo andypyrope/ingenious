@@ -1,6 +1,5 @@
 package io.github.andypyrope.ai.atomic.layers;
 
-import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.testutil.DeterministicRandom;
 import io.github.andypyrope.ai.testutil.TestUtil;
 import org.junit.jupiter.api.Assertions;

@@ -1,4 +1,4 @@
-package io.github.andypyrope.ai.atomic;
+package io.github.andypyrope.ai.atomic.layers;
 
 import io.github.andypyrope.ai.InvalidSizeException;
 import io.github.andypyrope.ai.NetworkLayer;

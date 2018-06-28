@@ -1,7 +1,6 @@
 package io.github.andypyrope.ai.atomic.layers;
 
 import io.github.andypyrope.ai.*;
-import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.data.AtomicRasterData;
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.util.StandardVector;

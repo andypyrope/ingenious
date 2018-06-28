@@ -3,9 +3,9 @@ package io.github.andypyrope.ai.atomic.networks;
 import io.github.andypyrope.ai.NetworkLayer;
 import io.github.andypyrope.ai.NoCalculationException;
 import io.github.andypyrope.ai.activation.ActivationFunction;
-import io.github.andypyrope.ai.atomic.AtomicLayer;
 import io.github.andypyrope.ai.atomic.AtomicNetwork;
 import io.github.andypyrope.ai.atomic.layers.ActivationLayer;
+import io.github.andypyrope.ai.atomic.layers.AtomicLayer;
 import io.github.andypyrope.ai.atomic.layers.BiasLayer;
 import io.github.andypyrope.ai.atomic.layers.FullyConnectedLayer;
 

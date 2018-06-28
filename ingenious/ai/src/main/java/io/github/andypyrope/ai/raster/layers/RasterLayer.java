@@ -1,4 +1,4 @@
-package io.github.andypyrope.ai.raster;
+package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.InvalidSizeException;
 import io.github.andypyrope.ai.NetworkLayer;

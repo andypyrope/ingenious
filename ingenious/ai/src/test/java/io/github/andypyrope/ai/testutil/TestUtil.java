@@ -1,7 +1,7 @@
 package io.github.andypyrope.ai.testutil;
 
 import io.github.andypyrope.ai.data.RasterData;
-import io.github.andypyrope.ai.raster.RasterLayer;
+import io.github.andypyrope.ai.raster.layers.RasterLayer;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.Arrays;

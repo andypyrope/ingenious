@@ -4,7 +4,6 @@ import io.github.andypyrope.ai.*;
 import io.github.andypyrope.ai.data.AtomicRasterData;
 import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.RasterData;
-import io.github.andypyrope.ai.raster.RasterLayer;
 import io.github.andypyrope.ai.util.StandardVector;
 import io.github.andypyrope.ai.util.Vector;
 
