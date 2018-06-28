@@ -55,45 +55,40 @@ class RasterActivationLayerTest {
 
    @Test
    void testGetAdjustmentComplexity() {
-      Assertions.assertEquals(16, makeLayer().getAdjustmentComplexity());
-   }
-
-   @Test
-   void testCalculation() {
-      final RasterLayer layer = makeLayer();
-      layer.calculate(INPUT);
-      final RasterData[] output = layer.getOutputAsRaster();
-      for (int i = 0; i < COUNT; i++) {
-         final RasterData currentInput = INPUT[i];
-         final RasterData currentOutput = output[i];
-         currentOutput.verifyDimensions(currentInput.getSize());
-         currentInput.forEach((x, y, z) -> TestUtil.compareDoubles(
-               currentInput.getCell(x, y, z) / 2.0,
-               currentOutput.getCell(x, y, z)));
-      }
+      Assertions.assertEquals(42, makeLayer().getAdjustmentComplexity());
    }
 
    @Test
    void testLearning() {
-      final RasterLayer layer = makeLayer();
-      layer.calculate(INPUT);
-      final double distance = 1.81;
-      TestUtil.compareDoublesLoose(distance,
-            TestUtil.getEuclideanDistance(layer, TARGET_OUTPUT));
+      final RasterLayer firstLayer = makeLayer();
+      final RasterLayer secondLayer = makeLayer();
+      firstLayer.setSurroundingLayers(null, secondLayer);
+      secondLayer.setSurroundingLayers(firstLayer, null);
 
-      train(layer);
-      TestUtil.compareDoublesLoose(distance,
-            TestUtil.getEuclideanDistance(layer, TARGET_OUTPUT));
+      firstLayer.calculate(INPUT);
+      secondLayer.calculate();
+      TestUtil.compareDoublesLoose(2.585,
+            TestUtil.getEuclideanDistance(secondLayer, TARGET_OUTPUT));
+
+      train(firstLayer, secondLayer);
+      TestUtil.compareDoublesLoose(1.404,
+            TestUtil.getEuclideanDistance(secondLayer, TARGET_OUTPUT));
+
+      train(firstLayer, secondLayer);
+      TestUtil.compareDoublesLoose(0.964,
+            TestUtil.getEuclideanDistance(secondLayer, TARGET_OUTPUT));
    }
 
-   private void train(final RasterLayer layer) {
+   private void train(final RasterLayer firstLayer, final RasterLayer secondLayer) {
       for (int i = 0; i < 5; i++) {
-         layer.adjust(TARGET_OUTPUT);
-         layer.calculate(INPUT);
+         secondLayer.adjust(TARGET_OUTPUT);
+         firstLayer.adjust();
+         firstLayer.calculate(INPUT);
+         secondLayer.calculate();
       }
    }
 
    private RasterLayer makeLayer() {
-      return new RasterActivationLayer(COUNT, SIZE, new HalfFunction());
+      return new RasterActivationLayer(COUNT, SIZE, new HalfFunction(), _random);
    }
 }
