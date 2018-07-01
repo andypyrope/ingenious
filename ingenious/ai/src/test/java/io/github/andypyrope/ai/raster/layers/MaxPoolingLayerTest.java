@@ -98,6 +98,6 @@ class MaxPoolingLayerTest {
    }
 
    private RasterLayer makeLayer() {
-      return new MaxPoolingLayer(COUNT, INPUT_SIZE, WINDOW_SIZE);
+      return new MaxPoolingLayer(COUNT, INPUT_SIZE, WINDOW_SIZE, null, null);
    }
 }

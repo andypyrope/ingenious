@@ -2,18 +2,17 @@ package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.data.RasterData;
 import io.github.andypyrope.ai.util.CoordinateConsumer;
-import io.github.andypyrope.ai.util.StandardVector;
 import io.github.andypyrope.ai.util.Vector;
 
 import java.util.Arrays;
 
 public class MaxPoolingLayer extends RasterLayerBase {
 
-   private static final Vector PADDING = StandardVector.ZERO;
-   private static final Vector STRIDE = StandardVector.UNIT;
-
    private final Vector _windowSize;
    private final Vector[][][][] _bestPositions;
+
+   private final Vector _padding;
+   private final Vector _stride;
 
    private final int _calculationComplexity;
    private final int _adjustmentComplexity;
@@ -25,18 +24,21 @@ public class MaxPoolingLayer extends RasterLayerBase {
     *
     * @param inputCount The number of inputs.
     * @param inputSize  The size (width, height, depth) of the input.
-    * @param windowSize The size of each filter. May be cut down if the resulting output
-    *                   size is below 1.
+    * @param windowSize The size of the window which takes the maximum value.
+    * @param padding     The padding of the input.
+    * @param stride      The stride(speed) the filter moves over the input with.
     */
    MaxPoolingLayer(final int inputCount, final Vector inputSize,
-         final Vector windowSize) {
+         final Vector windowSize, final Vector padding, final Vector stride) {
 
       super(inputCount, inputSize,
-            inputCount, inputSize.getScanSize(windowSize, PADDING, STRIDE));
+            inputCount, inputSize.getScanSize(windowSize, padding, stride));
       initializeInputGradientData();
 
       _windowSize = windowSize;
       _windowSize.validateAsSize();
+      _padding = padding;
+      _stride = stride;
 
       final int outputWidth = (int) _outputSize.getX();
       final int outputHeight = (int) _outputSize.getY();
@@ -57,7 +59,7 @@ public class MaxPoolingLayer extends RasterLayerBase {
          final Vector[][][] bestPositions = _bestPositions[i];
          final RasterData inputGradient = _inputGradients[i];
          final RasterData outputGradient = outputGradients[i];
-         _inputSize.slideWindow(_windowSize, PADDING, STRIDE, (inPos, yX, yY, yZ) ->
+         _inputSize.slideWindow(_windowSize, _padding, _stride, (inPos, yX, yY, yZ) ->
                inputGradient.addTo(bestPositions[yZ][yY][yX],
                      outputGradient.getCell(bestPositions[yZ][yY][yX])));
       }
@@ -69,7 +71,7 @@ public class MaxPoolingLayer extends RasterLayerBase {
          final Vector[][][] bestPositions = _bestPositions[i];
          final RasterData input = inputs[i];
          final RasterData output = _output[i];
-         _inputSize.slideWindow(_windowSize, PADDING, STRIDE, (inPos, yX, yY, yZ) -> {
+         _inputSize.slideWindow(_windowSize, _padding, _stride, (inPos, yX, yY, yZ) -> {
             final CoordinateConsumer maxGetter = new MaxValueConsumer(input, inPos);
             _windowSize.forEach(maxGetter);
             output.setCell(yX, yY, yZ, ((MaxValueConsumer) maxGetter)._maxValue);
