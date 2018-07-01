@@ -86,6 +86,6 @@ class ConvolutionalLayerTest {
 
    private RasterLayer makeLayer() {
       return new ConvolutionalLayer(INPUT_COUNT, INPUT_SIZE, FILTER_COUNT, FILTER_SIZE,
-            new DeterministicRandom());
+            null, null, new DeterministicRandom());
    }
 }

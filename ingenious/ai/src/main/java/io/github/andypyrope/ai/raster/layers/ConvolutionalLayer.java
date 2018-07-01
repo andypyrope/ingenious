@@ -2,7 +2,6 @@ package io.github.andypyrope.ai.raster.layers;
 
 import io.github.andypyrope.ai.data.CustomRasterData;
 import io.github.andypyrope.ai.data.RasterData;
-import io.github.andypyrope.ai.util.StandardVector;
 import io.github.andypyrope.ai.util.Vector;
 
 import java.util.Arrays;
@@ -10,15 +9,15 @@ import java.util.Random;
 
 public class ConvolutionalLayer extends RasterLayerBase {
 
-   private static final Vector PADDING = StandardVector.ZERO;
-   private static final Vector STRIDE = StandardVector.UNIT;
-
    private final int _filterCount;
    private final Vector _filterSize;
    private final RasterData[] _filters;
    private final RasterData[] _filterGradients;
    private final RasterData[] _filterVolatility;
    private final RasterData[] _lastFilterGradients;
+
+   private final Vector _padding;
+   private final Vector _stride;
 
    private final int _calculationComplexity;
    private final int _adjustmentComplexity;
@@ -31,16 +30,18 @@ public class ConvolutionalLayer extends RasterLayerBase {
     * @param inputCount  The number of inputs.
     * @param inputSize   The size (width, height, depth) of the input.
     * @param filterCount The number of filters.
-    * @param filterSize  The size of each filter. May be cut down if the resulting output
-    *                    size is below 1.
+    * @param filterSize  The size of each filter.
+    * @param padding     The padding of the input.
+    * @param stride      The stride(speed) the filter moves over the input with.
     * @param random      The random number generator to use.
     */
    ConvolutionalLayer(final int inputCount, final Vector inputSize, final int filterCount,
-         final Vector filterSize, final Random random) {
+         final Vector filterSize, final Vector padding, final Vector stride,
+         final Random random) {
 
       super(inputCount, inputSize,
             inputCount * filterCount,
-            inputSize.getScanSize(filterSize, PADDING, STRIDE));
+            inputSize.getScanSize(filterSize, padding, stride));
       initializeInputGradientData();
 
       _filterCount = filterCount;
@@ -57,6 +58,9 @@ public class ConvolutionalLayer extends RasterLayerBase {
          _filterVolatility[i] = new CustomRasterData(filterSize);
          _filterVolatility[i].setAll(RPROP_INITIAL_VOLATILITY);
       }
+
+      _padding = padding;
+      _stride = stride;
 
       _calculationComplexity = _outputCount * getOutputSize().getPixelCount() *
             filterSize.getPixelCount();
@@ -76,7 +80,7 @@ public class ConvolutionalLayer extends RasterLayerBase {
    private void calculateSingle(final RasterData input, final RasterData filter,
          final RasterData output) {
 
-      _inputSize.slideWindow(_filterSize, PADDING, STRIDE, (inPos, yX, yY, yZ) -> {
+      _inputSize.slideWindow(_filterSize, _padding, _stride, (inPos, yX, yY, yZ) -> {
          filter.forEach((fX, fY, fZ) -> {
             output.setCell(yX, yY, yZ,
                   input.getCell(inPos.plus(fX, fY, fZ)) * filter.getCell(fX, fY, fZ));
@@ -109,7 +113,7 @@ public class ConvolutionalLayer extends RasterLayerBase {
          final RasterData filter, final RasterData filterGradient,
          final RasterData outputGradient) {
 
-      _inputSize.slideWindow(_filterSize, PADDING, STRIDE, (inPos, yX, yY, yZ) -> {
+      _inputSize.slideWindow(_filterSize, _padding, _stride, (inPos, yX, yY, yZ) -> {
          final double outputGradientAtCell = outputGradient.getCell(yX, yY, yZ);
 
          filter.forEach((fX, fY, fZ) -> {
