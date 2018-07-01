@@ -127,6 +127,8 @@ class StandardVectorTest {
                   dummyVector(0, 0, 0),
                   dummyVector(1, 1, 1)
             ).toString());
+      Assertions.assertEquals(asString(X_POS, Y_POS, Z_POS),
+            makeVector().getScanSize(dummyVector(1, 1, 1), null, null).toString());
       Assertions.assertEquals(asString(X_POS / 2, Y_POS * 4, Z_POS),
             makeVector().getScanSize(
                   dummyVector(1, 1, 1),
@@ -211,6 +213,40 @@ class StandardVectorTest {
             dummyVector(3, 4, 6), // Window size
             dummyVector(1, 1, 2), // Padding
             dummyVector(0.5, 1.0, 3.0), // Stride
+            (inputPosition, x, y, z) -> {
+               actualPositions.add(inputPosition);
+               actualIndices.add(x + " " + y + " " + z);
+            });
+      Assertions.assertEquals(expectedIndices.length, actualIndices.size());
+      Assertions.assertEquals(expectedPositions.length, actualPositions.size());
+      for (int i = 0; i < expectedPositions.length; i++) {
+         Assertions.assertEquals(expectedPositions[i], actualPositions.get(i).toString(),
+               "The input position " + i + " is correct");
+         Assertions.assertEquals(expectedIndices[i], actualIndices.get(i),
+               "The output index " + i + " is correct");
+      }
+   }
+
+   @Test
+   void testSlideWindowWithDefaultSettings() {
+      final String[] expectedPositions = new String[]{
+            asString(0.0, 0.0, 0.0),
+            asString(1.0, 0.0, 0.0),
+            asString(0.0, 1.0, 0.0),
+            asString(1.0, 1.0, 0.0),
+      };
+      final String[] expectedIndices = new String[]{
+            "0 0 0",
+            "1 0 0",
+            "0 1 0",
+            "1 1 0",
+      };
+      final List<Vector> actualPositions = new ArrayList<>();
+      final List<String> actualIndices = new ArrayList<>();
+      new StandardVector(2, 2, 2).slideWindow(
+            dummyVector(1, 1, 2), // Window size
+            null, // Padding
+            null, // Stride
             (inputPosition, x, y, z) -> {
                actualPositions.add(inputPosition);
                actualIndices.add(x + " " + y + " " + z);

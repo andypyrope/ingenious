@@ -6,6 +6,9 @@ public class StandardVector implements Vector {
 
    public static final Vector UNIT = new StandardVector(1, 1, 1);
    public static final Vector ZERO = new StandardVector(0, 0, 0);
+   private static final Vector DEFAULT_PADDING = ZERO;
+   private static final Vector DEFAULT_STRIDE = UNIT;
+
    private static final double EPSILON = 0.0000000001;
    private final double _xPos;
    private final double _yPos;
@@ -127,9 +130,9 @@ public class StandardVector implements Vector {
          final Vector stride) {
 
       return this
-            .plus(padding.multipliedBy(2))
+            .plus((padding == null ? DEFAULT_PADDING : padding).multipliedBy(2))
             .minus(windowSize.minus(StandardVector.UNIT))
-            .dividedBy(stride);
+            .dividedBy(stride == null ? DEFAULT_STRIDE : stride);
    }
 
    @Override
@@ -152,19 +155,22 @@ public class StandardVector implements Vector {
    public void slideWindow(final Vector windowSize,
          final Vector padding, final Vector stride, VectorCoordinateConsumer consumer) {
 
-      final Vector from = StandardVector.ZERO.minus(padding);
+      final Vector actualPadding = padding == null ? DEFAULT_PADDING : padding;
+      final Vector actualStride = stride == null ? DEFAULT_STRIDE : stride;
+
+      final Vector from = StandardVector.ZERO.minus(actualPadding);
       // Since the <= operator does not always work on doubles, adding a tiny number is
       // used to simulate it
-      final Vector to = plus(padding).minus(windowSize).plus(EPSILON);
+      final Vector to = plus(actualPadding).minus(windowSize).plus(EPSILON);
 
       int actualX;
       int actualY;
       int actualZ = 0;
-      for (double z = from.getZ(); z < to.getZ(); z += stride.getZ()) {
+      for (double z = from.getZ(); z < to.getZ(); z += actualStride.getZ()) {
          actualY = 0;
-         for (double y = from.getY(); y < to.getY(); y += stride.getY()) {
+         for (double y = from.getY(); y < to.getY(); y += actualStride.getY()) {
             actualX = 0;
-            for (double x = from.getX(); x < to.getX(); x += stride.getX()) {
+            for (double x = from.getX(); x < to.getX(); x += actualStride.getX()) {
                consumer.accept(new StandardVector(x, y, z),
                      actualX, actualY, actualZ);
                actualX++;
