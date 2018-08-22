@@ -57,7 +57,7 @@ class CandleCalculatorTest {
 
    @Test
    void testGetStudyingComplexity() {
-      assertEquals(92, tryToCreate().getStudyingComplexity());
+      assertEquals(120, tryToCreate().getStudyingComplexity());
    }
 
    @Test
